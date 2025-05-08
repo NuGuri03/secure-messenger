@@ -97,6 +97,7 @@ public class ChatUI extends JFrame {
         JTextArea inputArea = new JTextArea();
         inputArea.setEditable(true);
         inputArea.setLineWrap(true);
+        inputArea.setPreferredSize(new Dimension(0, 40));
 
         // 메세지 입력창에 "메세지 입력" 문구 띄우기
         String placeholder = "메세지 입력";
@@ -118,6 +119,7 @@ public class ChatUI extends JFrame {
 
         // 전송 버튼
         JButton sendButton = new JButton("전송");
+        sendButton.setPreferredSize(new Dimension(80, 40));
 
         // Enter 누를 시 "전송" 버튼 동작
         inputArea.addKeyListener(new KeyAdapter() {
