@@ -8,11 +8,11 @@ public class ChatUI extends JFrame {
     private String username;
 
     public ChatUI(String username) {
-        this.username = username;
 
         if (username == null || username.trim().isEmpty()) {
             username = "user";
         }
+        this.username = username;
 
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -46,24 +46,9 @@ public class ChatUI extends JFrame {
         add(sidebar, BorderLayout.WEST);
         add(chatPanel, BorderLayout.CENTER);
 
-        pack();
         this.setMinimumSize(minSize);
 
         setLocationRelativeTo(null);
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                int minWidth = minSize.width;
-                int minHeight = minSize.height;
-
-                int width = getWidth();
-                int height = getHeight();
-
-                setSize(Math.max(width, minWidth), Math.max(height, minHeight));
-            }
-        });
-
         this.setVisible(true);
     }
 
@@ -114,7 +99,6 @@ public class ChatUI extends JFrame {
         JTextArea inputArea = new JTextArea();
         inputArea.setEditable(true);
         inputArea.setLineWrap(true);
-        inputArea.setPreferredSize(new Dimension(0, 40));
 
         // 메세지 입력창에 "메세지 입력" 문구 띄우기
         String placeholder = "메세지 입력";
@@ -130,6 +114,13 @@ public class ChatUI extends JFrame {
                 if (inputArea.getText().equals(placeholder)) {
                     inputArea.setText("");
                     inputArea.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (inputArea.getText().trim().isEmpty()) {
+                    inputArea.setText(placeholder);
+                    inputArea.setForeground(Color.GRAY);
                 }
             }
         });
@@ -153,10 +144,10 @@ public class ChatUI extends JFrame {
         sendButton.addActionListener(e -> {
             String message = inputArea.getText();
 
-            if (message != null && !message.trim().isEmpty()) {
-                chatArea.append(username + ": " + message.trim() + "\n");
-                inputArea.setText("");
-            }
+            if (message == null || message.trim().isEmpty()) { return; }
+
+            chatArea.append(username + ": " + message.trim() + "\n");
+            inputArea.setText("");
         });
 
         JPanel input = new JPanel();
