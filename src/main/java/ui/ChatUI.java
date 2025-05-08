@@ -6,13 +6,19 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusAdapter;
 
 public class ChatUI extends JFrame {
+    private String username;
 
-    public ChatUI() {
+    public ChatUI(String username) {
+        this.username = username;
+
+        if (username == null || username.trim().isEmpty()) {
+            username = "unknown_user";
+        }
 
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.setSize(450, 600);
+        this.setSize(525, 600);
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout());
 
@@ -23,14 +29,14 @@ public class ChatUI extends JFrame {
         JPanel chatPanel = getChatPanel();
 
         // topbar(어떤 유저와 채팅하는 지 표시)
-        JPanel topbar = getTopbarPanel(null);
+        JPanel topbar = getTopbarPanel(username);
 
         // 채팅창
         JTextArea chatArea = getChatArea();
         JScrollPane scrollPane = new JScrollPane(chatArea);
 
         // 메세지 입력창
-        JPanel inputPanel = getInputPanel();
+        JPanel inputPanel = getInputPanel(chatArea, username);
 
         // 위치 설정
         chatPanel.add(topbar, BorderLayout.NORTH);
@@ -60,10 +66,6 @@ public class ChatUI extends JFrame {
     private JPanel getTopbarPanel(String username) {
         JPanel topbar = new JPanel();
 
-        if (username == null || username.trim().isEmpty()) {
-            username = "unknown_user";
-        }
-
         JLabel usernameLabel = new JLabel(String.format("Chatting with %s", username));
         topbar.add(usernameLabel);
 
@@ -84,10 +86,10 @@ public class ChatUI extends JFrame {
         return chatArea;
     }
 
-    private JPanel getInputPanel() {
+    private JPanel getInputPanel(JTextArea chatArea, String username) {
 
         JTextField inputField = new JTextField(15);
-        inputField.setBounds(10, 10, 600, 30);
+        inputField.setBounds(10, 10, 300, 30);
 
         // "메세지 입력" 문구 띄우기
         String placeholder = "메세지 입력";
@@ -108,7 +110,16 @@ public class ChatUI extends JFrame {
         });
 
         JButton sendButton = new JButton("전송");
-        sendButton.setBounds(620, 10, 80, 30);
+        sendButton.setBounds(320, 10, 80, 30);
+
+        sendButton.addActionListener(e -> {
+            String message = inputField.getText();
+
+            if (message != null || !message.trim().isEmpty()) {
+                chatArea.append("나: " + message + "\n");
+                inputField.setText("");
+            }
+        });
 
         JPanel input = new JPanel(null);
         input.setPreferredSize(new Dimension(800, 50));
