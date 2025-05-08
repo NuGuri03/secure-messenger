@@ -24,20 +24,20 @@ public class ChatUI extends JFrame {
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout());
 
-        // 사이드바
+        // 사이드바 패널
         JPanel sidebar = getSidebarPanel();
 
-        // 채팅창
+        // 채팅창 패널
         JPanel chatPanel = getChatPanel();
 
-        // topbar(어떤 유저와 채팅하는 지 표시)
+        // 탑바 영역
         JPanel topbar = getTopbarPanel(username);
 
-        // 채팅창
+        // 채팅 내용 출력 영역
         JTextArea chatArea = getChatArea();
         JScrollPane scrollPane = new JScrollPane(chatArea);
 
-        // 메세지 입력창
+        // 메세지 입력창 영역
         JPanel inputPanel = getInputPanel(chatArea, username);
 
         // 위치 설정
@@ -97,7 +97,6 @@ public class ChatUI extends JFrame {
         JTextArea inputArea = new JTextArea();
         inputArea.setEditable(true);
         inputArea.setLineWrap(true);
-        inputArea.setBounds(10, 10, 300, 23);
 
         // 메세지 입력창에 "메세지 입력" 문구 띄우기
         String placeholder = "메세지 입력";
@@ -119,9 +118,8 @@ public class ChatUI extends JFrame {
 
         // 전송 버튼
         JButton sendButton = new JButton("전송");
-        sendButton.setBounds(320, 10, 80, 23);
 
-        // Enter 누를 시 "전송" 버튼 입력
+        // Enter 누를 시 "전송" 버튼 동작
         inputArea.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -132,12 +130,12 @@ public class ChatUI extends JFrame {
             }
         });
 
-        // 메세지 입력
+        // 전송 버튼 클릭 시 입력된 메세지를 채팅창에 추가
         sendButton.addActionListener(e -> {
             String message = inputArea.getText();
 
-            if (message != null || !message.trim().isEmpty()) {
-                chatArea.append(username + ": " + message + "\n");
+            if (message != null && !message.trim().isEmpty()) {
+                chatArea.append(username + ": " + message.trim() + "\n");
                 inputArea.setText("");
             }
         });
