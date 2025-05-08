@@ -2,10 +2,7 @@ package ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 public class ChatUI extends JFrame {
     private String username;
@@ -20,8 +17,9 @@ public class ChatUI extends JFrame {
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.setSize(525, 600);
-        this.setLocationRelativeTo(null);
+        Dimension minSize = new Dimension(525, 600);
+        this.setSize(minSize);
+
         this.setLayout(new BorderLayout());
 
         // 사이드바 패널
@@ -47,6 +45,25 @@ public class ChatUI extends JFrame {
 
         add(sidebar, BorderLayout.WEST);
         add(chatPanel, BorderLayout.CENTER);
+
+        pack();
+        this.setMinimumSize(minSize);
+
+        setLocationRelativeTo(null);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int minWidth = minSize.width;
+                int minHeight = minSize.height;
+
+                int width = getWidth();
+                int height = getHeight();
+
+                setSize(Math.max(width, minWidth), Math.max(height, minHeight));
+            }
+        });
+
         this.setVisible(true);
     }
 
