@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusAdapter;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ChatUI extends JFrame {
     private String username;
@@ -12,7 +14,7 @@ public class ChatUI extends JFrame {
         this.username = username;
 
         if (username == null || username.trim().isEmpty()) {
-            username = "unknown_user";
+            username = "user";
         }
 
         setTitle("Chat");
@@ -83,48 +85,67 @@ public class ChatUI extends JFrame {
         JTextArea chatArea = new JTextArea();
         chatArea.setEditable(false);
 
+        chatArea.setBackground(Color.LIGHT_GRAY);
+        chatArea.setLineWrap(true);
+
         return chatArea;
     }
 
     private JPanel getInputPanel(JTextArea chatArea, String username) {
 
-        JTextField inputField = new JTextField(15);
-        inputField.setBounds(10, 10, 300, 30);
+        // 메세지 입력창
+        JTextArea inputArea = new JTextArea();
+        inputArea.setEditable(true);
+        inputArea.setLineWrap(true);
+        inputArea.setBounds(10, 10, 300, 23);
 
-        // "메세지 입력" 문구 띄우기
+        // 메세지 입력창에 "메세지 입력" 문구 띄우기
         String placeholder = "메세지 입력";
-        inputField.setText(placeholder);
-        inputField.setForeground(Color.GRAY);
+        inputArea.setText(placeholder);
+        inputArea.setForeground(Color.GRAY);
 
         /* 메세지 입력창이 클릭되었을 때
         * "메세지 입력" 문구 지우고
         * 입력창 글자 색깔 검은색으로 바꾸기 */
-        inputField.addFocusListener(new FocusAdapter() {
+        inputArea.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (inputField.getText().equals(placeholder)) {
-                    inputField.setText("");
-                    inputField.setForeground(Color.BLACK);
+                if (inputArea.getText().equals(placeholder)) {
+                    inputArea.setText("");
+                    inputArea.setForeground(Color.BLACK);
                 }
             }
         });
 
+        // 전송 버튼
         JButton sendButton = new JButton("전송");
-        sendButton.setBounds(320, 10, 80, 30);
+        sendButton.setBounds(320, 10, 80, 23);
 
-        sendButton.addActionListener(e -> {
-            String message = inputField.getText();
-
-            if (message != null || !message.trim().isEmpty()) {
-                chatArea.append("나: " + message + "\n");
-                inputField.setText("");
+        // Enter 누를 시 "전송" 버튼 입력
+        inputArea.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER && !e.isShiftDown()) {
+                    e.consume();
+                    sendButton.doClick();
+                }
             }
         });
 
-        JPanel input = new JPanel(null);
-        input.setPreferredSize(new Dimension(800, 50));
+        // 메세지 입력
+        sendButton.addActionListener(e -> {
+            String message = inputArea.getText();
 
-        input.add(inputField);
+            if (message != null || !message.trim().isEmpty()) {
+                chatArea.append(username + ": " + message + "\n");
+                inputArea.setText("");
+            }
+        });
+
+        JPanel input = new JPanel();
+        input.setLayout(new BoxLayout(input, BoxLayout.X_AXIS));
+
+        input.add(inputArea);
         input.add(sendButton);
 
         return input;
