@@ -64,6 +64,10 @@ secure-messenger/
 │   │   │   │   ├── Message.java
 │   │   │   │   ├── Protocol.java
 │   │   │   │   └── Logger.java
+│   │   │   ├── ui/                   # ui
+│   │   │   │   ├── ChatUI.java
+│   │   │   │   ├── LoginUI.java
+│   │   │   │   └── SignUpUI.java
 │   └── main/
 │       └── resources/
 │           ├── schema.sql            # MySQL 테이블 생성 스크립트
