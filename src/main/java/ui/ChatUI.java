@@ -17,7 +17,7 @@ public class ChatUI extends JFrame {
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Dimension minSize = new Dimension(525, 600);
+        Dimension minSize = new Dimension(450, 600);
         this.setSize(minSize);
 
         this.setLayout(new BorderLayout());
