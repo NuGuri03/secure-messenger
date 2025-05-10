@@ -17,7 +17,6 @@ public class ChatUI extends JFrame {
             Font customFont = new Font("Pretendard", Font.PLAIN, 14);
             UIManager.put("defaultFont", customFont);
 
-
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
