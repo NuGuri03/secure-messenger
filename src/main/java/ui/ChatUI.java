@@ -6,6 +6,10 @@ import java.awt.event.*;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
+import ui.component.ChatBubblePanel;
+import ui.component.SideBarPanel;
+import ui.component.UserIconButton;
+
 public class ChatUI extends JFrame {
     private String username;
 
@@ -36,13 +40,14 @@ public class ChatUI extends JFrame {
         this.setLayout(new BorderLayout());
 
         // 사이드바 패널
-        JPanel sidebar = createSidebarPanel();
-
-        // 채팅창 패널
-        JPanel chatPanel = createChatPanel();
+        SideBarPanel sidebar = new SideBarPanel();
 
         // 탑바 영역
         JPanel topbar = createTopbarPanel(username);
+
+        // 채팅창 패널
+        JPanel chatPanel = new JPanel();
+        chatPanel.setLayout(new BorderLayout());
 
         // 채팅 내용 출력 영역
         JPanel chatArea = createChatArea();
@@ -63,63 +68,6 @@ public class ChatUI extends JFrame {
 
         setLocationRelativeTo(null);
         this.setVisible(true);
-    }
-
-    /**
-     * 주어진 이미지 경로로 아이콘 버튼을 생성
-     * @param path 이미지 경로 (예: "resources/icon/icon.png")
-     * @param size 아이콘 크기 (예: 32 → 32x32)
-     * @param toolTip 아이콘 툴팁 (예: icon)
-     * @return 스타일이 적용된 JButton
-     */
-    private JButton createIconButton(String path, int size, String toolTip) {
-        ImageIcon icon = new ImageIcon(getClass().getResource(path));
-        Image scaledImage = icon.getImage().getScaledInstance(size, size, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-
-        JButton button = new JButton(scaledIcon);
-        button.setPreferredSize(new Dimension(size, size));
-        button.setMinimumSize(new Dimension(size, size));
-        button.setMaximumSize(new Dimension(size, size));
-
-        button.setToolTipText(toolTip);
-        button.setContentAreaFilled(false);
-
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        return button;
-    }
-
-    /**
-     * 사이드바 패널 생성
-     * @return 사이드바 패널
-     */
-    private JPanel createSidebarPanel() {
-        JPanel sidebar = new JPanel();
-
-        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-        sidebar.setPreferredSize(new Dimension(80, 0));  // 너비 고정
-
-        // 정렬 및 여백
-        sidebar.setAlignmentY(Component.TOP_ALIGNMENT);
-        sidebar.setBorder(BorderFactory.createEmptyBorder(30, 5, 30, 5));
-
-        // 배경
-        sidebar.setBackground(Color.decode("#A9A9A9"));
-
-        JButton userButton = createIconButton("/icon/user.png", 24, "User");
-        JButton chatButton = createIconButton("/icon/chat.png", 20, "Chat");
-        JButton settingsButton = createIconButton("/icon/settings.png", 20, "Settings");
-
-        sidebar.add(Box.createVerticalStrut(30)); // 간격
-        sidebar.add(userButton);
-        sidebar.add(Box.createVerticalStrut(40)); // 간격
-        sidebar.add(chatButton);
-        sidebar.add(Box.createVerticalStrut(40)); // 간격
-        sidebar.add(settingsButton);
-
-        return sidebar;
     }
 
     /**
@@ -153,17 +101,6 @@ public class ChatUI extends JFrame {
     }
 
     /**
-     * 채팅 로그 패널 생성
-     * @return 채팅 로그 패널
-     */
-    private JPanel createChatPanel() {
-        JPanel chatPanel = new JPanel();
-        chatPanel.setLayout(new BorderLayout());
-
-        return chatPanel;
-    }
-
-    /**
      * 채팅창 텍스트 영역 생성
      * @return 채팅창 텍스트 영역
      */
@@ -173,7 +110,8 @@ public class ChatUI extends JFrame {
         chatArea.setAlignmentX(Component.LEFT_ALIGNMENT);
         chatArea.setBackground(Color.WHITE);
         chatArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        return chatArea;    }
+        return chatArea;
+    }
 
     /**
      * 채팅창 입력 패널 생성
