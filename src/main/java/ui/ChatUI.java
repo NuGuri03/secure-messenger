@@ -11,16 +11,14 @@ import ui.component.SideBarPanel;
 import ui.component.UserIconButton;
 
 public class ChatUI extends JFrame {
-    private String username;
 
     public ChatUI(String username) {
-
         try {
+            // LookAndFeel 플러그인 적용
             UIManager.setLookAndFeel(new FlatLightLaf());
-
+            // 폰트를 Pretendard로 설정
             Font customFont = new Font("Pretendard", Font.PLAIN, 14);
             UIManager.put("defaultFont", customFont);
-
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
@@ -28,7 +26,6 @@ public class ChatUI extends JFrame {
         if (username == null || username.trim().isEmpty()) {
             username = "user";
         }
-        this.username = username;
 
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -86,7 +83,7 @@ public class ChatUI extends JFrame {
         // 유저 이름 라벨
         JLabel usernameLabel = new JLabel(String.format("Chatting with %s", username));
 
-        // 탑바에 추가
+        // 탑바 패널에 요소 추가
         topbar.add(Box.createHorizontalStrut(15)); // 왼쪽 여백
         topbar.add(userIconButton);
         topbar.add(Box.createHorizontalStrut(12)); // 아이콘과 라벨 사이 여백
@@ -192,7 +189,7 @@ public class ChatUI extends JFrame {
         // 버튼을 오른쪽에 정렬하기 위한 래퍼 패널
         JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         buttonWrapper.add(sendButton);
-        buttonWrapper.setOpaque(false); // 배경 투명
+        buttonWrapper.setOpaque(false); // 배경 투명하게
 
         // 패널 생성
         JPanel inputPanel = new JPanel();
