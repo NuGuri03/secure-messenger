@@ -38,7 +38,7 @@ public class ChatBubblePanel extends JPanel {
         content.add(Box.createRigidArea(new Dimension(0, 4)));
 
         // 말풍선
-        JPanel bubble = new JPanel();
+        JPanel bubble = new RoundedPanel(10);
         bubble.setLayout(new BoxLayout(bubble, BoxLayout.X_AXIS));
         bubble.setBackground(Color.decode("#D9D9D9"));
         bubble.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
