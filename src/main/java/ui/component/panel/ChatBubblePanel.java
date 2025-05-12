@@ -53,7 +53,7 @@ public class ChatBubblePanel extends JPanel {
         FontMetrics fm = msgArea.getFontMetrics(msgArea.getFont());
         int actualWidth = fm.stringWidth(message);
 
-        final int MAX_WIDTH = 100;
+        final int MAX_WIDTH = 170;
 
         msgArea.setSize(new Dimension(MAX_WIDTH, Short.MAX_VALUE));
         Dimension preferred = msgArea.getPreferredSize();
