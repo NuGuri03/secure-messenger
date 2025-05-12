@@ -1,4 +1,6 @@
-package ui.component;
+package ui.component.panel;
+
+import ui.component.button.IconButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,9 +18,9 @@ public class SideBarPanel extends JPanel {
         // 배경
         setBackground(Color.decode("#A9A9A9"));
 
-        IconButton userButton = new IconButton("/icon/user.png", 24, "User");
-        IconButton chatButton = new IconButton("/icon/chat.png", 20, "Chat");
-        IconButton settingsButton = new IconButton("/icon/settings.png", 20, "Settings");
+        IconButton userButton = new IconButton("/icon/user.png", 28, "User");
+        IconButton chatButton = new IconButton("/icon/chat.png", 24, "Chat");
+        IconButton settingsButton = new IconButton("/icon/settings.png", 24, "Settings");
 
         add(Box.createVerticalStrut(30)); // 간격
         add(userButton);

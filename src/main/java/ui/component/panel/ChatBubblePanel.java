@@ -1,26 +1,25 @@
-package ui.component;
+package ui.component.panel;
+
+import ui.component.button.UserIconButton;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
- * 하나의 채팅 메시지(아바타 + 이름 + 말풍선)를 표시하는 패널.
- * 말풍선 크기는 메시지 텍스트 길이에만 종속됩니다.
+ * 하나의 채팅 메시지(아바타 + 이름 + 말풍선)를 표시하는 패널
  */
 public class ChatBubblePanel extends JPanel {
-    private static final int AVATAR_SIZE = 36;
     private static final int PADDING = 8;
 
-    public ChatBubblePanel(String username, String message, String avatarPath) {
+    public ChatBubblePanel(String username, String message, UserIconButton userIconButton) {
         // 전체: 가로 박스 레이아웃
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setOpaque(false);
 
-        // 아바타
-        UserIconButton avatar = new UserIconButton(avatarPath, AVATAR_SIZE);
-        avatar.setAlignmentY(Component.CENTER_ALIGNMENT);
-        add(avatar);
+        // 유저 아이콘 버튼
+        UserIconButton copiedUserIconButton = userIconButton.copy();
+        add(copiedUserIconButton);
 
         add(Box.createRigidArea(new Dimension(8, 0)));
 
@@ -47,7 +46,7 @@ public class ChatBubblePanel extends JPanel {
 
         JTextArea msgArea = new JTextArea(message);
         msgArea.setFont(new Font("Pretendard", Font.PLAIN, 12));
-        msgArea.setLineWrap(true);                 // 줄바꿈 허용
+        msgArea.setLineWrap(true);                // 줄바꿈 허용
         msgArea.setWrapStyleWord(true);           // 단어 단위로 줄바꿈
         msgArea.setEditable(false);               // 편집 불가
         msgArea.setOpaque(false);                 // 배경 투명

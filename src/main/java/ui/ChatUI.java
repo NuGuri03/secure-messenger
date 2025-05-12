@@ -6,9 +6,9 @@ import java.awt.event.*;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
-import ui.component.ChatBubblePanel;
-import ui.component.SideBarPanel;
-import ui.component.UserIconButton;
+import ui.component.panel.ChatBubblePanel;
+import ui.component.panel.SideBarPanel;
+import ui.component.button.UserIconButton;
 
 public class ChatUI extends JFrame {
 
@@ -16,7 +16,7 @@ public class ChatUI extends JFrame {
         try {
             // LookAndFeel 플러그인 적용
             UIManager.setLookAndFeel(new FlatLightLaf());
-            // 폰트를 Pretendard로 설정
+            // 폰트를 Pretendard 로 설정
             Font customFont = new Font("Pretendard", Font.PLAIN, 14);
             UIManager.put("defaultFont", customFont);
         } catch (UnsupportedLookAndFeelException e) {
@@ -39,8 +39,11 @@ public class ChatUI extends JFrame {
         // 사이드바 패널
         SideBarPanel sidebar = new SideBarPanel();
 
+        // 유저 아이콘 버튼
+        UserIconButton userIconButton = new UserIconButton("/icon/default_profile.png", 32);
+
         // 탑바 영역
-        JPanel topbar = createTopbarPanel(username);
+        JPanel topbar = createTopbarPanel(username, userIconButton);
 
         // 채팅창 패널
         JPanel chatPanel = new JPanel();
@@ -53,7 +56,7 @@ public class ChatUI extends JFrame {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         // 메세지 입력창 영역
-        JPanel inputPanel = createInputPanel(chatArea, scrollPane, username);
+        JPanel inputPanel = createInputPanel(chatArea, scrollPane, username, userIconButton);
 
         // 위치 설정
         chatPanel.add(topbar, BorderLayout.NORTH);
@@ -72,13 +75,14 @@ public class ChatUI extends JFrame {
      * @param username 유저 네임
      * @return 문구가 포함된 패널
      */
-    private JPanel createTopbarPanel(String username) {
+    private JPanel createTopbarPanel(String username, UserIconButton userIconButton) {
         JPanel topbar = new JPanel();
 
+        // 설정
+        topbar.setLayout(new BoxLayout(topbar, BoxLayout.X_AXIS));
+        topbar.setPreferredSize(new Dimension(0, 60)); // 높이를 50px로 설정
+        topbar.setAlignmentY(Component.TOP_ALIGNMENT);
         topbar.setBackground(new Color(175, 175, 175));
-
-        // 유저 아이콘 버튼
-        UserIconButton userIconButton = new UserIconButton("/icon/default_profile.png", 38);
 
         // 유저 이름 라벨
         JLabel usernameLabel = new JLabel(String.format("Chatting with %s", username));
@@ -89,10 +93,6 @@ public class ChatUI extends JFrame {
         topbar.add(Box.createHorizontalStrut(12)); // 아이콘과 라벨 사이 여백
         topbar.add(usernameLabel);
 
-        // 설정
-        topbar.setPreferredSize(new Dimension(0, 50)); // 높이를 50px로 설정
-        topbar.setLayout(new BoxLayout(topbar, BoxLayout.X_AXIS));
-        topbar.setAlignmentY(Component.TOP_ALIGNMENT);
 
         return topbar;
     }
@@ -116,7 +116,7 @@ public class ChatUI extends JFrame {
      * @param username 유저 네임
      * @return 채팅창 입력 패널
      */
-    private JPanel createInputPanel(JPanel chatArea, JScrollPane scrollPane, String username) {
+    private JPanel createInputPanel(JPanel chatArea, JScrollPane scrollPane, String username, UserIconButton userIconButton) {
 
         // 메세지 입력창
         JTextArea inputArea = new JTextArea();
@@ -151,7 +151,7 @@ public class ChatUI extends JFrame {
 
         // 전송 버튼
         JButton sendButton = new JButton("전송");
-        sendButton.setPreferredSize(new Dimension(70, 28)); // width=50, height=28
+        sendButton.setPreferredSize(new Dimension(70, 28));
 
         // Enter 누를 시 "전송" 버튼 동작
         inputArea.addKeyListener(new KeyAdapter() {
@@ -170,16 +170,14 @@ public class ChatUI extends JFrame {
 
             if (message == null || message.trim().isEmpty() || message.equals(placeholder)) return;
 
-            ChatBubblePanel bubble = new ChatBubblePanel(username, message, "/icon/default_profile.png");
+            ChatBubblePanel bubble = new ChatBubblePanel(username, message, userIconButton);
             bubble.setAlignmentX(Component.LEFT_ALIGNMENT);
             chatArea.add(bubble);
             chatArea.add(Box.createVerticalStrut(10));
 
-            chatArea.revalidate();
-            chatArea.repaint();
-
             inputArea.setText("");
 
+            // 채팅이 추가 될 시 스크롤을 제일 아래로
             SwingUtilities.invokeLater(() -> {
                 JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
                 verticalBar.setValue(verticalBar.getMaximum());
