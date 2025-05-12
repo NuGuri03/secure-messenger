@@ -17,11 +17,7 @@ public class ChatBubblePanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setOpaque(false);
 
-        // 유저 아이콘 버튼
-        UserIconButton copiedUserIconButton = userIconButton.copy();
-        add(copiedUserIconButton);
-
-        add(Box.createRigidArea(new Dimension(8, 0)));
+        add(Box.createHorizontalGlue());
 
         // 이름 + 말풍선 컨테이너
         JPanel content = new JPanel();
@@ -31,8 +27,8 @@ public class ChatBubblePanel extends JPanel {
 
         // 이름
         JLabel nameLabel = new JLabel(username);
-        nameLabel.setFont(new Font("Pretendard", Font.BOLD, 10));
-        nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+//        nameLabel.setFont(new Font("Pretendard", Font.BOLD, 10));
+        nameLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         content.add(nameLabel);
 
         content.add(Box.createRigidArea(new Dimension(0, 4)));
@@ -42,7 +38,10 @@ public class ChatBubblePanel extends JPanel {
         bubble.setLayout(new BoxLayout(bubble, BoxLayout.X_AXIS));
         bubble.setBackground(Color.decode("#D9D9D9"));
         bubble.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
-        bubble.setAlignmentX(Component.LEFT_ALIGNMENT);
+        bubble.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+        final int MAX_WIDTH = 100;
+        final int MIN_WIDTH = 50;
 
         JTextArea msgArea = new JTextArea(message);
         msgArea.setFont(new Font("Pretendard", Font.PLAIN, 12));
@@ -52,15 +51,41 @@ public class ChatBubblePanel extends JPanel {
         msgArea.setOpaque(false);                 // 배경 투명
         msgArea.setBorder(null);                  // 테두리 제거
 
-        msgArea.setSize(new Dimension(200, Short.MAX_VALUE));  // 너비 제한 후 높이 자동 계산
+        msgArea.setSize(new Dimension(MAX_WIDTH, Short.MAX_VALUE));
+        int lineCount = msgArea.getLineCount();
         Dimension preferred = msgArea.getPreferredSize();
-        msgArea.setMaximumSize(preferred);
 
-        // 3. 말풍선에 추가
+
+        int textWidth;
+        if (lineCount == 1) {
+            textWidth = Math.min(Math.max(preferred.width, MIN_WIDTH), MAX_WIDTH);
+        } else {
+            textWidth = MAX_WIDTH;
+        }
+
+        Dimension adjusted = new Dimension(textWidth, preferred.height);
+
+        // 크기 제한 적용
+        msgArea.setMinimumSize(adjusted);
+        msgArea.setPreferredSize(adjusted);
+        msgArea.setMaximumSize(adjusted);
+
+        // 말풍선 크기도 adjusted 기반으로
+        int bubbleW = adjusted.width + PADDING * 2;
+        int bubbleH = adjusted.height + PADDING * 2;
+        bubble.setMinimumSize(new Dimension(bubbleW, bubbleH));
+        bubble.setPreferredSize(new Dimension(bubbleW, bubbleH));
+        bubble.setMaximumSize(new Dimension(bubbleW, bubbleH));
+
+        // 말풍선에 대화 추가
         bubble.add(msgArea);
-        bubble.setMaximumSize(new Dimension(preferred.width + PADDING * 2, preferred.height + PADDING * 2));
-
         content.add(bubble);
+
+        // 유저 아이콘 버튼
+        UserIconButton copiedUserIconButton = userIconButton.copy();
+
         add(content);
+        add(Box.createRigidArea(new Dimension(8, 0)));
+        add(copiedUserIconButton);
     }
 }

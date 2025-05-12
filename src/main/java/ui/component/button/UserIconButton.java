@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class UserIconButton extends JButton {
-    private String imagePath = "";
-    private int avatarSize = 0;
+    private final String imagePath;
+    private final int avatarSize;
 
     public UserIconButton(String imagePath, int avatarSize) {
         this.imagePath = imagePath;

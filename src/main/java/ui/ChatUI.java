@@ -30,7 +30,7 @@ public class ChatUI extends JFrame {
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Dimension minSize = new Dimension(450, 600);
+        Dimension minSize = new Dimension(550, 700);
         this.setSize(minSize);
         this.setMinimumSize(minSize);
 
@@ -171,7 +171,7 @@ public class ChatUI extends JFrame {
             if (message == null || message.trim().isEmpty() || message.equals(placeholder)) return;
 
             ChatBubblePanel bubble = new ChatBubblePanel(username, message, userIconButton);
-            bubble.setAlignmentX(Component.LEFT_ALIGNMENT);
+            bubble.setAlignmentX(Component.RIGHT_ALIGNMENT);
             chatArea.add(bubble);
             chatArea.add(Box.createVerticalStrut(10));
 
