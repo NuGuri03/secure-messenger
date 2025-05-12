@@ -27,8 +27,9 @@ public class ChatBubblePanel extends JPanel {
 
         // 이름
         JLabel nameLabel = new JLabel(username);
-//        nameLabel.setFont(new Font("Pretendard", Font.BOLD, 10));
+        nameLabel.setFont(new Font("Pretendard", Font.BOLD, 10));
         nameLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        nameLabel.setBorder(new EmptyBorder(0, 0, 0, 4));
         content.add(nameLabel);
 
         content.add(Box.createRigidArea(new Dimension(0, 4)));
@@ -40,25 +41,26 @@ public class ChatBubblePanel extends JPanel {
         bubble.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
         bubble.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-        final int MAX_WIDTH = 100;
-        final int MIN_WIDTH = 50;
 
         JTextArea msgArea = new JTextArea(message);
-        msgArea.setFont(new Font("Pretendard", Font.PLAIN, 12));
         msgArea.setLineWrap(true);                // 줄바꿈 허용
         msgArea.setWrapStyleWord(true);           // 단어 단위로 줄바꿈
         msgArea.setEditable(false);               // 편집 불가
         msgArea.setOpaque(false);                 // 배경 투명
         msgArea.setBorder(null);                  // 테두리 제거
+        msgArea.setFont(new Font("Pretendard", Font.PLAIN, 12));
+
+        FontMetrics fm = msgArea.getFontMetrics(msgArea.getFont());
+        int actualWidth = fm.stringWidth(message);
+
+        final int MAX_WIDTH = 100;
 
         msgArea.setSize(new Dimension(MAX_WIDTH, Short.MAX_VALUE));
-        int lineCount = msgArea.getLineCount();
         Dimension preferred = msgArea.getPreferredSize();
 
-
         int textWidth;
-        if (lineCount == 1) {
-            textWidth = Math.min(Math.max(preferred.width, MIN_WIDTH), MAX_WIDTH);
+        if (actualWidth <= MAX_WIDTH) {
+            textWidth = actualWidth + PADDING - 2;
         } else {
             textWidth = MAX_WIDTH;
         }

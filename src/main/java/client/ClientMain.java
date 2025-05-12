@@ -4,6 +4,6 @@ import ui.ChatUI;
 
 public class ClientMain {
     public static void main(String[] args) {
-        ChatUI chatUI = new ChatUI(null);
+        ChatUI chatUI = new ChatUI("이름이너무길다");
     }
 }
