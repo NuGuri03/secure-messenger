@@ -17,22 +17,21 @@ public class ChatBubblePanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setOpaque(false);
 
-        add(Box.createHorizontalGlue());
-
         // 이름 + 말풍선 컨테이너
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setOpaque(false);
-        content.setAlignmentY(Component.CENTER_ALIGNMENT);
+        content.setAlignmentY(Component.TOP_ALIGNMENT);
 
         // 이름
         JLabel nameLabel = new JLabel(username);
         nameLabel.setFont(new Font("Pretendard", Font.BOLD, 10));
         nameLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        nameLabel.setBorder(new EmptyBorder(0, 0, 0, 4));
+        nameLabel.setBorder(new EmptyBorder(0, 0, 0, PADDING / 2));
         content.add(nameLabel);
 
-        content.add(Box.createRigidArea(new Dimension(0, 4)));
+        // 말풍선과 대화 사이 빈 공간 생성
+        content.add(Box.createRigidArea(new Dimension(0, PADDING / 2)));
 
         // 말풍선
         JPanel bubble = new RoundedPanel(10);
@@ -41,7 +40,7 @@ public class ChatBubblePanel extends JPanel {
         bubble.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
         bubble.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-
+        // 말풍선 내 대화
         JTextArea msgArea = new JTextArea(message);
         msgArea.setLineWrap(true);                // 줄바꿈 허용
         msgArea.setWrapStyleWord(true);           // 단어 단위로 줄바꿈
@@ -83,11 +82,21 @@ public class ChatBubblePanel extends JPanel {
         bubble.add(msgArea);
         content.add(bubble);
 
-        // 유저 아이콘 버튼
-        UserIconButton copiedUserIconButton = userIconButton.copy();
+        // 유저 아이콘 버튼 패널
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setOpaque(false);
+        buttonPanel.setAlignmentY(Component.TOP_ALIGNMENT);
+        buttonPanel.setBorder(new EmptyBorder(PADDING, 0, 0, 0));
 
+        // 패널에 유저 아이콘 버튼 추가
+        UserIconButton copiedUserIconButton = userIconButton.copy();
+        copiedUserIconButton.setAlignmentY(Component.TOP_ALIGNMENT);
+        buttonPanel.add(copiedUserIconButton);
+
+        // 완성
         add(content);
-        add(Box.createRigidArea(new Dimension(8, 0)));
-        add(copiedUserIconButton);
+        add(Box.createRigidArea(new Dimension(PADDING, 0)));
+        add(buttonPanel);
     }
 }
