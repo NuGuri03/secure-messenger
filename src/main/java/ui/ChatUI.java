@@ -4,39 +4,59 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
+import ui.component.panel.ChatBubblePanel;
+import ui.component.panel.SideBarPanel;
+import ui.component.button.UserIconButton;
+
 public class ChatUI extends JFrame {
-    private String username;
 
     public ChatUI(String username) {
+        try {
+            // LookAndFeel 플러그인 적용
+            UIManager.setLookAndFeel(new FlatLightLaf());
+            // 폰트를 Pretendard 로 설정
+            Font customFont = new Font("Pretendard", Font.PLAIN, 14);
+            UIManager.put("defaultFont", customFont);
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
 
         if (username == null || username.trim().isEmpty()) {
             username = "user";
         }
-        this.username = username;
 
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Dimension minSize = new Dimension(525, 600);
+        Dimension minSize = new Dimension(550, 700);
         this.setSize(minSize);
+        this.setMinimumSize(minSize);
 
         this.setLayout(new BorderLayout());
 
         // 사이드바 패널
-        JPanel sidebar = getSidebarPanel();
+        SideBarPanel sidebar = new SideBarPanel();
 
-        // 채팅창 패널
-        JPanel chatPanel = getChatPanel();
+        // 유저 아이콘 버튼
+        UserIconButton userIconButton = new UserIconButton("/icon/default_profile.png", 32);
 
         // 탑바 영역
-        JPanel topbar = getTopbarPanel(username);
+        JPanel topbar = createTopbarPanel(username, userIconButton);
+
+        // 채팅창 패널
+        JPanel chatPanel = new JPanel();
+        chatPanel.setLayout(new BorderLayout());
 
         // 채팅 내용 출력 영역
-        JTextArea chatArea = getChatArea();
+        JPanel chatArea = createChatArea();
         JScrollPane scrollPane = new JScrollPane(chatArea);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         // 메세지 입력창 영역
-        JPanel inputPanel = getInputPanel(chatArea, username);
+        JPanel inputPanel = createInputPanel(chatArea, scrollPane, username, userIconButton);
 
         // 위치 설정
         chatPanel.add(topbar, BorderLayout.NORTH);
@@ -46,59 +66,63 @@ public class ChatUI extends JFrame {
         add(sidebar, BorderLayout.WEST);
         add(chatPanel, BorderLayout.CENTER);
 
-        this.setMinimumSize(minSize);
-
         setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
-    private JPanel getSidebarPanel() {
-        JPanel sidebar = new JPanel();
-
-        sidebar.setPreferredSize(new Dimension(100, 600));
-        sidebar.setBackground(Color.LIGHT_GRAY);
-        sidebar.setLayout(new GridLayout(3, 1));
-
-        // 나중에 이미지로 교체 필요
-        sidebar.add(new JButton("👤"));
-        sidebar.add(new JButton("💬"));
-        sidebar.add(new JButton("⚙️"));
-
-        return sidebar;
-    }
-
-    private JPanel getTopbarPanel(String username) {
+    /**
+     * 탑바 패널을 생성
+     * @param username 유저 네임
+     * @return 문구가 포함된 패널
+     */
+    private JPanel createTopbarPanel(String username, UserIconButton userIconButton) {
         JPanel topbar = new JPanel();
 
+        // 설정
+        topbar.setLayout(new BoxLayout(topbar, BoxLayout.X_AXIS));
+        topbar.setPreferredSize(new Dimension(0, 60)); // 높이를 50px로 설정
+        topbar.setAlignmentY(Component.TOP_ALIGNMENT);
+        topbar.setBackground(new Color(175, 175, 175));
+
+        // 유저 이름 라벨
         JLabel usernameLabel = new JLabel(String.format("Chatting with %s", username));
+
+        // 탑바 패널에 요소 추가
+        topbar.add(Box.createHorizontalStrut(15)); // 왼쪽 여백
+        topbar.add(userIconButton);
+        topbar.add(Box.createHorizontalStrut(12)); // 아이콘과 라벨 사이 여백
         topbar.add(usernameLabel);
+
 
         return topbar;
     }
 
-    private JPanel getChatPanel() {
-        JPanel chat = new JPanel();
-        chat.setLayout(new BorderLayout());
-
-        return chat;
-    }
-
-    private JTextArea getChatArea() {
-        JTextArea chatArea = new JTextArea();
-        chatArea.setEditable(false);
-
-        chatArea.setBackground(Color.LIGHT_GRAY);
-        chatArea.setLineWrap(true);
-
+    /**
+     * 채팅창 텍스트 영역 생성
+     * @return 채팅창 텍스트 영역
+     */
+    private JPanel createChatArea() {
+        JPanel chatArea = new JPanel();
+        chatArea.setLayout(new BoxLayout(chatArea, BoxLayout.Y_AXIS));
+        chatArea.setAlignmentX(Component.LEFT_ALIGNMENT);
+        chatArea.setBackground(Color.WHITE);
+        chatArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         return chatArea;
     }
 
-    private JPanel getInputPanel(JTextArea chatArea, String username) {
+    /**
+     * 채팅창 입력 패널 생성
+     * @param chatArea 채팅창 텍스트 영역
+     * @param username 유저 네임
+     * @return 채팅창 입력 패널
+     */
+    private JPanel createInputPanel(JPanel chatArea, JScrollPane scrollPane, String username, UserIconButton userIconButton) {
 
         // 메세지 입력창
         JTextArea inputArea = new JTextArea();
         inputArea.setEditable(true);
         inputArea.setLineWrap(true);
+        inputArea.setWrapStyleWord(true);
 
         // 메세지 입력창에 "메세지 입력" 문구 띄우기
         String placeholder = "메세지 입력";
@@ -106,8 +130,8 @@ public class ChatUI extends JFrame {
         inputArea.setForeground(Color.GRAY);
 
         /* 메세지 입력창이 클릭되었을 때
-        * "메세지 입력" 문구 지우고
-        * 입력창 글자 색깔 검은색으로 바꾸기 */
+         * "메세지 입력" 문구 지우고
+         * 입력창 글자 색깔 검은색으로 바꾸기 */
         inputArea.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -127,7 +151,7 @@ public class ChatUI extends JFrame {
 
         // 전송 버튼
         JButton sendButton = new JButton("전송");
-        sendButton.setPreferredSize(new Dimension(80, 40));
+        sendButton.setPreferredSize(new Dimension(70, 28));
 
         // Enter 누를 시 "전송" 버튼 동작
         inputArea.addKeyListener(new KeyAdapter() {
@@ -144,18 +168,36 @@ public class ChatUI extends JFrame {
         sendButton.addActionListener(e -> {
             String message = inputArea.getText();
 
-            if (message == null || message.trim().isEmpty()) { return; }
+            if (message == null || message.trim().isEmpty() || message.equals(placeholder)) return;
 
-            chatArea.append(username + ": " + message.trim() + "\n");
+            ChatBubblePanel bubble = new ChatBubblePanel(username, message, userIconButton);
+            bubble.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            chatArea.add(bubble);
+            chatArea.add(Box.createVerticalStrut(10));
+
             inputArea.setText("");
+
+            // 채팅이 추가 될 시 스크롤을 제일 아래로
+            SwingUtilities.invokeLater(() -> {
+                JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+                verticalBar.setValue(verticalBar.getMaximum());
+            });
         });
 
-        JPanel input = new JPanel();
-        input.setLayout(new BoxLayout(input, BoxLayout.X_AXIS));
+        // 버튼을 오른쪽에 정렬하기 위한 래퍼 패널
+        JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        buttonWrapper.add(sendButton);
+        buttonWrapper.setOpaque(false); // 배경 투명하게
 
-        input.add(inputArea);
-        input.add(sendButton);
+        // 패널 생성
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-        return input;
+        inputPanel.add(inputArea);
+        inputPanel.add(Box.createVerticalStrut(5)); // 입력창-버튼 간 간격
+        inputPanel.add(buttonWrapper);
+
+        return inputPanel;
     }
 }

@@ -29,7 +29,7 @@ tasks.register('runServer', JavaExec) {
 }
 
 dependencies {
-    // 추후 추가 예정입니다
+    implementation 'com.formdev:flatlaf:3.6'
 }
 
 tasks.withType(JavaCompile).configureEach {

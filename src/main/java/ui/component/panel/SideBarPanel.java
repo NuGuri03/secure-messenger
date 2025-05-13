@@ -1,0 +1,33 @@
+package ui.component.panel;
+
+import ui.component.button.IconButton;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class SideBarPanel extends JPanel {
+
+    public SideBarPanel() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setPreferredSize(new Dimension(80, 0));  // 너비 고정
+
+        // 정렬 및 여백
+        setAlignmentY(Component.TOP_ALIGNMENT);
+        setBorder(BorderFactory.createEmptyBorder(30, 5, 30, 5));
+
+        // 배경
+        setBackground(Color.decode("#A9A9A9"));
+
+        IconButton userButton = new IconButton("/icon/user.png", 28, "User");
+        IconButton chatButton = new IconButton("/icon/chat.png", 24, "Chat");
+        IconButton settingsButton = new IconButton("/icon/settings.png", 24, "Settings");
+
+        add(Box.createVerticalStrut(30)); // 간격
+        add(userButton);
+        add(Box.createVerticalStrut(40)); // 간격
+        add(chatButton);
+        add(Box.createVerticalStrut(40)); // 간격
+        add(settingsButton);
+    }
+
+}
