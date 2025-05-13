@@ -57,12 +57,7 @@ public class ChatBubblePanel extends JPanel {
         msgArea.setSize(new Dimension(MAX_WIDTH, Short.MAX_VALUE));
         Dimension preferred = msgArea.getPreferredSize();
 
-        int textWidth;
-        if (actualWidth <= MAX_WIDTH) {
-            textWidth = actualWidth + PADDING - 2;
-        } else {
-            textWidth = MAX_WIDTH;
-        }
+        int textWidth = (actualWidth <= MAX_WIDTH) ? textWidth = actualWidth + PADDING - 2 : MAX_WIDTH;
 
         Dimension adjusted = new Dimension(textWidth, preferred.height);
 
