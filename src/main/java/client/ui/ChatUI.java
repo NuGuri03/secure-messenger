@@ -7,7 +7,6 @@ import java.awt.event.*;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import client.ui.component.panel.ChatBubblePanel;
-import client.ui.panel.SideBarPanel;
 import client.ui.component.button.UserIconButton;
 
 public class ChatUI extends JFrame {
@@ -24,20 +23,17 @@ public class ChatUI extends JFrame {
         }
 
         if (username == null || username.trim().isEmpty()) {
-            username = "user";
+            username = "홍길동";
         }
 
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Dimension minSize = new Dimension(550, 700);
+        Dimension minSize = new Dimension(450, 600);
         this.setSize(minSize);
         this.setMinimumSize(minSize);
 
         this.setLayout(new BorderLayout());
-
-        // 사이드바 패널
-        SideBarPanel sidebar = new SideBarPanel();
 
         // 유저 아이콘 버튼
         UserIconButton userIconButton = new UserIconButton("/icon/default_profile.png", 32);
@@ -62,8 +58,6 @@ public class ChatUI extends JFrame {
         chatPanel.add(topbar, BorderLayout.NORTH);
         chatPanel.add(scrollPane, BorderLayout.CENTER);
         chatPanel.add(inputPanel, BorderLayout.SOUTH);
-
-        add(sidebar, BorderLayout.WEST);
         add(chatPanel, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
@@ -85,7 +79,7 @@ public class ChatUI extends JFrame {
         topbar.setBackground(new Color(175, 175, 175));
 
         // 유저 이름 라벨
-        JLabel usernameLabel = new JLabel(String.format("Chatting with %s", username));
+        JLabel usernameLabel = new JLabel(String.format("%s 님과 대화", username));
 
         // 탑바 패널에 요소 추가
         topbar.add(Box.createHorizontalStrut(15)); // 왼쪽 여백
