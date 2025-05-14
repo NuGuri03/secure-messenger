@@ -56,7 +56,6 @@ secure-messenger/
 ├── build.gradle                      
 ├── settings.gradle                   
 └── .gitignore
-
 ```
 
 ---
