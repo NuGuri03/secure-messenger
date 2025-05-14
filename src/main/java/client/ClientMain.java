@@ -5,7 +5,7 @@ import client.ui.MainUI;
 
 public class ClientMain {
     public static void main(String[] args) {
-        ChatUI chatUI = new ChatUI(null);
-//        MainUI mainUI = new MainUI(null);
+//        ChatUI chatUI = new ChatUI(null);
+        MainUI mainUI = new MainUI(null);
     }
 }

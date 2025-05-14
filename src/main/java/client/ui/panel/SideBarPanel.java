@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SideBarPanel extends JPanel {
+    public IconButton lobbyButton;
+    public IconButton chatButton;
+    public IconButton settingsButton;
 
     public SideBarPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -18,12 +21,12 @@ public class SideBarPanel extends JPanel {
         // 배경
         setBackground(Color.decode("#A9A9A9"));
 
-        IconButton userButton = new IconButton("/icon/user.png", 28, "User");
-        IconButton chatButton = new IconButton("/icon/chat.png", 24, "Chat");
-        IconButton settingsButton = new IconButton("/icon/settings.png", 24, "Settings");
+        lobbyButton = new IconButton("/icon/user.png", 28, "Lobby");
+        chatButton = new IconButton("/icon/chat.png", 24, "Chat");
+        settingsButton = new IconButton("/icon/settings.png", 24, "Settings");
 
         add(Box.createVerticalStrut(30)); // 간격
-        add(userButton);
+        add(lobbyButton);
         add(Box.createVerticalStrut(40)); // 간격
         add(chatButton);
         add(Box.createVerticalStrut(40)); // 간격

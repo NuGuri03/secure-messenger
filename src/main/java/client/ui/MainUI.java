@@ -38,9 +38,15 @@ public class MainUI extends JFrame {
         sidebar.setPreferredSize(new Dimension(100, 0));
 
         JPanel mainPanel = new JPanel(new CardLayout());
+
         mainPanel.add(new LobbyPanel(username), "lobby");
         mainPanel.add(new RecentChatPanel(), "chat");
         mainPanel.add(new SettingsPanel(), "settings");
+
+        CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+        sidebar.lobbyButton.addActionListener(e -> cardLayout.show(mainPanel, "lobby"));
+        sidebar.chatButton.addActionListener(e -> cardLayout.show(mainPanel, "chat"));
+        sidebar.settingsButton.addActionListener(e -> cardLayout.show(mainPanel, "settings"));
 
         add(sidebar, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
