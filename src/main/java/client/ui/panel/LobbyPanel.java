@@ -1,6 +1,6 @@
-package ui.panel;
+package client.ui.panel;
 
-import ui.component.button.UserIconButton;
+import client.ui.component.button.UserIconButton;
 
 import javax.swing.*;
 import java.awt.*;

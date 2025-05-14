@@ -1,10 +1,10 @@
-package ui;
+package client.ui;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import ui.panel.LobbyPanel;
-import ui.panel.RecentChatPanel;
-import ui.panel.SettingsPanel;
-import ui.panel.SideBarPanel;
+import client.ui.panel.LobbyPanel;
+import client.ui.panel.RecentChatPanel;
+import client.ui.panel.SettingsPanel;
+import client.ui.panel.SideBarPanel;
 
 import javax.swing.*;
 import java.awt.*;

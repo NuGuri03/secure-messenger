@@ -1,4 +1,4 @@
-package ui.panel;
+package client.ui.panel;
 
 import javax.swing.*;
 
