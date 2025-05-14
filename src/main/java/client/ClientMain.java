@@ -1,9 +1,9 @@
 package client;
 
-import ui.ChatUI;
+import ui.MainUI;
 
 public class ClientMain {
     public static void main(String[] args) {
-        ChatUI chatUI = new ChatUI("이름이너무길다");
+        MainUI mainUI = new MainUI(null);
     }
 }

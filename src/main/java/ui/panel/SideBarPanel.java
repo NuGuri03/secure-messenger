@@ -1,4 +1,4 @@
-package ui.component.panel;
+package ui.panel;
 
 import ui.component.button.IconButton;
 

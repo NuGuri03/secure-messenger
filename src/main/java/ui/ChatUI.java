@@ -7,7 +7,7 @@ import java.awt.event.*;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import ui.component.panel.ChatBubblePanel;
-import ui.component.panel.SideBarPanel;
+import ui.panel.SideBarPanel;
 import ui.component.button.UserIconButton;
 
 public class ChatUI extends JFrame {
