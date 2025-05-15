@@ -10,6 +10,8 @@ import java.util.Comparator;
 import java.util.Vector;
 
 public class LobbyPanel extends JPanel {
+    private static final int PADDING = 30;
+
     public LobbyPanel() {
         setLayout(new BorderLayout());
 
@@ -17,6 +19,7 @@ public class LobbyPanel extends JPanel {
         JLabel titleLabel = new JLabel("나의 로비");
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         titleLabel.setVerticalAlignment(SwingConstants.CENTER);
+
         title.add(titleLabel);
         title.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode("#A9A9A9")));
         add(title, BorderLayout.NORTH);
@@ -25,7 +28,7 @@ public class LobbyPanel extends JPanel {
         JPanel usersPanel = new JPanel();
         usersPanel.setLayout(new BoxLayout(usersPanel, BoxLayout.PAGE_AXIS));
         usersPanel.setBorder(null);
-        usersPanel.add(Box.createVerticalStrut(30));
+        usersPanel.add(Box.createVerticalStrut(PADDING));
 
         UserInfoPanel myInfo = new UserInfoPanel(null, null, null);
         myInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -42,8 +45,6 @@ public class LobbyPanel extends JPanel {
         line.setAlignmentX(Component.LEFT_ALIGNMENT);
         usersPanel.add(line);
 
-        usersPanel.add(Box.createVerticalStrut(30));
-
         Vector<UserInfoPanel> userInfo = new Vector<UserInfoPanel>();
         // 예시 유저
         userInfo.add(new UserInfoPanel("호반우", "KNU CSE", null));
@@ -56,14 +57,29 @@ public class LobbyPanel extends JPanel {
         userInfo.add(new UserInfoPanel("신승빈", "SignUp UI 만드는 중...", null));
 
         // 이름 가나다 순서
-        userInfo.sort(Comparator.comparing(user -> user.getUsername(), Collator.getInstance()));
+        userInfo.sort(Comparator.comparing(UserInfoPanel::getUsername, Collator.getInstance()));
 
-//        int friendCount = userInfo.size(); // 미완성
+        // 친구 수 표시
+        int friendCount = userInfo.size();
+        JPanel friendPanel = new JPanel();
+        friendPanel.setLayout(new BoxLayout(friendPanel, BoxLayout.Y_AXIS));
+        friendPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        friendPanel.add(Box.createVerticalStrut(PADDING * 2 / 3));
+
+        JLabel friendLabel = new JLabel(String.format("친구 %d명", friendCount));
+        friendLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        friendLabel.setVerticalAlignment(SwingConstants.CENTER);
+        friendLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        friendPanel.add(friendLabel);
+
+        usersPanel.add(friendPanel);
+
+        usersPanel.add(Box.createVerticalStrut(PADDING * 2 / 3));
 
         for (UserInfoPanel user : userInfo) {
             user.setAlignmentX(Component.LEFT_ALIGNMENT);
             usersPanel.add(user);
-            usersPanel.add(Box.createVerticalStrut(40));
+            usersPanel.add(Box.createVerticalStrut(PADDING));
         }
 
         JScrollPane scrollPane = new JScrollPane(usersPanel);
