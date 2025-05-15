@@ -1,6 +1,5 @@
 package client.ui;
 
-import com.formdev.flatlaf.FlatLightLaf;
 import client.ui.panel.LobbyPanel;
 import client.ui.panel.RecentChatPanel;
 import client.ui.panel.SettingsPanel;
@@ -9,18 +8,10 @@ import client.ui.panel.SideBarPanel;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainUI extends JFrame {
+public class MainUI extends BaseUI {
 
     public MainUI(String username) {
-        try {
-            // LookAndFeel 플러그인 적용
-            UIManager.setLookAndFeel(new FlatLightLaf());
-            // 폰트를 Pretendard 로 설정
-            Font customFont = new Font("Pretendard", Font.PLAIN, 14);
-            UIManager.put("defaultFont", customFont);
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
+        super();
 
         if (username == null || username.trim().isEmpty()) {
             username = "user";
