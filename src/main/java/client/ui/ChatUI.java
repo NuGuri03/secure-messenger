@@ -4,23 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import com.formdev.flatlaf.FlatLightLaf;
-
 import client.ui.component.panel.ChatBubblePanel;
 import client.ui.component.button.UserIconButton;
 
 public class ChatUI extends JFrame {
 
     public ChatUI(String username) {
-        try {
-            // LookAndFeel 플러그인 적용
-            UIManager.setLookAndFeel(new FlatLightLaf());
-            // 폰트를 Pretendard 로 설정
-            Font customFont = new Font("Pretendard", Font.PLAIN, 14);
-            UIManager.put("defaultFont", customFont);
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
+        super();
 
         if (username == null || username.trim().isEmpty()) {
             username = "홍길동";
