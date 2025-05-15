@@ -21,9 +21,9 @@ public class SideBarPanel extends JPanel {
         // 배경
         setBackground(Color.decode("#A9A9A9"));
 
-        lobbyButton = new IconButton("/icon/user.png", 28, "Lobby");
-        chatButton = new IconButton("/icon/chat.png", 24, "Chat");
-        settingsButton = new IconButton("/icon/settings.png", 24, "Settings");
+        lobbyButton = new IconButton("/icons/user.png", 28, "Lobby");
+        chatButton = new IconButton("/icons/chat.png", 24, "Chat");
+        settingsButton = new IconButton("/icons/settings.png", 24, "Settings");
 
         add(Box.createVerticalStrut(30)); // 간격
         add(lobbyButton);

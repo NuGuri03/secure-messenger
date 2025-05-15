@@ -47,7 +47,7 @@ public class LobbyPanel extends JPanel {
         myAvatarPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         myAvatarPanel.setBorder(new EmptyBorder(1, 0, 0, 0));
 
-        UserIconButton userIconButton = new UserIconButton("/icon/default_profile.png", 40);
+        UserIconButton userIconButton = new UserIconButton("/icons/default_profile.png", 40);
         userIconButton.setAlignmentY(Component.TOP_ALIGNMENT);
         myAvatarPanel.add(userIconButton);
 
