@@ -16,9 +16,13 @@ public class LobbyPanel extends JPanel {
         setLayout(new BorderLayout());
 
         JPanel title = new JPanel();
+        title.setLayout(new BoxLayout(title, BoxLayout.Y_AXIS));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JLabel titleLabel = new JLabel("나의 로비");
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setVerticalAlignment(SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Pretendard", Font.BOLD, 14));
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(PADDING / 6, 0, PADDING / 6, 0));
 
         title.add(titleLabel);
         title.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode("#A9A9A9")));
@@ -67,9 +71,10 @@ public class LobbyPanel extends JPanel {
         friendPanel.add(Box.createVerticalStrut(PADDING * 2 / 3));
 
         JLabel friendLabel = new JLabel(String.format("친구 %d명", friendCount));
-        friendLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        friendLabel.setVerticalAlignment(SwingConstants.CENTER);
-        friendLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        friendLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        friendLabel.setFont(new Font("Pretendard", Font.PLAIN, 12));
+
+        friendPanel.setBorder(BorderFactory.createEmptyBorder(0, PADDING * 4 / 3, 0, 0));
         friendPanel.add(friendLabel);
 
         usersPanel.add(friendPanel);
