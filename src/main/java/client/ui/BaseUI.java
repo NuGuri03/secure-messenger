@@ -14,11 +14,11 @@ public abstract class BaseUI extends JFrame {
     private static Font mainFont;
 
     public BaseUI() {
-        ApplyLookAndFeel(new FlatLightLaf());
-        ApplyMainFont();
+        applyLookAndFeel(new FlatLightLaf());
+        applyMainFont();
     }
 
-    private void ApplyMainFont() {
+    private void applyMainFont() {
         if (mainFont != null) {
             UIManager.put("defaultFont", mainFont);
             return;
@@ -43,7 +43,7 @@ public abstract class BaseUI extends JFrame {
         }
     }
 
-    private void ApplyLookAndFeel(LookAndFeel lookAndFeel) {
+    private void applyLookAndFeel(LookAndFeel lookAndFeel) {
         try {
             UIManager.setLookAndFeel(lookAndFeel);
         } catch (UnsupportedLookAndFeelException e) {
