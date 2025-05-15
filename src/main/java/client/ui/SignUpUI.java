@@ -1,6 +1,7 @@
 package client.ui;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class SignUpUI extends JFrame {
     // TODO 1. 회원가입 UI 만들기 (아이디, 비밀번호, 성함, 생년월일 입력받게 해야함)
@@ -10,5 +11,10 @@ public class SignUpUI extends JFrame {
      */
     public SignUpUI() {
 
+        setTitle("Chat");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setPreferredSize(new Dimension(400, 300));
+
+        setVisible(true);
     }
 }
