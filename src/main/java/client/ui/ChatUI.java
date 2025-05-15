@@ -7,7 +7,7 @@ import java.awt.event.*;
 import client.ui.component.panel.ChatBubblePanel;
 import client.ui.component.button.UserIconButton;
 
-public class ChatUI extends JFrame {
+public class ChatUI extends BaseUI {
 
     public ChatUI(String username) {
         super();
