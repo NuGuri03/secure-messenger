@@ -16,7 +16,7 @@ public class SideBarPanel extends JPanel {
 
         // 정렬 및 여백
         setAlignmentY(Component.TOP_ALIGNMENT);
-        setBorder(BorderFactory.createEmptyBorder(40, 5, 40, 5));
+        setBorder(BorderFactory.createEmptyBorder(65, 5, 40, 5));
 
         // 배경
         setBackground(Color.decode("#A9A9A9"));

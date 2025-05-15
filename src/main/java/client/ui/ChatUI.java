@@ -61,7 +61,6 @@ public class ChatUI extends JFrame {
         add(chatPanel, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
-        this.setVisible(true);
     }
 
     /**
