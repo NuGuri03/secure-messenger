@@ -46,8 +46,7 @@ public class ChatBubblePanel extends JPanel {
         msgArea.setWrapStyleWord(true);           // 단어 단위로 줄바꿈
         msgArea.setEditable(false);               // 편집 불가
         msgArea.setOpaque(false);                 // 배경 투명
-        msgArea.setBorder(null);                  // 테두리 제거
-        msgArea.setFont(new Font("Pretendard", Font.PLAIN, 12));
+        msgArea.setFont(new Font("Pretendard", Font.PLAIN, 13));
 
         FontMetrics fm = msgArea.getFontMetrics(msgArea.getFont());
         int actualWidth = fm.stringWidth(message);
