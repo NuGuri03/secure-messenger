@@ -10,6 +10,12 @@ public class SignUpUI extends JFrame {
     /**
      * 회원가입 UI 생성
      */
+    private JTextField nameField;
+    private JTextField idField;
+    private JPasswordField pwField;
+    private JPasswordField pwcField;
+    private JLabel messageLabel;
+
     public SignUpUI() {
         setTitle("회원가입");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -24,7 +30,7 @@ public class SignUpUI extends JFrame {
         name.setSize(100, 20);
         c.add(name);
 
-        JTextField nameField  = new JTextField("");
+        nameField  = new JTextField("");
         nameField.setLocation(200, 20);
         nameField.setSize(100, 20);
         c.add(nameField);
@@ -34,7 +40,7 @@ public class SignUpUI extends JFrame {
         id.setSize(100, 20);
         c.add(id);
 
-        JTextField idField = new JTextField("");
+        idField = new JTextField("");
         idField.setLocation(200, 40);
         idField.setSize(100, 20);
         c.add(idField);
@@ -44,17 +50,17 @@ public class SignUpUI extends JFrame {
         pw.setSize(100, 20);
         c.add(pw);
 
-        JTextField pwField = new JTextField("");
+        pwField = new JPasswordField("");
         pwField.setLocation(200, 60);
         pwField.setSize(100, 20);
         c.add(pwField);
 
-        JLabel wpc = new JLabel("비밀번호 확인", SwingConstants.CENTER);
-        wpc.setLocation(100, 80);
-        wpc.setSize(100, 20);
-        c.add(wpc);
+        JLabel pwc = new JLabel("비밀번호 확인", SwingConstants.CENTER);
+        pwc.setLocation(100, 80);
+        pwc.setSize(100, 20);
+        c.add(pwc);
 
-        JTextField pwcField = new JTextField("");
+        pwcField = new JPasswordField("");
         pwcField.setLocation(200, 80);
         pwcField.setSize(100, 20);
         c.add(pwcField);
@@ -69,6 +75,37 @@ public class SignUpUI extends JFrame {
         confirm.setSize(100, 20);
         c.add(confirm);
 
+        messageLabel = new JLabel("");
+        messageLabel.setLocation(100, 120);
+        messageLabel.setSize(100, 20);
+        c.add(messageLabel);
+
+
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                signUp();
+            }
+        });
+
         setVisible(true);
     }
+
+    public void signUp()
+    {
+        String name = nameField.getText();
+        String id = idField.getText();
+        String password = new String(pwField.getPassword());
+        String confirmPassword = new String(pwcField.getPassword());
+
+        if (name.isEmpty() || id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            messageLabel.setText("모든 항목을 입력하세요.");
+        } else if (!password.equals(confirmPassword)) {
+            messageLabel.setText("비밀번호가 일치하지 않습니다.");
+        } else {
+            messageLabel.setText("회원가입 완료!");
+        }
+    }
 }
+
+
