@@ -51,7 +51,6 @@ public class ChatUI extends BaseUI {
         add(chatPanel, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
-        this.setVisible(true);
     }
 
     /**

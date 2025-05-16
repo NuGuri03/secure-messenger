@@ -30,7 +30,7 @@ public class MainUI extends BaseUI {
 
         JPanel mainPanel = new JPanel(new CardLayout());
 
-        mainPanel.add(new LobbyPanel(username), "lobby");
+        mainPanel.add(new LobbyPanel(), "lobby");
         mainPanel.add(new RecentChatPanel(), "chat");
         mainPanel.add(new SettingsPanel(), "settings");
 
