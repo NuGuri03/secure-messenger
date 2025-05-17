@@ -15,6 +15,7 @@ public class SignUpUI extends JFrame {
     private JPasswordField pwField;
     private JPasswordField pwcField;
     private JLabel messageLabel;
+    private boolean idExist;
 
     public SignUpUI() {
         setTitle("회원가입");
@@ -77,9 +78,26 @@ public class SignUpUI extends JFrame {
 
         messageLabel = new JLabel("");
         messageLabel.setLocation(100, 120);
-        messageLabel.setSize(100, 20);
+        messageLabel.setSize(200, 20);
         c.add(messageLabel);
 
+        idExist = false;
+
+        idConfirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (false)
+                {
+                    JOptionPane.showMessageDialog(null, "이미 존재하는 아이디입니다");
+                    idExist = false;
+                }
+                else if(true)
+                {
+                    JOptionPane.showMessageDialog(null, "사용 가능한 아이디입니다");
+                    idExist = true;
+                }
+            }
+        });
 
         confirm.addActionListener(new ActionListener() {
             @Override
@@ -98,12 +116,25 @@ public class SignUpUI extends JFrame {
         String password = new String(pwField.getPassword());
         String confirmPassword = new String(pwcField.getPassword());
 
-        if (name.isEmpty() || id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            messageLabel.setText("모든 항목을 입력하세요.");
-        } else if (!password.equals(confirmPassword)) {
-            messageLabel.setText("비밀번호가 일치하지 않습니다.");
-        } else {
-            messageLabel.setText("회원가입 완료!");
+        if (name.isEmpty() || id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "모든 항목을 입력하세요");
+        }
+        else if (!idExist)
+        {
+            JOptionPane.showMessageDialog(null, "아이디를 확인하세요");
+        }
+        else if (!password.equals(confirmPassword))
+        {
+            JOptionPane.showMessageDialog(null, "비밀번호가 일치하지 않습니다");
+        }
+        else if(!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\=\\-\\[\\]{}\"'/?.<>,]).{6,20}$"))
+        {
+            JOptionPane.showMessageDialog(null, "대소문자, 숫자, 특수기호 포함 6~20자로 입력하세요");
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "완료되었습니다");
         }
     }
 }
