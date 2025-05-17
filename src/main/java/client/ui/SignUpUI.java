@@ -21,64 +21,67 @@ public class SignUpUI extends JFrame
     public SignUpUI() {
         setTitle("회원가입");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(440, 560);
+        setSize(550, 700);
         setLocationRelativeTo(null);
         Container c = getContentPane();
         c.setLayout(null);
+        c.setBackground(Color.WHITE);
 
         //라벨, 입력창 위치 설정
         JLabel name = new JLabel("이름", SwingConstants.CENTER);
-        name.setLocation(70, 20);
+        name.setLocation(125, 180);
         name.setSize(100, 20);
         c.add(name);
 
         nameField  = new JTextField("");
-        nameField.setLocation(170, 20);
+        nameField.setLocation(225, 180);
         nameField.setSize(100, 20);
         c.add(nameField);
 
         JLabel id = new JLabel("id", SwingConstants.CENTER);
-        id.setLocation(70, 40);
+        id.setLocation(125, 205);
         id.setSize(100, 20);
         c.add(id);
 
         idField = new JTextField("");
-        idField.setLocation(170, 40);
+        idField.setLocation(225, 205);
         idField.setSize(100, 20);
         c.add(idField);
 
         JLabel pw = new JLabel("비밀번호", SwingConstants.CENTER);
-        pw.setLocation(70, 60);
+        pw.setLocation(125, 230);
         pw.setSize(100, 20);
         c.add(pw);
 
         pwField = new JPasswordField("");
-        pwField.setLocation(170, 60);
+        pwField.setLocation(225, 230);
         pwField.setSize(100, 20);
         c.add(pwField);
 
         JLabel pwc = new JLabel("비밀번호 확인", SwingConstants.CENTER);
-        pwc.setLocation(70, 80);
+        pwc.setLocation(125, 255);
         pwc.setSize(100, 20);
         c.add(pwc);
 
         pwcField = new JPasswordField("");
-        pwcField.setLocation(170, 80);
+        pwcField.setLocation(225, 255);
         pwcField.setSize(100, 20);
         c.add(pwcField);
 
         JButton idConfirm = new JButton("id 확인");
-        idConfirm.setLocation(270, 40);
+        idConfirm.setLocation(330, 205);
         idConfirm.setSize(100, 20);
+        idConfirm.setBackground(Color.WHITE);
         c.add(idConfirm);
 
         JButton confirm = new JButton("확인");
-        confirm.setLocation(170, 100);
+        confirm.setLocation(225, 280);
         confirm.setSize(100, 20);
+        confirm.setBackground(Color.WHITE);
         c.add(confirm);
 
         JLabel messageLabel = new JLabel("비밀번호는 대소문자, 특수문자 포함6~20자로 작성하세요", SwingConstants.CENTER);
-        messageLabel.setLocation(20, 125);
+        messageLabel.setLocation(75, 305);
         messageLabel.setSize(400, 20);
         c.add(messageLabel);
 
@@ -89,16 +92,16 @@ public class SignUpUI extends JFrame
             public void actionPerformed(ActionEvent e) {
                 if(idField.getText().isEmpty())
                 {
-                    JOptionPane.showMessageDialog(null, "아이디를 입력하세요");
+                    showCustomDialog("아이디를 입력하세요");
                 }
                 else if (false)
                 {
-                    JOptionPane.showMessageDialog(null, "이미 존재하는 아이디입니다");
+                    showCustomDialog("이미 존재하는 아이디입니다");
                     idExist = false;
                 }
                 else if(true)
                 {
-                    JOptionPane.showMessageDialog(null, "사용 가능한 아이디입니다");
+                    showCustomDialog("사용 가능한 아이디입니다");
                     idExist = true;
                 }
             }
@@ -127,23 +130,23 @@ public class SignUpUI extends JFrame
 
         if (name.isEmpty() || id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty())
         {
-            JOptionPane.showMessageDialog(null, "모든 항목을 입력하세요");
+            showCustomDialog("모든 항목을 입력하세요");
         }
         else if (!idExist)
         {
-            JOptionPane.showMessageDialog(null, "아이디를 확인하세요");
+            showCustomDialog("아이디를 확인하세요");
         }
         else if (!password.equals(confirmPassword))
         {
-            JOptionPane.showMessageDialog(null, "비밀번호가 일치하지 않습니다");
+            showCustomDialog("비밀번호가 일치하지 않습니다");
         }
         else if(!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\=\\-\\[\\]{}\"'/?.<>,]).{6,20}$"))
         {
-            JOptionPane.showMessageDialog(null, "대소문자, 숫자, 특수기호 포함 6~20자로 입력하세요");
+            showCustomDialog("대소문자, 숫자, 특수기호 포함 6~20자로 입력하세요");
         }
         else
         {
-            JOptionPane.showMessageDialog(null, "완료되었습니다");
+            showCustomDialog("완료되었습니다");
         }
     }
 
@@ -173,6 +176,27 @@ public class SignUpUI extends JFrame
         private boolean isComposedText(AttributeSet attr) {
             return attr != null && attr.isDefined(StyleConstants.ComposedTextAttribute);
         }
+    }
+
+    private void showCustomDialog(String message) {
+        JDialog dialog = new JDialog(this, "알림", true);
+        dialog.setSize(300, 150);
+        dialog.getContentPane().setBackground(Color.WHITE);
+        dialog.setLocationRelativeTo(this);
+        dialog.setLayout(new BorderLayout());
+
+        JLabel label = new JLabel(message, SwingConstants.CENTER);
+        label.setForeground(Color.BLACK);
+        dialog.add(label, BorderLayout.CENTER);
+
+        JButton okButton = new JButton("확인");
+        okButton.addActionListener(e -> dialog.dispose());
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(okButton);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        dialog.setVisible(true);
     }
 }
 
