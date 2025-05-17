@@ -26,6 +26,7 @@ public class SignUpUI extends JFrame
         Container c = getContentPane();
         c.setLayout(null);
         c.setBackground(Color.WHITE);
+        c.setForeground(Color.WHITE);
 
         //라벨, 입력창 위치 설정
         JLabel name = new JLabel("이름", SwingConstants.CENTER);
@@ -190,6 +191,7 @@ public class SignUpUI extends JFrame
         dialog.add(label, BorderLayout.CENTER);
 
         JButton okButton = new JButton("확인");
+        okButton.setBackground(Color.WHITE);
         okButton.addActionListener(e -> dialog.dispose());
 
         JPanel buttonPanel = new JPanel();
