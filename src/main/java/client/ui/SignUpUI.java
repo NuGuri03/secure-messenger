@@ -30,58 +30,67 @@ public class SignUpUI extends JFrame
 
         //라벨, 입력창 위치 설정
         JLabel name = new JLabel("이름", SwingConstants.CENTER);
-        name.setLocation(125, 180);
-        name.setSize(100, 20);
+        name.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+        name.setLocation(125, 130);
+        name.setSize(100, 30);
         c.add(name);
 
         nameField  = new JTextField("");
-        nameField.setLocation(225, 180);
-        nameField.setSize(100, 20);
+        nameField.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+        nameField.setLocation(225, 130);
+        nameField.setSize(100, 30);
         c.add(nameField);
 
-        JLabel id = new JLabel("id", SwingConstants.CENTER);
-        id.setLocation(125, 205);
-        id.setSize(100, 20);
+        JLabel id = new JLabel("ID", SwingConstants.CENTER);
+        id.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+        id.setLocation(125, 165);
+        id.setSize(100, 30);
         c.add(id);
 
         idField = new JTextField("");
-        idField.setLocation(225, 205);
-        idField.setSize(100, 20);
+        idField.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+        idField.setLocation(225, 165);
+        idField.setSize(100, 30);
         c.add(idField);
 
         JLabel pw = new JLabel("비밀번호", SwingConstants.CENTER);
-        pw.setLocation(125, 230);
-        pw.setSize(100, 20);
+        pw.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+        pw.setLocation(125, 200);
+        pw.setSize(100, 30);
         c.add(pw);
 
         pwField = new JPasswordField("");
-        pwField.setLocation(225, 230);
-        pwField.setSize(100, 20);
+        pwField.setLocation(225, 200);
+        pwField.setSize(100, 30);
         c.add(pwField);
 
         JLabel pwc = new JLabel("비밀번호 확인", SwingConstants.CENTER);
-        pwc.setLocation(125, 255);
-        pwc.setSize(100, 20);
+        pwc.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+        pwc.setLocation(125, 235);
+        pwc.setSize(100, 30);
         c.add(pwc);
 
         pwcField = new JPasswordField("");
-        pwcField.setLocation(225, 255);
-        pwcField.setSize(100, 20);
+        pwcField.setLocation(225, 235);
+        pwcField.setSize(100, 30);
         c.add(pwcField);
 
-        JButton idConfirm = new JButton("id 확인");
-        idConfirm.setLocation(330, 205);
-        idConfirm.setSize(100, 20);
+        JButton idConfirm = new JButton("ID 확인");
+        idConfirm.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+        idConfirm.setLocation(330, 165);
+        idConfirm.setSize(100, 30);
         idConfirm.setBackground(Color.WHITE);
         c.add(idConfirm);
 
         JButton confirm = new JButton("확인");
-        confirm.setLocation(225, 280);
-        confirm.setSize(100, 20);
+        confirm.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+        confirm.setLocation(225, 270);
+        confirm.setSize(100, 30);
         confirm.setBackground(Color.WHITE);
         c.add(confirm);
 
         JLabel messageLabel = new JLabel("비밀번호는 대소문자, 특수문자 포함6~20자로 작성하세요", SwingConstants.CENTER);
+        messageLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         messageLabel.setLocation(75, 305);
         messageLabel.setSize(400, 20);
         c.add(messageLabel);
@@ -182,15 +191,18 @@ public class SignUpUI extends JFrame
     private void showCustomDialog(String message) {
         JDialog dialog = new JDialog(this, "알림", true);
         dialog.setSize(300, 150);
+        dialog.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         dialog.getContentPane().setBackground(Color.WHITE);
         dialog.setLocationRelativeTo(this);
         dialog.setLayout(new BorderLayout());
 
         JLabel label = new JLabel(message, SwingConstants.CENTER);
+        label.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         label.setForeground(Color.BLACK);
         dialog.add(label, BorderLayout.CENTER);
 
         JButton okButton = new JButton("확인");
+        okButton.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         okButton.setBackground(Color.WHITE);
         okButton.addActionListener(e -> dialog.dispose());
 
