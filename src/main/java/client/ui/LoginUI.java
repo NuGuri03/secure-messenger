@@ -111,14 +111,7 @@ public class LoginUI extends BaseUI {
             if (inputID.equals(savedID) && inputPW.equals(savedPW)) {
                 JOptionPane.showMessageDialog(this, "로그인 성공!");
 
-                // 다음 창 띄우기
-                JFrame nextFrame = new JFrame("메인 화면");
-                nextFrame.setSize(300, 200);
-                nextFrame.setLocationRelativeTo(null);
-                nextFrame.add(new JLabel("환영합니다, " + inputID + "!", SwingConstants.CENTER));
-                nextFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                nextFrame.setVisible(true);
-
+                new MainUI(savedID);	
                 dispose(); // 현재 창 닫기
             } else {
                 JOptionPane.showMessageDialog(this, "아이디 또는 비밀번호가 틀렸습니다.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
