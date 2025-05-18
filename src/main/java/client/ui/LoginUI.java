@@ -20,6 +20,8 @@ public class LoginUI extends BaseUI {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.insets = new Insets(10, 10, 10, 10); // 여백
 
+		
+
 		JLabel labelID = new JLabel("아이디:");
 		labelID.setFont(new Font("pretendard", Font.PLAIN, 18));
 		gbc.gridx = 0;
@@ -83,9 +85,8 @@ public class LoginUI extends BaseUI {
                 dispose(); // 현재 창 닫기
             } else {
                 JOptionPane.showMessageDialog(this, "아이디 또는 비밀번호가 틀렸습니다.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
-
-                new LoginUI(); // 다시 로그인 창 열기
-                dispose(); // 현재 창 닫기
+                textPW.setText(""); 
+                
             }
         });
 		setVisible(true);
