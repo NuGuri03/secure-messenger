@@ -16,6 +16,7 @@ public class SignUpUI extends JFrame
     private JTextField idField;
     private JPasswordField pwField;
     private JPasswordField pwcField;
+    private JLabel messageLabel;
     private boolean idExist;
 
     public SignUpUI() {
@@ -23,77 +24,88 @@ public class SignUpUI extends JFrame
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(550, 700);
         setLocationRelativeTo(null);
-        Container c = getContentPane();
-        c.setLayout(null);
-        c.setBackground(Color.WHITE);
-        c.setForeground(Color.WHITE);
 
-        //라벨, 입력창 위치 설정
-        JLabel name = new JLabel("이름", SwingConstants.CENTER);
-        name.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-        name.setLocation(125, 130);
-        name.setSize(100, 30);
-        c.add(name);
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(Color.WHITE);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        nameField  = new JTextField("");
-        nameField.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-        nameField.setLocation(225, 130);
-        nameField.setSize(100, 30);
-        c.add(nameField);
+        Font font = new Font("맑은 고딕", Font.PLAIN, 14);
 
-        JLabel id = new JLabel("ID", SwingConstants.CENTER);
-        id.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-        id.setLocation(125, 165);
-        id.setSize(100, 30);
-        c.add(id);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0;
+        panel.add(new JLabel("이름", SwingConstants.CENTER), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        nameField = new JTextField();
+        nameField.setFont(font);
+        nameField.setPreferredSize(new Dimension(200, 30));
+        panel.add(nameField, gbc);
 
-        idField = new JTextField("");
-        idField.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-        idField.setLocation(225, 165);
-        idField.setSize(100, 30);
-        c.add(idField);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.weightx = 0;
+        panel.add(new JLabel("ID", SwingConstants.CENTER), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        idField = new JTextField();
+        idField.setFont(font);
+        idField.setPreferredSize(new Dimension(200, 30));
+        panel.add(idField, gbc);
 
-        JLabel pw = new JLabel("비밀번호", SwingConstants.CENTER);
-        pw.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-        pw.setLocation(125, 200);
-        pw.setSize(100, 30);
-        c.add(pw);
-
-        pwField = new JPasswordField("");
-        pwField.setLocation(225, 200);
-        pwField.setSize(100, 30);
-        c.add(pwField);
-
-        JLabel pwc = new JLabel("비밀번호 확인", SwingConstants.CENTER);
-        pwc.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-        pwc.setLocation(125, 235);
-        pwc.setSize(100, 30);
-        c.add(pwc);
-
-        pwcField = new JPasswordField("");
-        pwcField.setLocation(225, 235);
-        pwcField.setSize(100, 30);
-        c.add(pwcField);
-
+        // ID 확인 버튼
+        gbc.gridx = 2;
+        gbc.weightx = 0;
         JButton idConfirm = new JButton("ID 확인");
-        idConfirm.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-        idConfirm.setLocation(330, 165);
-        idConfirm.setSize(100, 30);
         idConfirm.setBackground(Color.WHITE);
-        c.add(idConfirm);
+        idConfirm.setFont(font);
+        panel.add(idConfirm, gbc);
 
+        // 비밀번호
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.weightx = 0;
+        panel.add(new JLabel("비밀번호", SwingConstants.CENTER), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        pwField = new JPasswordField();
+        pwField.setFont(font);
+        pwField.setPreferredSize(new Dimension(200, 30));
+        panel.add(pwField, gbc);
+
+        // 비밀번호 확인
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.weightx = 0;
+        panel.add(new JLabel("비밀번호 확인", SwingConstants.CENTER), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        pwcField = new JPasswordField();
+        pwcField.setFont(font);
+        pwcField.setPreferredSize(new Dimension(200, 30));
+        panel.add(pwcField, gbc);
+
+        // 메시지 라벨
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 3;
+        gbc.weightx = 0;
+        messageLabel = new JLabel("비밀번호는 대소문자, 특수문자 포함 6~20자로 작성하세요", SwingConstants.CENTER);
+        messageLabel.setFont(font);
+        panel.add(messageLabel, gbc);
+
+        // 확인 버튼
+        gbc.gridy++;
+        gbc.gridwidth = 3;
         JButton confirm = new JButton("확인");
-        confirm.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-        confirm.setLocation(225, 270);
-        confirm.setSize(100, 30);
         confirm.setBackground(Color.WHITE);
-        c.add(confirm);
+        confirm.setFont(font);
+        panel.add(confirm, gbc);
 
-        JLabel messageLabel = new JLabel("비밀번호는 대소문자, 특수문자 포함6~20자로 작성하세요", SwingConstants.CENTER);
-        messageLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-        messageLabel.setLocation(75, 305);
-        messageLabel.setSize(400, 20);
-        c.add(messageLabel);
+        add(panel);
+        setVisible(true);
 
         idExist = false;
 
@@ -127,8 +139,6 @@ public class SignUpUI extends JFrame
         ((AbstractDocument) idField.getDocument()).setDocumentFilter(new NoKoreanFilter());
         ((AbstractDocument) pwField.getDocument()).setDocumentFilter(new NoKoreanFilter());
         ((AbstractDocument) pwcField.getDocument()).setDocumentFilter(new NoKoreanFilter());
-
-        setVisible(true);
     }
 
     public void signUp()
