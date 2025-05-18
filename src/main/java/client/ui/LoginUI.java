@@ -108,13 +108,19 @@ public class LoginUI extends BaseUI {
             String inputID = textID.getText();
             String inputPW = new String(textPW.getPassword());
 
-            if (inputID.equals(savedID) && inputPW.equals(savedPW)) {
-                JOptionPane.showMessageDialog(this, "로그인 성공!");
+            if (inputID.equals(savedID)) {
+            	if(inputPW.equals(savedPW))
+            	{
+            		JOptionPane.showMessageDialog(this, "로그인 성공!");
 
-                new MainUI(savedID);	
-                dispose(); // 현재 창 닫기
-            } else { // 로그인 실패
-                JOptionPane.showMessageDialog(this, "아이디 또는 비밀번호가 틀렸습니다.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
+                    new MainUI(savedID);	
+                    dispose(); // 현재 창 닫기
+            	}else { // 비밀번호 불일치
+                    JOptionPane.showMessageDialog(this,"비밀번호가 일치하지 않습니다.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
+                    textPW.setText(""); 
+            	}
+            } else { // 존재하지않는 아이디
+                JOptionPane.showMessageDialog(this, "존재 하지않는 아이디입니다.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
                 textPW.setText(""); 
             }
         });
