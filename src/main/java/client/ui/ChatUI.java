@@ -4,23 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import com.formdev.flatlaf.FlatLightLaf;
-
 import client.ui.component.panel.ChatBubblePanel;
 import client.ui.component.button.UserIconButton;
 
-public class ChatUI extends JFrame {
+public class ChatUI extends BaseUI {
 
     public ChatUI(String username) {
-        try {
-            // LookAndFeel 플러그인 적용
-            UIManager.setLookAndFeel(new FlatLightLaf());
-            // 폰트를 Pretendard 로 설정
-            Font customFont = new Font("Pretendard", Font.PLAIN, 14);
-            UIManager.put("defaultFont", customFont);
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
+        super();
 
         if (username == null || username.trim().isEmpty()) {
             username = "홍길동";
@@ -36,7 +26,7 @@ public class ChatUI extends JFrame {
         this.setLayout(new BorderLayout());
 
         // 유저 아이콘 버튼
-        UserIconButton userIconButton = new UserIconButton("/icon/default_profile.png", 32);
+        UserIconButton userIconButton = new UserIconButton("/icons/default_profile.png", 32);
 
         // 탑바 영역
         JPanel topbar = createTopbarPanel(username, userIconButton);
@@ -61,7 +51,6 @@ public class ChatUI extends JFrame {
         add(chatPanel, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
-        this.setVisible(true);
     }
 
     /**
