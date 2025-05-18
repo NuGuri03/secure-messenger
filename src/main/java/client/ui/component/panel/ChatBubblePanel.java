@@ -46,8 +46,7 @@ public class ChatBubblePanel extends JPanel {
         msgArea.setWrapStyleWord(true);           // 단어 단위로 줄바꿈
         msgArea.setEditable(false);               // 편집 불가
         msgArea.setOpaque(false);                 // 배경 투명
-        msgArea.setBorder(null);                  // 테두리 제거
-        msgArea.setFont(new Font("Pretendard", Font.PLAIN, 12));
+        msgArea.setFont(new Font("Pretendard", Font.PLAIN, 13));
 
         FontMetrics fm = msgArea.getFontMetrics(msgArea.getFont());
         int actualWidth = fm.stringWidth(message);
@@ -58,20 +57,12 @@ public class ChatBubblePanel extends JPanel {
         Dimension preferred = msgArea.getPreferredSize();
 
         int textWidth = (actualWidth <= MAX_WIDTH) ? textWidth = actualWidth + PADDING - 2 : MAX_WIDTH;
-
         Dimension adjusted = new Dimension(textWidth, preferred.height);
 
         // 크기 제한 적용
         msgArea.setMinimumSize(adjusted);
         msgArea.setPreferredSize(adjusted);
         msgArea.setMaximumSize(adjusted);
-
-        // 말풍선 크기도 adjusted 기반으로
-        int bubbleW = adjusted.width + PADDING * 2;
-        int bubbleH = adjusted.height + PADDING * 2;
-        bubble.setMinimumSize(new Dimension(bubbleW, bubbleH));
-        bubble.setPreferredSize(new Dimension(bubbleW, bubbleH));
-        bubble.setMaximumSize(new Dimension(bubbleW, bubbleH));
 
         // 말풍선에 대화 추가
         bubble.add(msgArea);
