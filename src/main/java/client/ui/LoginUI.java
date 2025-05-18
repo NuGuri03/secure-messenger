@@ -3,6 +3,8 @@ package client.ui;
 import java.awt.*;
 import javax.swing.*;
 
+import test.LoginUITest;
+
 
 public class LoginUI extends JFrame {
 	// serialVersion UID
@@ -59,13 +61,46 @@ public class LoginUI extends JFrame {
 		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.CENTER;
 		add(btnLogin, gbc);
-
+		
 		JButton btnJoin = new JButton("회원 가입");
 		btnJoin.setFont(new Font("굴림", Font.PLAIN, 16));
 		gbc.gridy = 3;
 		add(btnJoin, gbc);
 
+		// 로그인 실패 여부에 따른 다양한 버튼 이벤트
+		
+		String savedID = "toturak3";  // 일단 예시 저장
+		String savedPW = "1234hj";
+		
+		btnLogin.addActionListener(e -> {
+            String inputID = textID.getText();
+            String inputPW = new String(textPW.getPassword());
+
+            if (inputID.equals(savedID) && inputPW.equals(savedPW)) {
+                JOptionPane.showMessageDialog(this, "로그인 성공!");
+
+                // 다음 창 띄우기
+                JFrame nextFrame = new JFrame("메인 화면");
+                nextFrame.setSize(300, 200);
+                nextFrame.setLocationRelativeTo(null);
+                nextFrame.add(new JLabel("환영합니다, " + inputID + "!", SwingConstants.CENTER));
+                nextFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                nextFrame.setVisible(true);
+
+                dispose(); // 현재 창 닫기
+            } else {
+                JOptionPane.showMessageDialog(this, "아이디 또는 비밀번호가 틀렸습니다.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
+
+                new LoginUI(); // 다시 로그인 창 열기
+                dispose(); // 현재 창 닫기
+            }
+        });
+		
+		
+		
 		setVisible(true);
 	}
+	
+	
     
 }
