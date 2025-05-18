@@ -67,40 +67,5 @@ public class LoginUI extends JFrame {
 
 		setVisible(true);
 	}
-	
-//    public LoginUI() {
-//    	UIManager.put("Button.font", new Font("굴림", Font.PLAIN, 16)); // 폰트 설정
-//
-//    	setTitle("로그인 하세요.");
-//    	setSize(1000,500);
-//    	setLayout(null);
-//    	setResizable(false);
-//    	setLocationRelativeTo(null);
-//    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-// 
-//    	// 텍스트 필드
-//    	JLabel labelID = new JLabel("아이디: ");
-//    	labelID.setFont(new Font("굴림", Font.PLAIN, 18)); // 글꼴, 스타일, 크기
-//    	labelID.setBounds(200,170,100,30);
-//    	JLabel labelPW = new JLabel("비밀번호: ");
-//    	labelPW.setFont(new Font("굴림", Font.PLAIN, 18)); // 글꼴, 스타일, 크기
-//    	labelPW.setBounds(200,220,100,30);
-//    	
-//    	
-//    	add(labelID);
-//    	add(labelPW);
-//    	// 버튼
-//    	JButton btn1 = new JButton("로그인");
-//    	JButton btn2 = new JButton("회원 가입");
-//    	
-//    	btn1.setBounds(700,150,130,130);
-//    	btn2.setBounds(300,400,150,40);
-//    	
-//    	add(btn1);
-//    	add(btn2);
-// 
-//    	setVisible(true);
-         
- //   }
     
 }
