@@ -100,10 +100,10 @@ public class LoginUI extends BaseUI {
 		add(btnJoin, gbc);
 		
 		// 로그인 실패 여부에 따른 다양한 버튼 이벤트
-		
 		String savedID = "toturak3";  // 일단 예시 저장
 		String savedPW = "1234hj";
 		
+		// 로그인 시도
 		btnLogin.addActionListener(e -> {
             String inputID = textID.getText();
             String inputPW = new String(textPW.getPassword());
@@ -113,11 +113,18 @@ public class LoginUI extends BaseUI {
 
                 new MainUI(savedID);	
                 dispose(); // 현재 창 닫기
-            } else {
+            } else { // 로그인 실패
                 JOptionPane.showMessageDialog(this, "아이디 또는 비밀번호가 틀렸습니다.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
                 textPW.setText(""); 
             }
-        });	
+        });
+		
+		// 회원 가입 시도
+		btnJoin.addActionListener(e -> {
+			new SignUpUI();
+        });
+		
+		
 		setVisible(true);
 	}
 }
