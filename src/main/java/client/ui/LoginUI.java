@@ -49,8 +49,8 @@ public class LoginUI extends BaseUI {
 		add(labelID, gbc);
 
 		// 아이디 입력
-		JTextField textID = new JTextField(15);
-		textID.setDocument(new JTextLimit(15)); // 최대 15글자
+		JTextField textID = new JTextField(20);
+		textID.setDocument(new JTextLimit(20)); // 최대 15글자
 		textID.setFont(mainFont);
 		gbc.gridx = 1;
 		gbc.gridy = 0;
@@ -65,11 +65,9 @@ public class LoginUI extends BaseUI {
 		gbc.anchor = GridBagConstraints.EAST;
 		add(labelPW, gbc);
 
-
-
 		//비밀번호 입력
-		JPasswordField textPW = new JPasswordField(15);
-		textPW.setDocument(new JTextLimit(15)); // 최대 15글자
+		JPasswordField textPW = new JPasswordField(20);
+		textPW.setDocument(new JTextLimit(25)); // 최대 20글자
 		textPW.setFont(mainFont);
 		gbc.gridx = 1;
 		gbc.gridy = 1;
