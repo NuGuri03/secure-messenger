@@ -7,7 +7,6 @@ import javax.swing.text.*;
 
 public class LoginUI extends BaseUI {
 	public class JTextLimit extends PlainDocument {
-		private static final long serialVersionUID = 1L;
 		private int limit;
 
 	    public JTextLimit(int limit) {
@@ -23,18 +22,7 @@ public class LoginUI extends BaseUI {
 	        }
 	    }
 	}
-	
-	
-	
-	
-// serialVersion UID
-	private static final long serialVersionUID = 1L;
-	
-    // TODO 1. 로그인 UI 만들기
-    /**
-     * LoginUI 생
-     */
-	
+
 	public LoginUI() {
         super();
 
@@ -49,10 +37,12 @@ public class LoginUI extends BaseUI {
 		GridBagConstraints gbc = new GridBagConstraints();  // 세부 위치 설정
 		gbc.insets = new Insets(10, 10, 10, 10); // 여백
 
-		
+		Font mainFont = new Font("Pretendard", Font.PLAIN, 18);
+		Font subFont = new Font("Pretendard", Font.PLAIN, 16);
+
 		// 아이디
 		JLabel labelID = new JLabel("아이디:");
-		labelID.setFont(new Font("굴림", Font.PLAIN, 18));
+		labelID.setFont(mainFont);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.EAST;
@@ -61,7 +51,7 @@ public class LoginUI extends BaseUI {
 		// 아이디 입력
 		JTextField textID = new JTextField(15);
 		textID.setDocument(new JTextLimit(15)); // 최대 15글자
-		textID.setFont(new Font("굴림", Font.PLAIN, 18));
+		textID.setFont(mainFont);
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.EAST;
@@ -69,27 +59,26 @@ public class LoginUI extends BaseUI {
 
 		// 비밀번호
 		JLabel labelPW = new JLabel("비밀번호:");
-		labelPW.setFont(new Font("굴림", Font.PLAIN, 18));
+		labelPW.setFont(mainFont);
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.EAST;
 		add(labelPW, gbc);
 
-		
+
+
 		//비밀번호 입력
 		JPasswordField textPW = new JPasswordField(15);
 		textPW.setDocument(new JTextLimit(15)); // 최대 15글자
-		textPW.setFont(new Font("굴림", Font.PLAIN, 18));
+		textPW.setFont(mainFont);
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		add(textPW, gbc);
 
-		
 		// 로그인 버튼
-		
 		JButton btnLogin = new JButton("로그인");
-		btnLogin.setFont(new Font("굴림", Font.BOLD, 16));
+		btnLogin.setFont(subFont);
 		gbc.gridx = 1;
 		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.CENTER;
@@ -97,13 +86,13 @@ public class LoginUI extends BaseUI {
 		
 		// 회원가입 버튼	
 		JButton btnJoin = new JButton("회원 가입");
-		btnJoin.setFont(new Font("굴림", Font.PLAIN, 16));
+		btnJoin.setFont(subFont);
 		gbc.gridy = 3;
 		add(btnJoin, gbc);
 		
 		// 로그인 실패 여부에 따른 다양한 버튼 이벤트
-		String savedID = "toturak3";  // 일단 예시 저장
-		String savedPW = "1234hj";
+		String savedID = "user";  // 일단 예시 저장
+		String savedPW = "user";
 		
 		// 로그인 시도
 		btnLogin.addActionListener(e -> {
@@ -131,8 +120,7 @@ public class LoginUI extends BaseUI {
 		btnJoin.addActionListener(e -> {
 			new SignUpUI();
         });
-		
-		
+
 		setVisible(true);
 	}
 }
