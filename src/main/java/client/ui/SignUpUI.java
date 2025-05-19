@@ -39,10 +39,29 @@ public class SignUpUI extends BaseUI {
         panel.add(new JLabel("이름", SwingConstants.CENTER), gbc);
         gbc.gridx = 1;
         gbc.weightx = 1.0;
-        nameField = new JTextField();
+        nameField = new JTextField("1~32자로 입력하세요");
         nameField.setFont(font);
         nameField.setPreferredSize(new Dimension(200, 30));
         panel.add(nameField, gbc);
+        nameField.setForeground(Color.GRAY);
+
+        nameField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (nameField.getText().equals("1~32자로 입력하세요")) {
+                    nameField.setText("");
+                    nameField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (nameField.getText().isEmpty()) {
+                    nameField.setText("1~32자로 입력하세요");
+                    nameField.setForeground(Color.GRAY);
+                }
+            }
+        });
 
         gbc.gridx = 0;
         gbc.gridy++;
@@ -50,10 +69,29 @@ public class SignUpUI extends BaseUI {
         panel.add(new JLabel("ID", SwingConstants.CENTER), gbc);
         gbc.gridx = 1;
         gbc.weightx = 1.0;
-        idField = new JTextField();
+        idField = new JTextField("소문자,숫자,특수기호(_ . -)4~32자로 작성하세요");
         idField.setFont(font);
         idField.setPreferredSize(new Dimension(200, 30));
         panel.add(idField, gbc);
+        idField.setForeground(Color.GRAY);
+
+        idField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (nameField.getText().equals("소문자,숫자,특수기호(_ . -)4~32자로 작성하세요")) {
+                    nameField.setText("");
+                    nameField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (nameField.getText().isEmpty()) {
+                    nameField.setText("소문자,숫자,특수기호(_ . -)4~32자로 작성하세요");
+                    nameField.setForeground(Color.GRAY);
+                }
+            }
+        });
 
         // 비밀번호
         gbc.gridx = 0;
@@ -84,15 +122,21 @@ public class SignUpUI extends BaseUI {
         gbc.gridy++;
         gbc.gridwidth = 3;
         gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
         messageLabel = new JLabel("비밀번호는 8글자 이상, 1024글자 이하로 작성하세요", SwingConstants.CENTER);
         messageLabel.setFont(font);
         panel.add(messageLabel, gbc);
 
         // 확인 버튼
-        gbc.gridx++;
+        gbc.gridx=0;
         gbc.gridy++;
-        gbc.gridwidth = 0;
+        gbc.gridwidth = 2;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
         JButton confirm = new JButton("확인");
+        confirm.setPreferredSize(new Dimension(100, 30));
         confirm.setBackground(Color.WHITE);
         confirm.setFont(font);
         panel.add(confirm, gbc);
@@ -130,6 +174,10 @@ public class SignUpUI extends BaseUI {
         else if (!name.matches("^.{1,32}$"))
         {
             showCustomDialog("이름은 1~32자로 작성하세요");
+        }
+        else if (false)
+        {
+            showCustomDialog("중복된 아이디입니다");
         }
         else if(!id.matches("^[a-z0-9_.\\-]{4,32}$"))
         {
