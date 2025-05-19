@@ -206,7 +206,7 @@ public class SignUpUI extends JFrame
         dialog.setLocationRelativeTo(this);
         dialog.setLayout(new BorderLayout());
 
-        JLabel label = new JLabel(message, SwingConstants.CENTER);
+        JLabel label = new JLabel("<html>" + message + "</html>", SwingConstants.CENTER);
         label.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         label.setForeground(Color.BLACK);
         dialog.add(label, BorderLayout.CENTER);
