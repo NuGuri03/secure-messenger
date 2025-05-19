@@ -91,7 +91,7 @@ public class SignUpUI extends BaseUI {
         // 확인 버튼
         gbc.gridx++;
         gbc.gridy++;
-        gbc.gridwidth = 1;
+        gbc.gridwidth = 0;
         JButton confirm = new JButton("확인");
         confirm.setBackground(Color.WHITE);
         confirm.setFont(font);
@@ -122,10 +122,6 @@ public class SignUpUI extends BaseUI {
         if (name.isEmpty() || id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty())
         {
             showCustomDialog("모든 항목을 입력하세요");
-        }
-        else if (!idExist)
-        {
-            showCustomDialog("아이디를 확인하세요");
         }
         else if (!password.equals(confirmPassword))
         {
