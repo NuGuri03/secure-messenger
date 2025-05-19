@@ -102,10 +102,10 @@ public class LoginUI extends BaseUI {
 
 
 		// 회원가입 버튼
-		JButton btnJoin = new JButton("회원 가입");
-		btnJoin.setFont(subFont);
+		JButton btnSignUp = new JButton("회원 가입");
+		btnSignUp.setFont(subFont);
 		gbc.gridy = 3;
-		add(btnJoin, gbc);
+		add(btnSignUp, gbc);
 		
 		// 로그인 실패 여부에 따른 다양한 버튼 이벤트
 		String savedID = "user";  // 일단 예시 저장
@@ -139,7 +139,7 @@ public class LoginUI extends BaseUI {
         });
 		
 		// 회원 가입 시도
-		btnJoin.addActionListener(e -> {
+		btnSignUp.addActionListener(e -> {
 			new SignUpUI();
         });
 
