@@ -84,7 +84,7 @@ public class SignUpUI extends BaseUI {
         gbc.gridy++;
         gbc.gridwidth = 3;
         gbc.weightx = 0;
-        messageLabel = new JLabel("비밀번호는 대소문자, 특수문자 포함 6~20자로 작성하세요", SwingConstants.CENTER);
+        messageLabel = new JLabel("비밀번호는 8글자 이상, 1024글자 이하로 작성하세요", SwingConstants.CENTER);
         messageLabel.setFont(font);
         panel.add(messageLabel, gbc);
 
@@ -127,9 +127,17 @@ public class SignUpUI extends BaseUI {
         {
             showCustomDialog("비밀번호가 일치하지 않습니다");
         }
-        else if(!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\=\\-\\[\\]{}\"'/?.<>,]).{6,20}$"))
+        else if (!name.matches("^{1,32}$"))
         {
-            showCustomDialog("대소문자, 숫자, 특수기호 포함 6~20자로 입력하세요");
+            showCustomDialog("이름은 1~32자로 작성하세요");
+        }
+        else if(!id.matches("^[a-z0-9_.\\-]{4,32}$"))
+        {
+            showCustomDialog("ID는 소문자,숫자,특수기호(_ . -)4~32자로 작성하세요");
+        }
+        else if(!password.matches("^[\\x20-\\x7E]{8,1024}$"))
+        {
+            showCustomDialog("비밀번호는 8글자 이상, 1024글자 이하로 작성하세요");
         }
         else
         {
