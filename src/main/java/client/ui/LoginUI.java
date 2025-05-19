@@ -83,7 +83,7 @@ public class LoginUI extends BaseUI {
 		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.CENTER;
 		add(btnLogin, gbc);
-		
+
 		// 회원가입 버튼	
 		JButton btnJoin = new JButton("회원 가입");
 		btnJoin.setFont(subFont);
@@ -98,6 +98,11 @@ public class LoginUI extends BaseUI {
 		btnLogin.addActionListener(e -> {
             String inputID = textID.getText();
             String inputPW = new String(textPW.getPassword());
+
+			// 입력이 없을 시에 버튼 작동하지 않게
+			if (inputID.isEmpty() || inputPW.isEmpty()) {
+				return;
+			}
 
             if (inputID.equals(savedID)) {
             	if(inputPW.equals(savedPW))
