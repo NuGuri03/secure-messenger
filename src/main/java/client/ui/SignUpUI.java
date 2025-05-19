@@ -55,14 +55,6 @@ public class SignUpUI extends BaseUI {
         idField.setPreferredSize(new Dimension(200, 30));
         panel.add(idField, gbc);
 
-        // ID 확인 버튼
-        gbc.gridx = 2;
-        gbc.weightx = 0;
-        JButton idConfirm = new JButton("ID 확인");
-        idConfirm.setBackground(Color.WHITE);
-        idConfirm.setFont(font);
-        panel.add(idConfirm, gbc);
-
         // 비밀번호
         gbc.gridx = 0;
         gbc.gridy++;
@@ -97,8 +89,9 @@ public class SignUpUI extends BaseUI {
         panel.add(messageLabel, gbc);
 
         // 확인 버튼
+        gbc.gridx++;
         gbc.gridy++;
-        gbc.gridwidth = 3;
+        gbc.gridwidth = 1;
         JButton confirm = new JButton("확인");
         confirm.setBackground(Color.WHITE);
         confirm.setFont(font);
@@ -106,28 +99,6 @@ public class SignUpUI extends BaseUI {
 
         add(panel);
         setVisible(true);
-
-        idExist = false;
-
-        idConfirm.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(idField.getText().isEmpty())
-                {
-                    showCustomDialog("아이디를 입력하세요");
-                }
-                else if (false)
-                {
-                    showCustomDialog("이미 존재하는 아이디입니다");
-                    idExist = false;
-                }
-                else if(true)
-                {
-                    showCustomDialog("사용 가능한 아이디입니다");
-                    idExist = true;
-                }
-            }
-        });
 
         confirm.addActionListener(new ActionListener() {
             @Override
