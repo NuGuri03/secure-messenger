@@ -127,7 +127,7 @@ public class SignUpUI extends BaseUI {
         {
             showCustomDialog("비밀번호가 일치하지 않습니다");
         }
-        else if (!name.matches("^{1,32}$"))
+        else if (!name.matches("^.{1,32}$"))
         {
             showCustomDialog("이름은 1~32자로 작성하세요");
         }
@@ -135,7 +135,7 @@ public class SignUpUI extends BaseUI {
         {
             showCustomDialog("ID는 소문자,숫자,특수기호(_ . -)4~32자로 작성하세요");
         }
-        else if(!password.matches("^[\\x20-\\x7E]{8,1024}$"))
+        else if(!password.matches("^[\\u0020-\\u007E]{8,1024}$"))
         {
             showCustomDialog("비밀번호는 8글자 이상, 1024글자 이하로 작성하세요");
         }
