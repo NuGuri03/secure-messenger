@@ -1,6 +1,7 @@
 package client.ui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import javax.swing.*;
 import javax.swing.text.*;
 
@@ -82,7 +83,25 @@ public class LoginUI extends BaseUI {
 		gbc.anchor = GridBagConstraints.CENTER;
 		add(btnLogin, gbc);
 
-		// 회원가입 버튼	
+		// Enter 키를 누를 시 로그인 버튼이 작동하게
+		KeyStroke enterKey = KeyStroke.getKeyStroke("ENTER");
+
+		// 공통 액션 객체
+		Action loginAction = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnLogin.doClick(); // 로그인 버튼 클릭과 동일한 동작 수행
+			}
+		};
+		// 바인딩 적용
+		textID.getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, "login");
+		textID.getActionMap().put("login", loginAction);
+
+		textPW.getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, "login");
+		textPW.getActionMap().put("login", loginAction);
+
+
+		// 회원가입 버튼
 		JButton btnJoin = new JButton("회원 가입");
 		btnJoin.setFont(subFont);
 		gbc.gridy = 3;
