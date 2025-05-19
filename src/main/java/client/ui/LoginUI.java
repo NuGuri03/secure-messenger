@@ -143,6 +143,7 @@ public class LoginUI extends BaseUI {
 			new SignUpUI();
         });
 
+		// test
 		setVisible(true);
 	}
 }
