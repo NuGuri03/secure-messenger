@@ -26,8 +26,8 @@ public class LoginUI extends BaseUI {
 	public LoginUI() {
         super();
 
-		setTitle("로그인 하세요.");
-		setSize(600, 400);
+		setTitle("환영합니다");
+		setSize(450, 300);
 		setResizable(true); // 창 크기 조절 가능
 		setLocationRelativeTo(null);  // 창 화면 중앙 위치
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,8 +37,8 @@ public class LoginUI extends BaseUI {
 		GridBagConstraints gbc = new GridBagConstraints();  // 세부 위치 설정
 		gbc.insets = new Insets(10, 10, 10, 10); // 여백
 
-		Font mainFont = new Font("Pretendard", Font.PLAIN, 18);
-		Font subFont = new Font("Pretendard", Font.PLAIN, 16);
+		Font mainFont = new Font("Pretendard", Font.PLAIN, 16);
+		Font subFont = new Font("Pretendard", Font.PLAIN, 14);
 
 		// 아이디
 		JLabel labelID = new JLabel("아이디:");
