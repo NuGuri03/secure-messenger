@@ -89,18 +89,13 @@ public class SignUpUI extends BaseUI {
             @Override
             public void focusLost(FocusEvent e) {
 
-                Document original = idField.getDocument();
-                idField.setDocument(new PlainDocument());
-
-                idField.setText("소문자,숫자,특수기호(_ . -)4~32자로 작성하세요");
-                idField.setForeground(Color.GRAY);
-
-                AbstractDocument newDoc = (AbstractDocument) idField.getDocument();
-                newDoc.setDocumentFilter(new NoKoreanFilter());//noKoreanFilter 일시적으로 제거
-
-                if (idField.getText().isEmpty()) {
+                String text = idField.getText();
+                if (text.isEmpty() || text.equals("소문자,숫자,특수기호(_ . -)4~32자로 작성하세요")) {
+                    // placeholder 복구
+                    idField.setDocument(new PlainDocument());
                     idField.setText("소문자,숫자,특수기호(_ . -)4~32자로 작성하세요");
                     idField.setForeground(Color.GRAY);
+                    ((AbstractDocument) idField.getDocument()).setDocumentFilter(new NoKoreanFilter());
                 }
             }
         });
