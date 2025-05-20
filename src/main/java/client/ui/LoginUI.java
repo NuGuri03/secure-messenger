@@ -14,7 +14,7 @@ public class LoginUI extends BaseUI {
         super();
 
         setTitle("환영합니다");
-        setSize(450, 300);
+        setSize(400, 300);
         setResizable(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,7 +33,7 @@ public class LoginUI extends BaseUI {
         gbc.anchor = GridBagConstraints.EAST;
         add(labelID, gbc);
 
-        JTextField textID = new JTextField(20);
+        JTextField textID = new JTextField(12);
         textID.setFont(mainFont);
         textID.setDocument(new JTextFieldLimit(20));
         gbc.gridx = 1;
@@ -48,7 +48,7 @@ public class LoginUI extends BaseUI {
         gbc.anchor = GridBagConstraints.EAST;
         add(labelPW, gbc);
 
-        JPasswordField textPW = new JPasswordField(20);
+        JPasswordField textPW = new JPasswordField(12);
         textPW.setFont(mainFont);
         textPW.setDocument(new JTextFieldLimit(20));
         gbc.gridx = 1;
