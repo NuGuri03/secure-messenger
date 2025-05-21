@@ -3,7 +3,6 @@ package server;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryonet.*;
-import common.*;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -17,7 +16,13 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import crypto.CryptoUtil;
+import networked.*;
+import networked.messages.EncryptedMessage;
+import networked.messages.KeyExchangeMessage;
+import networked.messages.LoginRequest;
+import networked.messages.LoginResponse;
+import networked.messages.RegisterRequest;
+import networked.messages.RegisterResponse;
 
 public class ChatServer {
     public static final int TCP_PORT = 23456;
@@ -45,7 +50,7 @@ public class ChatServer {
         kryoServer = new Server();
         var kryo = kryoServer.getKryo();
         kryo.register(byte[].class);
-        kryo.register(KeyExchange.class);
+        kryo.register(KeyExchangeMessage.class);
         kryo.register(EncryptedMessage.class);
         kryo.register(RegisterRequest.class);
         kryo.register(RegisterResponse.class);
@@ -64,7 +69,7 @@ public class ChatServer {
             @Override public void received(Connection c, Object obj) {
                 try {
                     // 1) handshake, receive client AES key (comes encrypted using server public RSA key)
-                    if (obj instanceof KeyExchange kx) {
+                    if (obj instanceof KeyExchangeMessage kx) {
                         //decrypt handshake using server rsa privatekey
                         byte[] aesBytes = CryptoUtil.decryptRSA(kx.encryptedKey, serverPrivateKey);
                         SecretKey aes = new SecretKeySpec(aesBytes, "AES");

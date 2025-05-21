@@ -3,8 +3,14 @@ package client;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryonet.*;
-import common.*;
-import crypto.CryptoUtil;
+
+import networked.*;
+import networked.messages.EncryptedMessage;
+import networked.messages.KeyExchangeMessage;
+import networked.messages.LoginRequest;
+import networked.messages.LoginResponse;
+import networked.messages.RegisterRequest;
+import networked.messages.RegisterResponse;
 
 import javax.crypto.SecretKey;
 import java.io.ByteArrayOutputStream;
@@ -35,7 +41,7 @@ public class ChatClient {
 
         var kryo = kryoClient.getKryo();
         kryo.register(byte[].class);
-        kryo.register(KeyExchange.class);
+        kryo.register(KeyExchangeMessage.class);
         kryo.register(EncryptedMessage.class);
         kryo.register(RegisterRequest.class);
         kryo.register(RegisterResponse.class);
@@ -59,7 +65,7 @@ public class ChatClient {
 
                     //encrypt aes key with rsa (public server key)
                     byte[] encKey = CryptoUtil.encryptRSA(aesBytes, serverInfo.getPublicKey());
-                    KeyExchange kx = new KeyExchange();
+                    KeyExchangeMessage kx = new KeyExchangeMessage();
                     kx.encryptedKey = encKey;
 
                     //send to server our encrypted aes key

@@ -3,7 +3,7 @@ package client.ui;
 import client.ChatClient;
 import client.WindowManager;
 import client.ui.component.text.JTextFieldLimit;
-import common.LoginResponse;
+import networked.messages.LoginResponse;
 
 import java.awt.*;
 import java.awt.event.*;

@@ -1,4 +1,4 @@
-package crypto;
+package networked;
 
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;

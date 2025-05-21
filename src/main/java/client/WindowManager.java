@@ -3,7 +3,7 @@ package client;
 import javax.swing.SwingUtilities;
 
 import client.ui.*;
-import common.RoomInfo;
+import networked.RoomInfo;
 
 public class WindowManager {
     private static BaseUI currentUI;

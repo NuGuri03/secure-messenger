@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import client.ui.component.panel.ChatBubblePanel;
-import common.RoomInfo;
+import networked.RoomInfo;
 import client.ChatClient;
 import client.ui.component.button.UserIconButton;
 

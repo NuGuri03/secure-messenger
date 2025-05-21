@@ -1,7 +1,7 @@
 package client.ui.panel;
 
 import client.WindowManager;
-import common.RoomInfo;
+import networked.RoomInfo;
 
 import javax.swing.*;
 import java.awt.*;

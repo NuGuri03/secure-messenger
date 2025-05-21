@@ -2,7 +2,7 @@ package client.ui;
 
 import client.ChatClient;
 import client.ui.component.text.JTextFieldLimit;
-import common.RegisterResponse;
+import networked.messages.RegisterResponse;
 
 import javax.swing.*;
 import javax.swing.text.*;

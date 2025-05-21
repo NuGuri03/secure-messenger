@@ -1,4 +1,4 @@
-package common;
+package networked;
 
 import java.security.PublicKey;
 

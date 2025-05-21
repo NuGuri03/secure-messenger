@@ -10,7 +10,8 @@ import java.security.GeneralSecurityException;
 import java.security.PublicKey;
 
 import javax.swing.JOptionPane;
-import crypto.CryptoUtil;
+
+import networked.CryptoUtil;
 
 public class ServerInfo {
     private static final String CONFIG_FILE_NAME = "server_info.txt";
