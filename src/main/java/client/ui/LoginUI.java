@@ -5,8 +5,6 @@ import client.ui.component.text.JTextFieldLimit;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.event.*;
 
 public class LoginUI extends BaseUI {
 
