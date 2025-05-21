@@ -1,5 +1,6 @@
 package client.ui;
 
+import client.ChatClient;
 import client.ui.panel.LobbyPanel;
 import client.ui.panel.RecentChatPanel;
 import client.ui.panel.SettingsPanel;
@@ -10,12 +11,8 @@ import java.awt.*;
 
 public class MainUI extends BaseUI {
 
-    public MainUI(String username) {
-        super();
-
-        if (username == null || username.trim().isEmpty()) {
-            username = "user";
-        }
+    public MainUI(ChatClient client) {
+        super(client);
 
         setTitle("Main");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

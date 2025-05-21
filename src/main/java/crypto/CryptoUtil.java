@@ -7,7 +7,6 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -66,8 +65,8 @@ public class CryptoUtil {
     }
 
     //load rsa public key from pem x509
-    public static PublicKey loadRSAPublicKey(String pemPath) throws IOException, GeneralSecurityException {
-        try (PemReader reader = new PemReader(new FileReader(pemPath))) {
+    public static PublicKey loadRSAPublicKey(Reader dataReader) throws IOException, GeneralSecurityException {
+        try (PemReader reader = new PemReader(dataReader)) {
             PemObject pem = reader.readPemObject();
             byte[] content = pem.getContent();
             X509EncodedKeySpec spec = new X509EncodedKeySpec(content);
@@ -77,8 +76,8 @@ public class CryptoUtil {
     }
 
     //load rsa private key from pem pkcs#8
-    public static PrivateKey loadRSAPrivateKey(String pemPath) throws IOException, GeneralSecurityException {
-        try (PemReader reader = new PemReader(new FileReader(pemPath))) {
+    public static PrivateKey loadRSAPrivateKey(Reader dataReader) throws IOException, GeneralSecurityException {
+        try (PemReader reader = new PemReader(dataReader)) {
             PemObject pem = reader.readPemObject();
             byte[] content = pem.getContent();
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(content);
@@ -90,24 +89,37 @@ public class CryptoUtil {
     //load or generate rsa keypair and save to pem files
     public static KeyPair loadOrGenerateRSAKeyPair(String privPath, String pubPath) throws Exception {
         if (Files.exists(Paths.get(privPath)) && Files.exists(Paths.get(pubPath))) {
-            PrivateKey priv = loadRSAPrivateKey(privPath);
-            PublicKey  pub  = loadRSAPublicKey(pubPath);
+            PrivateKey priv;
+            PublicKey pub;
+
+            try (FileReader reader = new FileReader(privPath)) {
+                priv = loadRSAPrivateKey(reader);
+            }
+
+            try (FileReader reader = new FileReader(pubPath)) {
+                pub = loadRSAPublicKey(reader);
+            }
+
             return new KeyPair(pub, priv);
         }
+    
         //generate new rsa keypair
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
         kpg.initialize(2048);
         KeyPair kp = kpg.generateKeyPair();
+    
         //save private key to pem
         try (Writer w = new FileWriter(privPath)) {
             String b64 = Base64.getEncoder().encodeToString(kp.getPrivate().getEncoded());
             w.write("-----BEGIN PRIVATE KEY-----\n" + chunk(b64) + "-----END PRIVATE KEY-----\n");
         }
+
         //save public key to pem
         try (Writer w = new FileWriter(pubPath)) {
             String b64 = Base64.getEncoder().encodeToString(kp.getPublic().getEncoded());
             w.write("-----BEGIN PUBLIC KEY-----\n" + chunk(b64) + "-----END PUBLIC KEY-----\n");
         }
+
         return kp;
     }
 

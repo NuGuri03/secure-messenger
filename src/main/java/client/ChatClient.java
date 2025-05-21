@@ -8,30 +8,30 @@ import crypto.CryptoUtil;
 
 import javax.crypto.SecretKey;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.PublicKey;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.function.Consumer;
 
 public class ChatClient {
-    public static final String HOST = "localhost";
-    public static final int TCP_PORT = 54555, UDP_PORT = 54777;
-
-    private final Client kryoClient;
-    private final PublicKey serverPublicKey;
-    private SecretKey aesKey;
     private final boolean debug = true;
 
-    public ChatClient() throws Exception {
+    private final Client kryoClient;
+    private final ServerInfo serverInfo;
+    private SecretKey sessionSecret;
+    private Connection connection;
+
+    private UserInfo currentUser;
+
+
+    public ChatClient(ServerInfo serverInfo) throws Exception {
+        this.serverInfo = serverInfo;
+
         kryoClient = new Client();
 
-        //load server public key from pem
-        String baseDir = System.getProperty("user.dir");
-        String pubPath = baseDir + File.separator + "server_public.pem";
-        serverPublicKey = CryptoUtil.loadRSAPublicKey(pubPath);
         if (debug) {
-            System.out.println("[DEBUG] Server PublicKey (Base64): " + Base64.getEncoder().encodeToString(serverPublicKey.getEncoded()));}
+            System.out.println("[DEBUG] Server PublicKey (Base64): " + Base64.getEncoder().encodeToString(serverInfo.getPublicKey().getEncoded()));
+        }
 
         var kryo = kryoClient.getKryo();
         kryo.register(byte[].class);
@@ -46,38 +46,44 @@ public class ChatClient {
 
             //perform handshake right after connection
             @Override public void connected(Connection c) {
+                connection = c;
+
                 try {
                     //generate aes key for session
-                    aesKey = CryptoUtil.generateAESKey();
-                    byte[] aesBytes = aesKey.getEncoded();
+                    sessionSecret = CryptoUtil.generateAESKey();
+                    byte[] aesBytes = sessionSecret.getEncoded();
+
                     if (debug) {
-                        System.out.println("[DEBUG][Handshake] AES key (Base64): " + Base64.getEncoder().encodeToString(aesBytes));}
+                        System.out.println("[DEBUG][Handshake] AES key (Base64): " + Base64.getEncoder().encodeToString(aesBytes));
+                    }
 
                     //encrypt aes key with rsa (public server key)
-                    byte[] encKey = CryptoUtil.encryptRSA(aesBytes, serverPublicKey);
+                    byte[] encKey = CryptoUtil.encryptRSA(aesBytes, serverInfo.getPublicKey());
                     KeyExchange kx = new KeyExchange();
                     kx.encryptedKey = encKey;
 
                     //send to server our encrypted aes key
-                    c.sendTCP(kx);
+                    connection.sendTCP(kx);
 
                     if (debug) {
-                        System.out.println("[DEBUG][Handshake] Encrypted AES key (RSA): " + Base64.getEncoder().encodeToString(encKey));}
+                        System.out.println("[DEBUG][Handshake] Encrypted AES key (RSA): " + Base64.getEncoder().encodeToString(encKey));
+                    }
 
                     //(test) send first encrypted message after handshake
-                    login("noru", "noru", c);
-                    register("noru", "noru", c);
-                    login("noru", "noru", c);
+                    login("noru", "noru");
+                    register("noru", "noru");
+                    login("noru", "noru");
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
-            @Override public void received(Connection c, Object obj) {
+            @Override public void received(Connection _c, Object obj) {
                 if (!(obj instanceof EncryptedMessage em)) return;
+
                 try {
-                    byte[] pt = CryptoUtil.decrypt(em.ciphertext, aesKey, em.iv);
+                    byte[] pt = CryptoUtil.decrypt(em.ciphertext, sessionSecret, em.iv);
                     if (debug) {
                         System.out.println("[DEBUG][recvObject] iv  " + Base64.getEncoder().encodeToString(em.iv));
                         System.out.println("[DEBUG][recvObject] ct  " + Base64.getEncoder().encodeToString(em.ciphertext));
@@ -107,26 +113,84 @@ public class ChatClient {
     public void connect() throws IOException {
         //start client and connect to server
         kryoClient.start();
-        kryoClient.connect(5000, HOST, TCP_PORT, UDP_PORT);
+        kryoClient.connect(5000, serverInfo.getAddress(), serverInfo.getTcpPort());
     }
 
-    //helper to send any object encrypted
-    private void sendEncryptedObject(Object obj, Connection c) {
+    // --------------------- send messages to server methods --------------------- //
+
+    public UserInfo getCurrentUser() {
+        return currentUser;
+    }
+
+    public void register(String user, String pass) {
+        RegisterRequest rr = new RegisterRequest();
+        rr.username = user;
+        rr.password = pass;
+        sendEncryptedObject(rr);
+    }
+
+    public void login(String user, String pass) {
+        LoginRequest lr = new LoginRequest();
+        lr.username = user;
+        lr.password = pass;
+        sendEncryptedObject(lr);
+    }
+
+    // --------------------- handle methods --------------------- //
+
+    private HashMap<Class<?>, Consumer<?>> responseOneshotCallbacks = new HashMap<>();
+
+    public <T> void setOneshotCallback(Class<T> type, Consumer<T> callback) {
+        responseOneshotCallbacks.put(type, callback);
+    }
+
+    private <T> void handleResponse(T response) {
+        Class<?> type = response.getClass();
+        Consumer<?> callback = responseOneshotCallbacks.get(type);
+
+        if (debug) {
+            System.out.println("[DEBUG][handleResponse] " + type.getSimpleName() + " : " + response);
+        }
+
+        if (callback != null) {
+            responseOneshotCallbacks.remove(type);
+            ((Consumer<T>) callback).accept(response);
+        }
+    }
+
+    private void handleRegisterResponse(RegisterResponse response)
+    {
+        System.out.println("Register response: " + response.success + " : " + response.message);
+        handleResponse(response);
+    }
+
+    private void handleLoginResponse(LoginResponse response)
+    {
+        System.out.println("Login response: " + response.success + " : " + response.message);
+        handleResponse(response);
+    }
+
+    // helper to send any encrypted object
+    private void sendEncryptedObject(Object obj) {
         try {
             // serialize with kryo
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
             Output output = new Output(baos);
             kryoClient.getKryo().writeClassAndObject(output, obj);
             output.close();
+
             byte[] plaintext = baos.toByteArray();
 
             // encrypt
             byte[] iv = CryptoUtil.generateIV();
-            byte[] ct = CryptoUtil.encrypt(plaintext, aesKey, iv);
+            byte[] ct = CryptoUtil.encrypt(plaintext, sessionSecret, iv);
+
             EncryptedMessage em = new EncryptedMessage();
             em.iv = iv;
             em.ciphertext = ct;
-            c.sendTCP(em);
+
+            connection.sendTCP(em);
 
             if (debug) {
                 System.out.println("[DEBUG][sendObject] iv  " + Base64.getEncoder().encodeToString(iv));
@@ -137,33 +201,4 @@ public class ChatClient {
             e.printStackTrace();
         }
     }
-
-    // --------------------- send messages to server methods --------------------- //
-
-    public void register(String user, String pass, Connection c) {
-        RegisterRequest rr = new RegisterRequest();
-        rr.username = user;
-        rr.password = pass;
-        sendEncryptedObject(rr, c);
-    }
-
-    public void login(String user, String pass, Connection c) {
-        LoginRequest lr = new LoginRequest();
-        lr.username = user;
-        lr.password = pass;
-        sendEncryptedObject(lr, c);
-    }
-
-    // --------------------- handle methods --------------------- //
-
-    private void handleRegisterResponse(RegisterResponse response)
-    {
-        System.out.println("Register response: " + response.success + " : " + response.message);
-    }
-
-    private void handleLoginResponse(LoginResponse response)
-    {
-        System.out.println("Login response: " + response.success + " : " + response.message);
-    }
-
 }

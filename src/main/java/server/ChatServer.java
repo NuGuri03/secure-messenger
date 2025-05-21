@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import crypto.CryptoUtil;
 
 public class ChatServer {
-    public static final int TCP_PORT = 54555, UDP_PORT = 54777;
+    public static final int TCP_PORT = 23456;
     private final Server kryoServer;
     private final PrivateKey serverPrivateKey;
     private final Map<Connection, SecretKey> aesKeys = new ConcurrentHashMap<>();
@@ -149,8 +149,8 @@ public class ChatServer {
     public void start() throws IOException {
         //start server and bind ports
         kryoServer.start();
-        kryoServer.bind(TCP_PORT, UDP_PORT);
-        System.out.printf("Server started on TCP %d / UDP %d%n", TCP_PORT, UDP_PORT);
+        kryoServer.bind(TCP_PORT);
+        System.out.printf("Server started on TCP %d%n", TCP_PORT);
     }
 
     // --------------------- handle methods --------------------- //

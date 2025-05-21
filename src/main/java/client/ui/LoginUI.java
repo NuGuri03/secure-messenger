@@ -1,15 +1,17 @@
 package client.ui;
 
+import client.ChatClient;
+import client.WindowManager;
 import client.ui.component.text.JTextFieldLimit;
+import common.LoginResponse;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 public class LoginUI extends BaseUI {
-
-    public LoginUI() {
-        super();
+    public LoginUI(ChatClient client) {
+        super(client);
 
         setTitle("환영합니다");
         setSize(400, 300);
@@ -81,10 +83,6 @@ public class LoginUI extends BaseUI {
         gbc.gridy = 3;
         add(btnSignUp, gbc);
 
-        // test 계정
-        String savedID = "admin";
-        String savedPW = "admin";
-
         btnLogin.addActionListener(e -> {
             String inputID = textID.getText();
             String inputPW = new String(textPW.getPassword());
@@ -101,25 +99,28 @@ public class LoginUI extends BaseUI {
                 return;
             }
 
-            if (inputID.equals(savedID)) {
-                if (inputPW.equals(savedPW)) {
-                    JOptionPane.showMessageDialog(this, "로그인 성공!");
-                    new MainUI(savedID);
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "비밀번호가 일치하지 않습니다.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
-                    textPW.setText("");
-                }
+            loginRequest(inputID, inputPW);
+        });
+
+        btnSignUp.addActionListener(e -> WindowManager.openSignUpUI());
+
+        setVisible(true);
+    }
+
+    private void loginRequest(String id, String password) {
+        // 로그인 처리 로직
+        var client = getClient();
+        client.login(id, password);
+        client.setOneshotCallback(LoginResponse.class, (LoginResponse response) -> {
+            if (response.success) {
+                WindowManager.toMainUI();
             } else {
-                JOptionPane.showMessageDialog(this, "존재 하지않는 아이디입니다.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
-                textPW.setText("");
+                showErrorMessage("로그인 실패: " + response.message);
+                setEnabled(true);
             }
         });
 
-        btnSignUp.addActionListener(e -> {
-            new SignUpUI();
-        });
-
-        setVisible(true);
+        // 처리 전까지 UI 비활성화
+        setEnabled(false);
     }
 }
