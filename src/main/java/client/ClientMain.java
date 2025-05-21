@@ -1,10 +1,9 @@
 package client;
 
-import client.ui.ChatUI;
-import client.ui.MainUI;
+import client.ui.SignUpUI;
 
 public class ClientMain {
     public static void main(String[] args) {
-        MainUI mainUI = new MainUI(null);
+        new SignUpUI();
     }
 }
