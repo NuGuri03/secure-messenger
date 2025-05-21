@@ -7,8 +7,6 @@ import java.security.GeneralSecurityException;
 
 public class ClientMain {
     public static void main(String[] args) {
-
-
         try {
             ChatClient chatClient = new ChatClient();
             chatClient.connect();
