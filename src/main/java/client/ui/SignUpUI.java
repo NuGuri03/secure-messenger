@@ -14,28 +14,28 @@ public class SignUpUI extends BaseUI {
 
         setTitle("회원가입");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(550, 700);
+        setSize(450, 500);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel(new GridBagLayout());
+        setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        final Dimension TEXT_SIZE_DIMENSION = new Dimension(250, 30);
         Font font = new Font("Pretendard", Font.PLAIN, 14);
         this.setFont(font);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0;
-        panel.add(new JLabel("이름", SwingConstants.CENTER), gbc);
+        add(new JLabel("이름", SwingConstants.RIGHT), gbc);
 
+        JTextField nameField = new JTextField("1~32자로 입력하세요");
+        nameField.setPreferredSize(TEXT_SIZE_DIMENSION);
         gbc.gridx = 1;
         gbc.weightx = 1.0;
-        JTextField nameField = new JTextField("1~32자로 입력하세요");
         nameField.setFont(font);
-        nameField.setPreferredSize(new Dimension(200, 30));
-        panel.add(nameField, gbc);
+        add(nameField, gbc);
         nameField.setForeground(Color.GRAY);
 
         nameField.addFocusListener(new FocusAdapter() {
@@ -59,14 +59,14 @@ public class SignUpUI extends BaseUI {
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.weightx = 0;
-        panel.add(new JLabel("ID", SwingConstants.CENTER), gbc);
+        add(new JLabel("ID", SwingConstants.CENTER), gbc);
 
         gbc.gridx = 1;
         gbc.weightx = 1.0;
         JTextField idField = new JTextField("소문자,숫자,특수기호(_ . -)4~32자로 작성하세요");
+        idField.setPreferredSize(TEXT_SIZE_DIMENSION);
         idField.setFont(font);
-        idField.setPreferredSize(new Dimension(200, 30));
-        panel.add(idField, gbc);
+        add(idField, gbc);
         idField.setForeground(Color.GRAY);
 
         idField.addFocusListener(new FocusAdapter() {
@@ -95,39 +95,39 @@ public class SignUpUI extends BaseUI {
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.weightx = 0;
-        panel.add(new JLabel("비밀번호", SwingConstants.CENTER), gbc);
+        add(new JLabel("비밀번호", SwingConstants.CENTER), gbc);
 
         gbc.gridx = 1;
         gbc.weightx = 1.0;
         JPasswordField pwField = new JPasswordField();
+        pwField.setPreferredSize(TEXT_SIZE_DIMENSION);
         pwField.setFont(font);
-        pwField.setPreferredSize(new Dimension(200, 30));
-        panel.add(pwField, gbc);
+        add(pwField, gbc);
 
         // 메시지 라벨
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 3;
         gbc.weightx = 0;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.anchor = GridBagConstraints.EAST;
         JLabel messageLabel = new JLabel("비밀번호는 8글자 이상, 1024글자 이하로 작성하세요", SwingConstants.CENTER);
         messageLabel.setFont(font);
-        panel.add(messageLabel, gbc);
+        add(messageLabel, gbc);
 
         // 비밀번호 확인
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 1;
         gbc.weightx = 0;
-        panel.add(new JLabel("비밀번호 확인", SwingConstants.CENTER), gbc);
+        add(new JLabel("비밀번호 확인", SwingConstants.CENTER), gbc);
 
         gbc.gridx = 1;
         gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
         JPasswordField pwcField = new JPasswordField();
+        pwcField.setPreferredSize(TEXT_SIZE_DIMENSION);
         pwcField.setFont(font);
-        pwcField.setPreferredSize(new Dimension(420, 30));
-        panel.add(pwcField, gbc);
+        add(pwcField, gbc);
 
         // 확인 버튼
         gbc.gridx=0;
@@ -140,10 +140,7 @@ public class SignUpUI extends BaseUI {
         confirm.setPreferredSize(new Dimension(100, 30));
         confirm.setBackground(Color.WHITE);
         confirm.setFont(font);
-        panel.add(confirm, gbc);
-
-        add(panel);
-        setVisible(true);
+        add(confirm, gbc);
 
         confirm.addActionListener(new ActionListener() {
             @Override
@@ -156,6 +153,8 @@ public class SignUpUI extends BaseUI {
         ((AbstractDocument) idField.getDocument()).setDocumentFilter(new KoreanFilter());
         ((AbstractDocument) pwField.getDocument()).setDocumentFilter(new KoreanFilter());
         ((AbstractDocument) pwcField.getDocument()).setDocumentFilter(new KoreanFilter());
+
+        setVisible(true);
     }
 
     private void signUp(JTextField nameField, JTextField idField, JPasswordField pwField, JPasswordField pwcField) {
