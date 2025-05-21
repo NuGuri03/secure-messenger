@@ -81,8 +81,9 @@ public class LoginUI extends BaseUI {
         gbc.gridy = 3;
         add(btnSignUp, gbc);
 
-        String savedID = "user";
-        String savedPW = "user";
+        // test 계정
+        String savedID = "admin";
+        String savedPW = "admin";
 
         btnLogin.addActionListener(e -> {
             String inputID = textID.getText();
