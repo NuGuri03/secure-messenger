@@ -32,8 +32,8 @@ public class LoginUI extends BaseUI {
         add(labelID, gbc);
 
         JTextField textID = new JTextField(12);
-        textID.setFont(mainFont);
         textID.setDocument(new JTextFieldLimit(20));
+        textID.setFont(mainFont);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.EAST;
@@ -47,8 +47,8 @@ public class LoginUI extends BaseUI {
         add(labelPW, gbc);
 
         JPasswordField textPW = new JPasswordField(12);
-        textPW.setFont(mainFont);
         textPW.setDocument(new JTextFieldLimit(20));
+        textPW.setFont(mainFont);
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
@@ -92,6 +92,14 @@ public class LoginUI extends BaseUI {
                 return;
             }
 
+            // 한국어 정규식
+            String koreanRegex = ".*[가-힣ㄱ-ㅎㅏ-ㅣ].*";
+
+            if (inputID.matches(koreanRegex) || inputPW.matches(koreanRegex)) {
+                JOptionPane.showMessageDialog(this, "아이디와 비밀번호에는 한글을 포함할 수 없습니다.");
+                return;
+            }
+
             if (inputID.equals(savedID)) {
                 if (inputPW.equals(savedPW)) {
                     JOptionPane.showMessageDialog(this, "로그인 성공!");
@@ -106,6 +114,7 @@ public class LoginUI extends BaseUI {
                 textPW.setText("");
             }
         });
+
         btnSignUp.addActionListener(e -> {
             new SignUpUI();
         });

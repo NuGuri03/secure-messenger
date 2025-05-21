@@ -1,6 +1,6 @@
 package client.ui;
 
-import client.ui.component.text.KoreanFilter;
+import client.ui.component.text.JTextFieldLimit;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -21,7 +21,7 @@ public class SignUpUI extends BaseUI {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        final Dimension TEXT_SIZE_DIMENSION = new Dimension(250, 30);
+        final Dimension TEXT_SIZE_DIMENSION = new Dimension(300, 30);
         Font font = new Font("Pretendard", Font.PLAIN, 14);
         this.setFont(font);
 
@@ -31,6 +31,7 @@ public class SignUpUI extends BaseUI {
         add(new JLabel("이름", SwingConstants.RIGHT), gbc);
 
         JTextField nameField = new JTextField("1~32자로 입력하세요");
+        nameField.setDocument(new JTextFieldLimit(32));
         nameField.setPreferredSize(TEXT_SIZE_DIMENSION);
         gbc.gridx = 1;
         gbc.weightx = 1.0;
@@ -86,7 +87,6 @@ public class SignUpUI extends BaseUI {
                     idField.setDocument(new PlainDocument());
                     idField.setText("소문자,숫자,특수기호(_ . -)4~32자로 작성하세요");
                     idField.setForeground(Color.GRAY);
-                    ((AbstractDocument) idField.getDocument()).setDocumentFilter(new KoreanFilter());
                 }
             }
         });
@@ -149,11 +149,6 @@ public class SignUpUI extends BaseUI {
             }
         });
 
-        // .setDocumentFilter 메서드는 AbstractDocument 클래스로 정의 되어 있음으로 다운캐스팅을 해야한다
-        ((AbstractDocument) idField.getDocument()).setDocumentFilter(new KoreanFilter());
-        ((AbstractDocument) pwField.getDocument()).setDocumentFilter(new KoreanFilter());
-        ((AbstractDocument) pwcField.getDocument()).setDocumentFilter(new KoreanFilter());
-
         setVisible(true);
     }
 
@@ -166,7 +161,12 @@ public class SignUpUI extends BaseUI {
         ArrayList<String> idList = new ArrayList<>();
         idList.add("user");
 
-        if (name.isEmpty() || id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+        // 한국어 정규식
+        String koreanRegex = ".*[가-힣ㄱ-ㅎㅏ-ㅣ].*";
+
+        if (id.matches(koreanRegex) || password.matches(koreanRegex)) {
+            showCustomDialog("아이디와 비밀번호에는 한글을 포함할 수 없습니다");
+        } else if (name.isEmpty() || id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             showCustomDialog("모든 항목을 입력하세요");
         } else if (!password.equals(confirmPassword)) {
             showCustomDialog("비밀번호가 일치하지 않습니다");
@@ -185,13 +185,13 @@ public class SignUpUI extends BaseUI {
 
     private void showCustomDialog(String message) {
         JDialog dialog = new JDialog(this, "알림", true);
-        dialog.setSize(300, 150);
+        dialog.setSize(350, 150);
         dialog.setFont(this.getFont());
         dialog.getContentPane().setBackground(Color.WHITE);
         dialog.setLocationRelativeTo(this);
         dialog.setLayout(new BorderLayout());
 
-        JLabel label = new JLabel("<html>" + message + "</html>", SwingConstants.CENTER);
+        JLabel label = new JLabel(message, SwingConstants.CENTER);
         label.setFont(this.getFont());
         label.setForeground(Color.BLACK);
         dialog.add(label, BorderLayout.CENTER);
