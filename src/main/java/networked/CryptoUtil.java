@@ -34,6 +34,14 @@ public class CryptoUtil {
         return iv;
     }
 
+    /**
+     * @brief 무작위의 long값을 반환한다.
+     * @apiNote long은 64비트의 정수형이므로, 경우의 수는 2^64 = 18,446,744,073,709,551,616이다.
+     */
+    public static long generateRandomId() {
+        return new SecureRandom().nextLong();
+    }
+
     //encrypt plaintext with aes-gcm
     public static byte[] encrypt(byte[] plaintext, SecretKey key, byte[] iv) throws GeneralSecurityException {
         Cipher c = Cipher.getInstance(AES_GCM);

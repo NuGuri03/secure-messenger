@@ -9,8 +9,10 @@ import networked.messages.EncryptedMessage;
 import networked.messages.KeyExchangeMessage;
 import networked.messages.LoginRequest;
 import networked.messages.LoginResponse;
+import networked.messages.NetworkedMessage;
 import networked.messages.RegisterRequest;
 import networked.messages.RegisterResponse;
+import networked.messages.SessionHelloMessage;
 
 import javax.crypto.SecretKey;
 import java.io.ByteArrayOutputStream;
@@ -27,6 +29,10 @@ public class ChatClient {
     private SecretKey sessionSecret;
     private Connection connection;
 
+    private int clientSeqNumber = 0;
+    private int serverSeqNumber = 0;
+    private long sessionId = 0;
+
     private UserInfo currentUser;
 
 
@@ -41,6 +47,7 @@ public class ChatClient {
 
         var kryo = kryoClient.getKryo();
         kryo.register(byte[].class);
+        kryo.register(SessionHelloMessage.class);
         kryo.register(KeyExchangeMessage.class);
         kryo.register(EncryptedMessage.class);
         kryo.register(RegisterRequest.class);
@@ -75,11 +82,6 @@ public class ChatClient {
                         System.out.println("[DEBUG][Handshake] Encrypted AES key (RSA): " + Base64.getEncoder().encodeToString(encKey));
                     }
 
-                    //(test) send first encrypted message after handshake
-                    login("noru", "noru");
-                    register("noru", "noru");
-                    login("noru", "noru");
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -94,12 +96,33 @@ public class ChatClient {
                         System.out.println("[DEBUG][recvObject] iv  " + Base64.getEncoder().encodeToString(em.iv));
                         System.out.println("[DEBUG][recvObject] ct  " + Base64.getEncoder().encodeToString(em.ciphertext));
                     }
+
                     // deserialize
                     Input input = new Input(pt);
                     Object message = kryo.readClassAndObject(input);
                     input.close();
 
-                    if (message instanceof RegisterResponse resp) {
+                    if (!(message instanceof NetworkedMessage nwm)) {
+                        System.out.println("[ERROR] Received unknown message type: " + message.getClass().getSimpleName());
+                        return;
+                    }
+
+                    // check sequence number
+                    if (nwm.seqNumber <= serverSeqNumber) {
+                        // discard the message
+                        if (debug) {
+                            System.out.println("[DEBUG][recvObject] Discarding message with wrong seqNumber: " + nwm.getClass().getSimpleName());
+                        }
+                        return;
+                    }
+
+                    if (message instanceof SessionHelloMessage hello) {
+                        // server sent us the session id
+                        sessionId = hello.sessionId;
+                        if (debug) {
+                            System.out.println("[DEBUG][Handshake] Session ID: " + sessionId);
+                        }
+                    } else if (message instanceof RegisterResponse resp) {
                         // handle server response to register
                         handleRegisterResponse(resp);
                     }
@@ -177,7 +200,10 @@ public class ChatClient {
     }
 
     // helper to send any encrypted object
-    private void sendEncryptedObject(Object obj) {
+    private void sendEncryptedObject(NetworkedMessage obj) {
+        clientSeqNumber++;
+        obj.seqNumber = clientSeqNumber;
+
         try {
             // serialize with kryo
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -193,6 +219,7 @@ public class ChatClient {
             byte[] ct = CryptoUtil.encrypt(plaintext, sessionSecret, iv);
 
             EncryptedMessage em = new EncryptedMessage();
+            em.sessionId = sessionId;
             em.iv = iv;
             em.ciphertext = ct;
 

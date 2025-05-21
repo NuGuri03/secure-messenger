@@ -21,15 +21,23 @@ import networked.messages.EncryptedMessage;
 import networked.messages.KeyExchangeMessage;
 import networked.messages.LoginRequest;
 import networked.messages.LoginResponse;
+import networked.messages.NetworkedMessage;
 import networked.messages.RegisterRequest;
 import networked.messages.RegisterResponse;
+import networked.messages.SessionHelloMessage;
 
 public class ChatServer {
     public static final int TCP_PORT = 23456;
+    private final boolean debug = true;
+
     private final Server kryoServer;
     private final PrivateKey serverPrivateKey;
-    private final Map<Connection, SecretKey> aesKeys = new ConcurrentHashMap<>();
-    private final boolean debug = true;
+
+    // TODO: group these into a single object
+    private final Map<Long, SecretKey> aesKeys = new ConcurrentHashMap<>();
+    private final Map<Long, Integer> recvSeqNumbers = new ConcurrentHashMap<>();
+    private final Map<Long, Integer> sendSeqNumbers = new ConcurrentHashMap<>();
+    private final Map<Connection, Long> sessionIds = new ConcurrentHashMap<>();
 
     //temporal test db, change later to real db
     private final Map<String,String> usersDb = new ConcurrentHashMap<>();
@@ -50,6 +58,7 @@ public class ChatServer {
         kryoServer = new Server();
         var kryo = kryoServer.getKryo();
         kryo.register(byte[].class);
+        kryo.register(SessionHelloMessage.class);
         kryo.register(KeyExchangeMessage.class);
         kryo.register(EncryptedMessage.class);
         kryo.register(RegisterRequest.class);
@@ -65,6 +74,14 @@ public class ChatServer {
             @Override public void disconnected(Connection c) {
                 //log client disconnection
                 System.out.println("Client disconnected: " + c.getRemoteAddressTCP());
+
+                // remove session id and aes key
+                Long sessionId = sessionIds.remove(c);
+                if (sessionId != null) {
+                    aesKeys.remove(sessionId);
+                    recvSeqNumbers.remove(sessionId);
+                    sendSeqNumbers.remove(sessionId);
+                }
             }
             @Override public void received(Connection c, Object obj) {
                 try {
@@ -73,18 +90,42 @@ public class ChatServer {
                         //decrypt handshake using server rsa privatekey
                         byte[] aesBytes = CryptoUtil.decryptRSA(kx.encryptedKey, serverPrivateKey);
                         SecretKey aes = new SecretKeySpec(aesBytes, "AES");
-                        aesKeys.put(c, aes);
+
+                        // generate session id
+                        long sessionId = CryptoUtil.generateRandomId();
+                        sessionIds.put(c, sessionId);
+                        aesKeys.put(sessionId, aes);
 
                         if (debug) {
                             System.out.println("[DEBUG][Handshake] Encrypted AES key (RSA): " + Base64.getEncoder().encodeToString(kx.encryptedKey));
                             System.out.println("[DEBUG][Handshake] Decrypted AES key (Base64): " + Base64.getEncoder().encodeToString(aesBytes));
                         }
+
+                        // send back session id
+                        SessionHelloMessage hello = new SessionHelloMessage();
+                        hello.sessionId = sessionId;
+                        sendEncryptedObject(hello, c);
+
                         return;
                     }
 
                     // 2) encrypted payload
                     if (obj instanceof EncryptedMessage em) {
-                        SecretKey aes = aesKeys.get(c);
+                        Long sessionId = sessionIds.get(c);
+                        if (sessionId == null) {
+                            System.out.println("[ERROR] Session ID == null for connection: " + c + ". Discarding!");
+                            return;
+                        }
+
+                        SecretKey aes = aesKeys.get(sessionId);
+                        if (aes == null) {
+                            System.out.println(
+                                "[ERROR] Unknown session ID '" + sessionId +
+                                "' sent from connection: " + c + ". Discarding!"
+                            );
+                            return;
+                        }
+
                         byte[] plaintext = CryptoUtil.decrypt(em.ciphertext, aes, em.iv);
                         if (debug) {
                             System.out.println("[DEBUG][Recv] IV:  " + Base64.getEncoder().encodeToString(em.iv));
@@ -95,6 +136,19 @@ public class ChatServer {
                         Input input = new Input(plaintext);
                         Object message = kryoServer.getKryo().readClassAndObject(input);
                         input.close();
+
+                        // 3-2) check seq num
+                        if (message instanceof NetworkedMessage nw) {
+                            Integer seqNum = recvSeqNumbers.getOrDefault(sessionId, -1);
+                            if (seqNum == null || seqNum >= nw.seqNumber) {
+                                System.out.println("[ERROR] Received message with wrong sequence number. Discarding!");
+                                return;
+                            }
+                            recvSeqNumbers.put(sessionId, nw.seqNumber);
+                        } else {
+                            System.out.println("[ERROR] Received message not extending NetworkedMessage. Discarding!");
+                            return;
+                        }
 
                         // 4) dispatch by type
                         if (message instanceof RegisterRequest rr) {
@@ -108,7 +162,7 @@ public class ChatServer {
                         else {
                             // echo fallback
                             String text = new String(plaintext, StandardCharsets.UTF_8);
-                            if (debug) System.out.println("[DEBUG][Recv] raw text: " + text);
+                            if (debug) System.out.println("[DEBUG][Recv] unknown raw text: " + text);
 
                         }
                     }
@@ -120,9 +174,15 @@ public class ChatServer {
     }
 
     //helper to send any object encrypted
-    private void sendEncryptedObject(Object obj, Connection c) {
-        SecretKey aesKey = aesKeys.get(c);
+    private void sendEncryptedObject(NetworkedMessage obj, Connection c) {
+        Long sessionId = sessionIds.get(c);
+        if (sessionId == null) throw new IllegalStateException("Session ID not found for connection: " + c);
+
+        SecretKey aesKey = aesKeys.get(sessionId);
         if (aesKey == null) throw new IllegalStateException("AES key not found for connection: " + c);
+
+        obj.seqNumber = sendSeqNumbers.getOrDefault(sessionId, 0);
+        sendSeqNumbers.put(sessionId, obj.seqNumber + 1);
 
         try {
             // serialize with kryo
