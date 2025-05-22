@@ -44,7 +44,7 @@ public class ServerInfo {
         Path filePath = getConfigFilePath();
 
         try {
-            String[] lines = Files.readString(filePath).split("\n");
+            String[] lines = Files.readString(filePath).replace("\r", "").split("\n");
             String serverAddress = lines[0];
             lines[0] = "";
 
