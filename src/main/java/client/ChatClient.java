@@ -30,7 +30,7 @@ public class ChatClient {
     private Connection connection;
 
     private int clientSeqNumber = 0;
-    private int serverSeqNumber = 0;
+    private int serverSeqNumber = -1;
     private long sessionId = 0;
 
     private UserInfo currentUser;
@@ -46,14 +46,9 @@ public class ChatClient {
         }
 
         var kryo = kryoClient.getKryo();
-        kryo.register(byte[].class);
-        kryo.register(SessionHelloMessage.class);
-        kryo.register(KeyExchangeMessage.class);
-        kryo.register(EncryptedMessage.class);
-        kryo.register(RegisterRequest.class);
-        kryo.register(RegisterResponse.class);
-        kryo.register(LoginRequest.class);
-        kryo.register(LoginResponse.class);
+        for (var messageType : MessageTypeIndex.getAllMessageTypes()) {
+            kryo.register(messageType);
+        }
 
         kryoClient.addListener(new Listener() {
 
@@ -73,6 +68,7 @@ public class ChatClient {
                     //encrypt aes key with rsa (public server key)
                     byte[] encKey = CryptoUtil.encryptRSA(aesBytes, serverInfo.getPublicKey());
                     KeyExchangeMessage kx = new KeyExchangeMessage();
+                    kx.sessionId = 0;
                     kx.encryptedKey = encKey;
 
                     //send to server our encrypted aes key
@@ -95,6 +91,7 @@ public class ChatClient {
                     if (debug) {
                         System.out.println("[DEBUG][recvObject] iv  " + Base64.getEncoder().encodeToString(em.iv));
                         System.out.println("[DEBUG][recvObject] ct  " + Base64.getEncoder().encodeToString(em.ciphertext));
+                        System.out.println("[DEBUG][recvObject] pt  " + Base64.getEncoder().encodeToString(pt));
                     }
 
                     // deserialize
@@ -110,28 +107,11 @@ public class ChatClient {
                     // check sequence number
                     if (nwm.seqNumber <= serverSeqNumber) {
                         // discard the message
-                        if (debug) {
-                            System.out.println("[DEBUG][recvObject] Discarding message with wrong seqNumber: " + nwm.getClass().getSimpleName());
-                        }
+                        System.out.println("[DEBUG][recvObject] Discarding message with wrong seqNumber: " + nwm.getClass().getSimpleName());
                         return;
                     }
 
-                    if (message instanceof SessionHelloMessage hello) {
-                        // server sent us the session id
-                        sessionId = hello.sessionId;
-                        if (debug) {
-                            System.out.println("[DEBUG][Handshake] Session ID: " + sessionId);
-                        }
-                    } else if (message instanceof RegisterResponse resp) {
-                        // handle server response to register
-                        handleRegisterResponse(resp);
-                    }
-                    else if (message instanceof LoginResponse resp) {
-                        handleLoginResponse(resp);
-                    }
-                    //add more types here
-
-
+                    dispatchResponse(nwm);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -187,16 +167,22 @@ public class ChatClient {
         }
     }
 
-    private void handleRegisterResponse(RegisterResponse response)
-    {
-        System.out.println("Register response: " + response.success + " : " + response.message);
-        handleResponse(response);
-    }
+    private void dispatchResponse(NetworkedMessage message) {
+        System.out.println("[DEBUG][dispatchResponse] " + message.getClass().getSimpleName());
 
-    private void handleLoginResponse(LoginResponse response)
-    {
-        System.out.println("Login response: " + response.success + " : " + response.message);
-        handleResponse(response);
+        serverSeqNumber = message.seqNumber;
+
+        switch (message) {
+            case SessionHelloMessage hello -> {
+                sessionId = hello.sessionId;
+                if (debug) {
+                    System.out.println("[DEBUG][dispatchResponse] SessionHelloMessage: " + hello.sessionId);
+                }
+            }
+            case RegisterResponse resp -> handleResponse(resp);
+            case LoginResponse resp -> handleResponse(resp);
+            default -> System.out.println("[WARN] Unhandled NetworkedMessage from server: " + message.getClass());
+        }
     }
 
     // helper to send any encrypted object

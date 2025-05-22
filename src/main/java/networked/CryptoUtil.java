@@ -9,7 +9,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.security.*;
 import java.security.spec.*;
 import java.util.Base64;
@@ -95,35 +95,35 @@ public class CryptoUtil {
     }
 
     //load or generate rsa keypair and save to pem files
-    public static KeyPair loadOrGenerateRSAKeyPair(String privPath, String pubPath) throws Exception {
-        if (Files.exists(Paths.get(privPath)) && Files.exists(Paths.get(pubPath))) {
+    public static KeyPair loadOrGenerateRSAKeyPair(Path privPath, Path pubPath) throws Exception {
+        if (Files.exists(privPath) && Files.exists(pubPath)) {
             PrivateKey priv;
             PublicKey pub;
 
-            try (FileReader reader = new FileReader(privPath)) {
+            try (FileReader reader = new FileReader(privPath.toFile())) {
                 priv = loadRSAPrivateKey(reader);
             }
 
-            try (FileReader reader = new FileReader(pubPath)) {
+            try (FileReader reader = new FileReader(pubPath.toFile())) {
                 pub = loadRSAPublicKey(reader);
             }
 
             return new KeyPair(pub, priv);
         }
     
-        //generate new rsa keypair
+        // generate new rsa keypair
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
         kpg.initialize(2048);
         KeyPair kp = kpg.generateKeyPair();
     
-        //save private key to pem
-        try (Writer w = new FileWriter(privPath)) {
+        // save private key to pem
+        try (Writer w = new FileWriter(privPath.toFile())) {
             String b64 = Base64.getEncoder().encodeToString(kp.getPrivate().getEncoded());
             w.write("-----BEGIN PRIVATE KEY-----\n" + chunk(b64) + "-----END PRIVATE KEY-----\n");
         }
 
-        //save public key to pem
-        try (Writer w = new FileWriter(pubPath)) {
+        // save public key to pem
+        try (Writer w = new FileWriter(pubPath.toFile())) {
             String b64 = Base64.getEncoder().encodeToString(kp.getPublic().getEncoded());
             w.write("-----BEGIN PUBLIC KEY-----\n" + chunk(b64) + "-----END PUBLIC KEY-----\n");
         }
