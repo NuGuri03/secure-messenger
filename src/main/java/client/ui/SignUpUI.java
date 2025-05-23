@@ -66,7 +66,7 @@ public class SignUpUI extends BaseUI {
 
         gbc.gridx = 1;
         gbc.weightx = 1.0;
-        JTextField idField = new JTextField("소문자, 숫자, 특수기호(_ . -)만 사용할 수 있습니다");
+        JTextField idField = new JTextField("4~32자의 소문자, 숫자, 특수기호(_ . -)만 사용할 수 있습니다.");
         idField.setPreferredSize(TEXT_SIZE_DIMENSION);
         idField.setFont(font);
         add(idField, gbc);
@@ -75,7 +75,7 @@ public class SignUpUI extends BaseUI {
         idField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (idField.getText().equals("소문자, 숫자, 특수기호(_ . -)만 사용할 수 있습니다")) {
+                if (idField.getText().equals("4~32자의 소문자, 숫자, 특수기호(_ . -)만 사용할 수 있습니다.")) {
                     idField.setText("");
                     idField.setForeground(Color.BLACK);
                 }
@@ -85,7 +85,7 @@ public class SignUpUI extends BaseUI {
             public void focusLost(FocusEvent e) {
 
                 String text = idField.getText();
-                if (text.isEmpty() || text.equals("소문자, 숫자, 특수기호(_ . -)만 사용할 수 있습니다")) {
+                if (text.isEmpty()) {
                     // placeholder 복구
                     idField.setDocument(new PlainDocument());
                     idField.setText("4~32자의 소문자, 숫자, 특수기호(_ . -)만 사용할 수 있습니다.");
