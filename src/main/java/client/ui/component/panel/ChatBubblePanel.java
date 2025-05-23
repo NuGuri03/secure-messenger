@@ -40,38 +40,29 @@ public class ChatBubblePanel extends JPanel {
         bubble.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
         bubble.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-        // 말풍선 내 대화칸
+        // 말풍선 내 대화
         JTextArea msgArea = new JTextArea(message);
-        msgArea.setLineWrap(false);
-        msgArea.setWrapStyleWord(false);
-        msgArea.setEditable(false);
-        msgArea.setOpaque(false);
+        msgArea.setLineWrap(true);                // 줄바꿈 허용
+        msgArea.setWrapStyleWord(true);           // 단어 단위로 줄바꿈
+        msgArea.setEditable(false);               // 편집 불가
+        msgArea.setOpaque(false);                 // 배경 투명
         msgArea.setFont(new Font("Pretendard", Font.PLAIN, 13));
-        msgArea.setMargin(new Insets(0,0,0,0));
 
-        // 한 줄로 놓았을 때의 크기 측정
-        Dimension oneLine = msgArea.getPreferredSize();
+        FontMetrics fm = msgArea.getFontMetrics(msgArea.getFont());
+        int actualWidth = fm.stringWidth(message);
 
         final int MAX_WIDTH = 170;
 
-        // 실제 줄바꿈이 필요한지 검사
-        boolean needWrap = oneLine.width > MAX_WIDTH;
-        msgArea.setLineWrap(needWrap);
-        msgArea.setWrapStyleWord(needWrap);
+        msgArea.setSize(new Dimension(MAX_WIDTH, Short.MAX_VALUE));
+        Dimension preferred = msgArea.getPreferredSize();
 
-        // 폭 설정:
-        //    - wrap이 필요 없으면 실제 한 줄 폭
-        //    - 필요하면 MAX_WIDTH
-        int finalWidth = needWrap ? MAX_WIDTH : oneLine.width;
+        int textWidth = (actualWidth <= MAX_WIDTH) ? textWidth = actualWidth + PADDING - 2 : MAX_WIDTH;
+        Dimension adjusted = new Dimension(textWidth, preferred.height);
 
-        // 높이는 wrap 상태에서 다시 계산
-        msgArea.setSize(new Dimension(finalWidth, Short.MAX_VALUE));
-        Dimension wrapped = msgArea.getPreferredSize();
-
-        // 사이즈 고정
-        msgArea.setMinimumSize(wrapped);
-        msgArea.setPreferredSize(wrapped);
-        msgArea.setMaximumSize(wrapped);
+        // 크기 제한 적용
+        msgArea.setMinimumSize(adjusted);
+        msgArea.setPreferredSize(adjusted);
+        msgArea.setMaximumSize(adjusted);
 
         // 말풍선에 대화 추가
         bubble.add(msgArea);
