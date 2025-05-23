@@ -9,11 +9,11 @@ import client.ui.component.button.UserIconButton;
 
 public class ChatUI extends BaseUI {
 
-    public ChatUI(String username) {
+    public ChatUI(String myInfo, String username) {
         super();
 
         if (username == null || username.trim().isEmpty()) {
-            username = "홍길동";
+            username = "알 수 없음";
         }
 
         setTitle("Chat");
@@ -42,7 +42,7 @@ public class ChatUI extends BaseUI {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         // 메세지 입력창 영역
-        JPanel inputPanel = createInputPanel(chatArea, scrollPane, username, userIconButton);
+        JPanel inputPanel = createInputPanel(chatArea, scrollPane, myInfo, userIconButton);
 
         // 위치 설정
         chatPanel.add(topbar, BorderLayout.NORTH);

@@ -10,11 +10,11 @@ import java.awt.*;
 
 public class MainUI extends BaseUI {
 
-    public MainUI(String username) {
+    public MainUI(String myInfo) {
         super();
 
-        if (username == null || username.trim().isEmpty()) {
-            username = "user";
+        if (myInfo == null || myInfo.trim().isEmpty()) {
+            myInfo = "user";
         }
 
         setTitle("Main");
@@ -30,8 +30,8 @@ public class MainUI extends BaseUI {
 
         JPanel mainPanel = new JPanel(new CardLayout());
 
-        mainPanel.add(new LobbyPanel(), "lobby");
-        mainPanel.add(new RecentChatPanel(), "chat");
+        mainPanel.add(new LobbyPanel(myInfo), "lobby");
+        mainPanel.add(new RecentChatPanel(myInfo), "chat");
         mainPanel.add(new SettingsPanel(), "settings");
 
         CardLayout cardLayout = (CardLayout) mainPanel.getLayout();

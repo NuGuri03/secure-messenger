@@ -12,7 +12,7 @@ import java.util.Vector;
 public class LobbyPanel extends JPanel {
     private static final int PADDING = 30;
 
-    public LobbyPanel() {
+    public LobbyPanel(String username) {
         setLayout(new BorderLayout());
 
         JPanel title = new JPanel();
@@ -34,7 +34,7 @@ public class LobbyPanel extends JPanel {
         usersPanel.setBorder(null);
         usersPanel.add(Box.createVerticalStrut(PADDING));
 
-        UserInfoPanel myInfo = new UserInfoPanel(null, null, null);
+        UserInfoPanel myInfo = new UserInfoPanel(username, null, null);
         myInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
         usersPanel.add(myInfo);
 
