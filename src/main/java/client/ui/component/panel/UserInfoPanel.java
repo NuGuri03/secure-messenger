@@ -1,5 +1,6 @@
 package client.ui.component.panel;
 
+import client.ui.ProfileUI;
 import client.ui.component.button.UserIconButton;
 
 import javax.swing.*;
@@ -58,7 +59,12 @@ public class UserInfoPanel extends JPanel {
         UserIconButton userIconButton = new UserIconButton(this.avatarPath, 40);
         userIconButton.setAlignmentY(Component.TOP_ALIGNMENT);
         myAvatarPanel.add(userIconButton);
-
+        // profileUI 생성
+        userIconButton.addActionListener(e -> {
+        	new ProfileUI();
+        });
+        
+        
         add(Box.createRigidArea(new Dimension(35, 0)));
         add(myAvatarPanel);
         add(Box.createRigidArea(new Dimension(15, 0)));
