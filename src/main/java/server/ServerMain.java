@@ -2,7 +2,7 @@ package server;
 
 import java.io.IOException;
 
-import server.Database.DatabaseManager;
+import server.database.DatabaseManager;
 
 public class ServerMain {
     public static void main(String[] args) {

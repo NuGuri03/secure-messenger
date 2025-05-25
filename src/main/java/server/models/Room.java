@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import server.Database.DatabaseManager;
+import server.database.DatabaseManager;
 
 public class Room extends Model {
     private long id;

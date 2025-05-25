@@ -25,7 +25,7 @@ import networked.messages.PreSessionMessage;
 import networked.messages.RegisterRequest;
 import networked.messages.RegisterResponse;
 import networked.messages.SessionHelloMessage;
-import server.Database.UserBuilder;
+import server.database.UserBuilder;
 import server.models.User;
 
 public class ChatServer {

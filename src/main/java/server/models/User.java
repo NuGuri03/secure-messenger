@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import networked.CryptoUtil;
-import server.Database.DatabaseManager;
+import server.database.DatabaseManager;
 
 public class User extends Model {
     private long id;
