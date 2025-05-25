@@ -36,7 +36,7 @@ public class ChatUI extends BaseUI {
 
         // 유저 아이콘 버튼
         UserIconButton userIconButton = new UserIconButton("/icons/default_profile.png", 32);
-
+        
         // 탑바 영역
         JPanel topbar = createTopbarPanel(username, userIconButton);
 
@@ -185,11 +185,6 @@ public class ChatUI extends BaseUI {
         inputPanel.add(buttonWrapper);
 
         
-        // profileUI 생성
-        userIconButton.addActionListener(e -> {
-            ProfileUI profileUI = new ProfileUI();
-            profileUI.setVisible(true);
-        });
         
         return inputPanel;
     }

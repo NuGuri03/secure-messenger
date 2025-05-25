@@ -57,7 +57,7 @@ public class LobbyPanel extends JPanel {
         userInfo.add(new UserInfoPanel("서유민", "PM", null));
         userInfo.add(new UserInfoPanel("Bruno", "떼굴떼굴 구르는 중...", null));
         userInfo.add(new UserInfoPanel("정성진", "떼굴떼굴 구르는 중...", null));
-        userInfo.add(new UserInfoPanel("권혁주", "Login UI 만드는 중...", null));
+        userInfo.add(new UserInfoPanel("권혁주", "섹스", null));
         userInfo.add(new UserInfoPanel("신승빈", "SignUp UI 만드는 중...", null));
 
         // 이름 가나다 순서

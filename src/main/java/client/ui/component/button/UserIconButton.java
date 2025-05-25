@@ -57,4 +57,5 @@ public class UserIconButton extends JButton {
     public UserIconButton copy() {
         return new UserIconButton(imagePath, avatarSize);
     }
+    
 }
