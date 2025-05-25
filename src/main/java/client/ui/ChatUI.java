@@ -7,6 +7,15 @@ import java.awt.event.*;
 import client.ui.component.panel.ChatBubblePanel;
 import client.ui.component.button.UserIconButton;
 
+/**
+ * 
+ */
+/**
+ * 
+ */
+/**
+ * 
+ */
 public class ChatUI extends BaseUI {
 
     public ChatUI(String username) {
@@ -51,13 +60,7 @@ public class ChatUI extends BaseUI {
         add(chatPanel, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
-    }
-
-    /**
-     * 탑바 패널을 생성
-     * @param username 유저 네임
-     * @return 문구가 포함된 패널
-     */
+    }    	
     private JPanel createTopbarPanel(String username, UserIconButton userIconButton) {
         JPanel topbar = new JPanel();
 
@@ -181,6 +184,13 @@ public class ChatUI extends BaseUI {
         inputPanel.add(Box.createVerticalStrut(5)); // 입력창-버튼 간 간격
         inputPanel.add(buttonWrapper);
 
+        
+        // profileUI 생성
+        userIconButton.addActionListener(e -> {
+            ProfileUI profileUI = new ProfileUI();
+            profileUI.setVisible(true);
+        });
+        
         return inputPanel;
     }
 }
