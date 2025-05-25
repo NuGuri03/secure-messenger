@@ -21,30 +21,29 @@ public class ProfileUI extends BaseUI{
         Font mainFont = new Font("Pretendard", Font.PLAIN, 16);
         Font subFont = new Font("Pretendard", Font.PLAIN, 14);
         
-        
-        // 배경사진
-        ImageIcon BackIcon = new ImageIcon(getClass().getResource("/icons/user_profile.jpg"));
-        Image BackscaledImage = BackIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
-        JLabel BackLabel = new JLabel(new ImageIcon(BackscaledImage));
-
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.gridheight = 4; // 0~3행 병합
-        gbc.anchor = GridBagConstraints.CENTER;
-        add(BackLabel, gbc);
-        
         // 프로필 사진
         ImageIcon profileIcon = new ImageIcon(getClass().getResource("/icons/default_profile.png"));
         Image scaledImage = profileIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         JLabel profileLabel = new JLabel(new ImageIcon(scaledImage));
         
         profileLabel.setOpaque(false);
- 
+        
+        gbc.gridx = 1;
         gbc.gridy = 3;
         gbc.gridheight = 1;
-        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.anchor = GridBagConstraints.SOUTH;
         add(profileLabel, gbc);
         
+        
+        // 배경사진
+        ImageIcon BackIcon = new ImageIcon(getClass().getResource("/icons/user_profile.jpg"));
+        Image BackscaledImage = BackIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+        JLabel BackLabel = new JLabel(new ImageIcon(BackscaledImage));
+
+        gbc.gridy = 0;
+        gbc.gridheight = 3; // 0~3행 병합
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(BackLabel, gbc);
         
         // 프로필 이름
         JLabel labelID = new JLabel(username);
