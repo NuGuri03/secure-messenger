@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.util.Base64;
@@ -24,6 +25,8 @@ import networked.messages.PreSessionMessage;
 import networked.messages.RegisterRequest;
 import networked.messages.RegisterResponse;
 import networked.messages.SessionHelloMessage;
+import server.Database.UserBuilder;
+import server.models.User;
 
 public class ChatServer {
     public static final int TCP_PORT = 23456;
@@ -33,9 +36,6 @@ public class ChatServer {
 
     private final Map<Long, SessionInfo> sessionTable = new ConcurrentHashMap<>();
     private final Map<Connection, Long> connectionTable = new ConcurrentHashMap<>();
-
-    //temporal test db, change later to real db
-    private final Map<String,String> usersDb = new ConcurrentHashMap<>();
 
 
     public ChatServer() throws Exception {
@@ -47,7 +47,7 @@ public class ChatServer {
         //start server and bind ports
         kryoServer.start();
         kryoServer.bind(TCP_PORT);
-        System.out.printf("Server started on TCP %d%n", TCP_PORT);
+        System.out.printf("[ChatServer] Server started on TCP %d%n", TCP_PORT);
     }
 
 
@@ -93,11 +93,11 @@ public class ChatServer {
     }
 
     private void serverConnected(Connection c) {
-        System.out.println("Client connected: " + c.getRemoteAddressTCP());
+        System.out.println("[ChatServer] Client connected: " + c.getRemoteAddressTCP());
     }
 
     private void serverDisconnected(Connection c) {
-        System.out.println("Client disconnected: " + c.getRemoteAddressTCP());
+        System.out.println("[ChatServer] Client disconnected: " + c.getRemoteAddressTCP());
 
         // remove from connection table
         Long sessionId = connectionTable.remove(c);
@@ -112,7 +112,7 @@ public class ChatServer {
         switch (psm) {
             case KeyExchangeMessage kx -> handleKeyExchangeMessage(c, kx);
             case EncryptedMessage em -> handleEncryptedMessage(c, em);
-            default -> System.out.println("[ERROR] Unknown PreSessionMessage " + psm.getClass());
+            default -> System.out.println("[ChatServer] [ERROR] Unknown PreSessionMessage " + psm.getClass());
         }
     }
 
@@ -201,7 +201,7 @@ public class ChatServer {
 
         // 4. check seq num
         if (!session.receiveSeqNumber(msg.seqNumber)) {
-            System.out.println("[ERROR] Received message with wrong sequence number. Discarding!");
+            System.out.println("[ChatServer] [ERROR] Received message with wrong sequence number. Discarding!");
             return;
         }
 
@@ -209,42 +209,73 @@ public class ChatServer {
         dispatchNetworkedMessage(msg, c);
     }
 
-    private void dispatchNetworkedMessage(NetworkedMessage msg, Connection c) {
+    private void dispatchNetworkedMessage(NetworkedMessage msg, Connection c) throws Exception {
         switch (msg) {
             case RegisterRequest rr -> handleRegister(rr, c);
             case LoginRequest lr -> handleLogin(lr, c);
 
-            default -> System.out.println("[WARN] Unhandled NetworkedMessage: " + msg.getClass());
+            default -> System.out.println("[ChatServer] [WARN] Unhandled NetworkedMessage: " + msg.getClass());
         }
     }
 
     // --------------------- handle methods --------------------- //
 
     //temporal method, check with DB later
-    private void handleRegister(RegisterRequest req, Connection c) {
+    private void handleRegister(RegisterRequest req, Connection c) throws Exception {
         RegisterResponse resp = new RegisterResponse();
-        if (usersDb.containsKey(req.username)) {
+
+        if (User.isHandleExists(req.username)) {
             resp.success = false;
-            resp.message = "username already exists";
-        } else {
-            usersDb.put(req.username, req.password);
-            resp.success = true;
-            resp.message = "registration successful";
+            resp.message = "handle already exists";
+            sendMessage(resp, c);
+            return;
         }
+
+        if (!User.isHandleValid(req.username)) {
+            resp.success = false;
+            resp.message = "invalid handle";
+            sendMessage(resp, c);
+            return;
+        }
+
+        // TODO: RegisterRequest should contain more fields like nickname, public key, etc.
+        var handle = req.username; // placeholder, should be req.handle
+        var nickname = req.username; // placeholder, should be req.nickname
+        var authenticationKey = req.password.getBytes(Charset.forName("UTF-8")); // placeholder
+        var publicKey = new byte[] {0x1, 0x2, 0x3, 0x4, 0x5}; // placeholder
+        var encryptedPrivateKey = new byte[] {0x11, 0x22, 0x33, 0x44, 0x55}; // placeholder
+        var encryptedPrivateKeyIv = new byte[] {0xA, 0xB, 0xC, 0xD, 0xE}; // placeholder
+
+        new UserBuilder()
+            .setHandle(handle)
+            .setNickname(nickname)
+            .setAuthenticationKey(authenticationKey)
+            .setPublicKey(publicKey)
+            .setEncryptedPrivateKey(encryptedPrivateKey)
+            .setEncryptedPrivateKeyIv(encryptedPrivateKeyIv)
+            .createUser();
+
+        resp.success = true;
+        resp.message = "registration successful";
         sendMessage(resp, c);
     }
 
     //temporal method, check with DB later
     private void handleLogin(LoginRequest req, Connection c) {
         LoginResponse resp = new LoginResponse();
-        String stored = usersDb.get(req.username);
-        if (stored != null && stored.equals(req.password)) {
+
+        User user = User.queryByHandle(req.username);
+
+        // TODO: placeholder; use authenticationKey, not password
+        var authenticationKey = req.password.getBytes(Charset.forName("UTF-8"));
+        if (user != null && user.verifyAuthenticationKey(authenticationKey)) {
             resp.success = true;
             resp.message = "login successful";
         } else {
             resp.success = false;
             resp.message = "invalid credentials";
         }
+
         sendMessage(resp, c);
     }
 }

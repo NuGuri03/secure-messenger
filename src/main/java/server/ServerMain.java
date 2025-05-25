@@ -2,9 +2,12 @@ package server;
 
 import java.io.IOException;
 
+import server.Database.DatabaseManager;
+
 public class ServerMain {
     public static void main(String[] args) {
         try {
+            DatabaseManager.init();
             ChatServer server = new ChatServer();
             server.start();
         } catch (IOException e) {

@@ -1,5 +1,7 @@
 package networked;
 
+import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
+import org.bouncycastle.crypto.params.Argon2Parameters;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 
@@ -35,11 +37,22 @@ public class CryptoUtil {
     }
 
     /**
-     * @brief 무작위의 long값을 반환한다.
+     * 무작위의 long값을 반환한다.
      * @apiNote long은 64비트의 정수형이므로, 경우의 수는 2^64 = 18,446,744,073,709,551,616이다.
      */
     public static long generateRandomId() {
         return new SecureRandom().nextLong();
+    }
+
+    /**
+     * 지정된 길이의 무작위 바이트 배열을 생성한다.
+     * @param length 생성할 바이트 배열의 길이
+     * @return 무작위 바이트 배열
+     */
+    public static byte[] generateRandomBytes(int length) {
+        byte[] bytes = new byte[length];
+        new SecureRandom().nextBytes(bytes);
+        return bytes;
     }
 
     //encrypt plaintext with aes-gcm
@@ -129,6 +142,55 @@ public class CryptoUtil {
         }
 
         return kp;
+    }
+
+    /**
+     * Argon2id 키 파생 함수 (KDF)를 사용하여 입력 데이터를 해시한다.
+     * @param input 입력 데이터
+     * @param salt 솔트 값
+     * @return 64바이트 길이의 해시 값
+     * @see https://hd.nulable.kr/s/E286YqsWG#%EC%A0%84%EC%A0%9C%EC%A1%B0%EA%B1%B4
+     * @apiNote 문서에 명시된 바와 같이, Argon2id(m=19MiB, t=2, p=1, length=64bytes)의 설정을 사용한다.
+     * @apiNote 같은 input과 salt에 대해 항상 동일한 해시 값을 생성한다.
+     */
+    public static byte[] kdf(byte[] input, byte[] salt) {
+        var params = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id)
+            .withVersion(Argon2Parameters.ARGON2_VERSION_13)
+            .withMemoryAsKB(1024 * 19)  // t=19 MiB
+            .withIterations(2)   // i=2
+            .withParallelism(1)  // p=1
+            .withSalt(salt)
+            .build();
+        
+        var argon2 = new Argon2BytesGenerator();
+        argon2.init(params);
+
+        byte[] output = new byte[64];  // outputLength = 64 bytes
+        argon2.generateBytes(input, output, 0, output.length);
+
+        return output;
+    }
+
+    /**
+     * 두 바이트 배열을 안전하게 비교한다.
+     * @param a 첫 번째 바이트 배열
+     * @param b 두 번째 바이트 배열
+     * @return 두 배열이 동일하면 true, 그렇지 않으면 false
+     * @apiNote 이 메서드는 Timing attack을 방지하기 위해 상수 시간으로 비교를 수행한다.
+     */
+    public static boolean secureCompareBytes(byte[] a, byte[] b) {
+        if (a.length != b.length) {
+            return false;
+        }
+
+        // Compare byte arrays in constant time
+        // to avoid possible timing attack vectors
+        int result = 0;
+        for (int i = 0; i < a.length; i++) {
+            result |= a[i] ^ b[i];
+        }
+
+        return result == 0;
     }
 
     //helper to chunk base64 into lines of 64 chars
