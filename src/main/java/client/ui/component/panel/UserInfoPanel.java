@@ -61,7 +61,7 @@ public class UserInfoPanel extends JPanel {
         myAvatarPanel.add(userIconButton);
         // profileUI 생성
         userIconButton.addActionListener(e -> {
-        	new ProfileUI();
+        	new ProfileUI(username);
         });
         
         
