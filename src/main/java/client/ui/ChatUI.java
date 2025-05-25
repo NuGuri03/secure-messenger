@@ -60,6 +60,8 @@ public class ChatUI extends BaseUI {
         add(chatPanel, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
+        
+        setVisible(true);
     }    	
     private JPanel createTopbarPanel(String username, UserIconButton userIconButton) {
         JPanel topbar = new JPanel();
