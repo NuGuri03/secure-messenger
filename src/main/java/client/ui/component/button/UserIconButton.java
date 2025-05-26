@@ -8,7 +8,11 @@ public class UserIconButton extends JButton {
     private final int avatarSize;
 
     public UserIconButton(String imagePath, int avatarSize) {
-        this.imagePath = imagePath;
+        if (imagePath == null || imagePath.isEmpty()) {
+            this.imagePath = "/icons/default_avatar.png";
+        } else {
+            this.imagePath = imagePath;
+        }
         this.avatarSize = avatarSize;
 
         setPreferredSize(new Dimension(avatarSize, avatarSize));
