@@ -202,7 +202,7 @@ public class SignUpUI extends BaseUI {
         } else if(!password.matches("^[\\u0020-\\u007E]{8,1024}$")) {
             showCustomDialog("비밀번호는 8글자 이상, 1024글자 이하로 작성하세요");
         } else {
-            showCustomDialog("완료되었습니다");
+            showCustomDialog("가입이 완료되었습니다. 환영합니다!");
             this.dispose();
         }
     }
