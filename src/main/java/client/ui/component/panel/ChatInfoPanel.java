@@ -27,18 +27,41 @@ public class ChatInfoPanel extends ClickAblePanel{
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(null);
-//
-//        UserIconButton userIconButton = new UserIconButton();
+
+        Font nameFont = new Font("Pretendard", Font.BOLD, 16);
+        Font messageFont = new Font("Pretendard", Font.PLAIN, 14);
+
+        JPanel avatarPanel = new JPanel();
+        avatarPanel.setLayout(new BoxLayout(avatarPanel, BoxLayout.Y_AXIS));
+        avatarPanel.setOpaque(false);
+        avatarPanel.setAlignmentY(Component.TOP_ALIGNMENT);
+        avatarPanel.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
+        UserIconButton userIconButton = new UserIconButton("/icons/default_profile.png", 40);
+        userIconButton.setAlignmentY(Component.TOP_ALIGNMENT);
+        avatarPanel.add(userIconButton);
+
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setOpaque(false);
+        contentPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 
         JLabel userLabel = new JLabel(username);
-        add(userLabel);
+        userLabel.setFont(nameFont);
+        userLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentPanel.add(userLabel);
 
         JLabel messageLabel = new JLabel(lastMessage);
+        messageLabel.setFont(messageFont);
+        messageLabel.setAlignmentY(Component.TOP_ALIGNMENT);
         messageLabel.setForeground(Color.GRAY);
-        add(messageLabel);
+        contentPanel.add(messageLabel);
 
-        setAlignmentX(LEFT_ALIGNMENT);
-        setAlignmentY(TOP_ALIGNMENT);
+        add(Box.createRigidArea(new Dimension(15, 0)));
+        add(avatarPanel);
+        add(Box.createRigidArea(new Dimension(15, 0)));
+        add(contentPanel);
+        add(Box.createRigidArea(new Dimension(0, 30)));
+
         setVisible(true);
     }
 }
