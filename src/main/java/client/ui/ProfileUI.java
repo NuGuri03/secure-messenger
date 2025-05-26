@@ -34,7 +34,7 @@ public class ProfileUI extends BaseUI {
         
         // 배경사진
 
-        ImageIcon BackIcon = new ImageIcon(getClass().getResource("/images/deafult_background.png"));
+        ImageIcon BackIcon = new ImageIcon(getClass().getResource("/images/default_background.png"));
         Image BackscaledImage = BackIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
         JLabel BackLabel = new JLabel(new ImageIcon(BackscaledImage));
 
