@@ -34,7 +34,8 @@ public class SignUpUI extends BaseUI {
         gbc.anchor = GridBagConstraints.EAST;
         add(label, gbc);
 
-        JTextField nameField = new JTextField("이름을 1자 이상 32자 이하로 입력해주세요");
+        String namePlaceHolder = "이름을 1자 이상 32자 이하로 입력해주세요";
+        JTextField nameField = new JTextField(namePlaceHolder);
         nameField.setDocument(new JTextFieldLimit(32));
         nameField.setPreferredSize(TEXT_SIZE_DIMENSION);
         gbc.gridx = 1;
@@ -45,7 +46,7 @@ public class SignUpUI extends BaseUI {
         nameField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (nameField.getText().equals("이름을 1자 이상 32자 이하로 입력해주세요")) {
+                if (nameField.getText().equals(namePlaceHolder)) {
                     nameField.setText("");
                     nameField.setForeground(Color.BLACK);
                 }
@@ -54,7 +55,7 @@ public class SignUpUI extends BaseUI {
             @Override
             public void focusLost(FocusEvent e) {
                 if (nameField.getText().isEmpty()) {
-                    nameField.setText("이름을 1자 이상 32자 이하로 입력해주세요");
+                    nameField.setText(namePlaceHolder);
                     nameField.setForeground(Color.GRAY);
                 }
             }
@@ -67,7 +68,9 @@ public class SignUpUI extends BaseUI {
 
         gbc.gridx = 1;
         gbc.weightx = 1.0;
-        JTextField idField = new JTextField("소문자, 숫자, 특수기호(_ . -)만 사용할 수 있습니다");
+
+        String idPlaceHolder = "소문자, 숫자, 특수기호(_ . -)만 사용할 수 있습니다";
+        JTextField idField = new JTextField(idPlaceHolder);
         idField.setPreferredSize(TEXT_SIZE_DIMENSION);
         idField.setFont(font);
         add(idField, gbc);
@@ -76,7 +79,7 @@ public class SignUpUI extends BaseUI {
         idField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (idField.getText().equals("소문자, 숫자, 특수기호(_ . -)만 사용할 수 있습니다")) {
+                if (idField.getText().equals(idPlaceHolder)) {
                     idField.setText("");
                     idField.setForeground(Color.BLACK);
                 }
@@ -84,17 +87,14 @@ public class SignUpUI extends BaseUI {
 
             @Override
             public void focusLost(FocusEvent e) {
-
                 String text = idField.getText();
-                if (text.isEmpty() || text.equals("소문자, 숫자, 특수기호(_ . -)만 사용할 수 있습니다")) {
-                    // placeholder 복구
+                if (text.isEmpty()) {
                     idField.setDocument(new PlainDocument());
-                    idField.setText("4~32자의 소문자, 숫자, 특수기호(_ . -)만 사용할 수 있습니다.");
+                    idField.setText(idPlaceHolder);
                     idField.setForeground(Color.GRAY);
                 }
             }
         });
-
 
         // 비밀번호
         gbc.gridx = 0;
@@ -159,12 +159,7 @@ public class SignUpUI extends BaseUI {
         confirm.setFont(font);
         add(confirm, gbc);
 
-        confirm.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                signUp(nameField, idField, pwField, pwcField);
-            }
-        });
+        confirm.addActionListener(e -> signUp(nameField, idField, pwField, pwcField));
 
         KeyStroke enterKey = KeyStroke.getKeyStroke("ENTER");
         Action loginAction = new AbstractAction() {
