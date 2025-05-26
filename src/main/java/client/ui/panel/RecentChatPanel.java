@@ -34,9 +34,22 @@ public class RecentChatPanel extends JPanel {
         chatListPanel.setBorder(BorderFactory.createEmptyBorder(PADDING / 2, PADDING / 2, PADDING / 2, PADDING / 2));
 
         ArrayList<ChatInfoPanel> recentChatList = new ArrayList<>();
+        // Sample data for recent chats
         recentChatList.add(new ChatInfoPanel(username,"테스트유저1", "안녕하세요!"));
         recentChatList.add(new ChatInfoPanel(username,"테스트유저2", "반갑습니다!"));
         recentChatList.add(new ChatInfoPanel(username,"테스트유저3", "오늘 날씨가 좋네요!"));
+        recentChatList.add(new ChatInfoPanel(username,"테스트유저4", "오랜만이에요!"));
+        recentChatList.add(new ChatInfoPanel(username,"테스트유저5", "채팅을 시작해볼까요?"));
+        recentChatList.add(new ChatInfoPanel(username,"테스트유저6", "새로운 소식이 있어요!"));
+        recentChatList.add(new ChatInfoPanel(username,"테스트유저7", "어떻게 지내세요?"));
+        recentChatList.add(new ChatInfoPanel(username,"테스트유저8", "이번 주말에 뭐해요?"));
+        recentChatList.add(new ChatInfoPanel(username,"테스트유저9", "프로젝트 진행 상황은 어때요?"));
+        recentChatList.add(new ChatInfoPanel(username,"테스트유저10", "다음에 만나요!"));
+        recentChatList.add(new ChatInfoPanel(username,"테스트유저11", "새로운 아이디어가 있어요!"));
+        recentChatList.add(new ChatInfoPanel(username,"테스트유저12", "오늘 저녁 뭐 먹을까요?"));
+        recentChatList.add(new ChatInfoPanel(username,"테스트유저13", "다음 회의 일정은 언제인가요?"));
+        recentChatList.add(new ChatInfoPanel(username,"테스트유저14", "프로젝트 마감이 다가오네요!"));
+        recentChatList.add(new ChatInfoPanel(username,"테스트유저15", "새로운 기능을 추가했어요!"));
 
         for (var chatInfoPanel : recentChatList) {
             chatInfoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
