@@ -28,6 +28,9 @@ public class ChatInfoPanel extends ClickAblePanel{
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(null);
 
+        setPreferredSize(new Dimension(400, 55)); // 너비는 부모에 따라 달라질 수 있음
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, 60)); // BoxLayout용 확장 허용
+
         Font nameFont = new Font("Pretendard", Font.BOLD, 16);
         Font messageFont = new Font("Pretendard", Font.PLAIN, 14);
 
