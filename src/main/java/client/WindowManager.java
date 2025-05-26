@@ -29,7 +29,7 @@ public class WindowManager {
     public static void openSignUpUI() {
         // 새 창을 띄우되, 기존 창과는 상호작용하지 못하게 한다.
         var currentUI = WindowManager.currentUI;
-        currentUI.setEnabled(false);
+        currentUI.setFormEnabled(false);
 
         SwingUtilities.invokeLater(() -> {
             SignUpUI signUpUI = new SignUpUI(client);
@@ -38,7 +38,7 @@ public class WindowManager {
             signUpUI.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                    currentUI.setEnabled(true);
+                    currentUI.setFormEnabled(true);
                 }
             });
         });

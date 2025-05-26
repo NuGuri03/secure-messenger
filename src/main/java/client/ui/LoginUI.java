@@ -116,11 +116,11 @@ public class LoginUI extends BaseUI {
                 WindowManager.toMainUI();
             } else {
                 showErrorMessage("로그인 실패: " + response.message);
-                setEnabled(true);
+                setFormEnabled(true);
             }
         });
 
         // 처리 전까지 UI 비활성화
-        setEnabled(false);
+        setFormEnabled(false);
     }
 }

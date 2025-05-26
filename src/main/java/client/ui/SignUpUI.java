@@ -209,7 +209,7 @@ public class SignUpUI extends BaseUI {
     }
 
     private void requestSignUp(String name, String id, String password) {
-        setEnabled(false);
+        setFormEnabled(false);
 
         var client = getClient();
         client.setOneshotCallback(RegisterResponse.class, (RegisterResponse res) -> {
@@ -218,7 +218,7 @@ public class SignUpUI extends BaseUI {
                 dispose();
             } else {
                 showCustomDialog("회원가입에 실패했습니다: " + res.message);
-                setEnabled(true);
+                setFormEnabled(true);
             }
         });
 

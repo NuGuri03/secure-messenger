@@ -27,6 +27,19 @@ public abstract class BaseUI extends JFrame {
         JOptionPane.showMessageDialog(this, message, "오류", JOptionPane.ERROR_MESSAGE);
     }
 
+    public void setFormEnabled(boolean enabled) {
+        for (Component component : getContentPane().getComponents()) {
+            var isInteractive = component instanceof JButton
+                || component instanceof JTextField
+                || component instanceof JCheckBox
+                || component instanceof JComboBox;
+
+            if (isInteractive) {
+                component.setEnabled(enabled);
+            }
+        }
+    }
+
 
     protected ChatClient getClient() {
         return client;
