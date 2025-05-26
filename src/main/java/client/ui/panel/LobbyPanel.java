@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Vector;
 
@@ -49,7 +50,7 @@ public class LobbyPanel extends JPanel {
         line.setAlignmentX(Component.LEFT_ALIGNMENT);
         usersPanel.add(line);
 
-        Vector<UserInfoPanel> userInfo = new Vector<UserInfoPanel>();
+        ArrayList<UserInfoPanel> userInfo = new ArrayList<UserInfoPanel>();
         // 예시 유저
         userInfo.add(new UserInfoPanel("호반우", "KNU CSE", null));
         userInfo.add(new UserInfoPanel("김민준", "코딩을 사랑합니다 저를 굴려주세요 PM님 힝힝 (당근)", null));
