@@ -8,6 +8,7 @@ public class ProfileUI extends BaseUI {
     	super();
 
         setSize(400, 700);
+        setMinimumSize(new Dimension(400, 700));
         setResizable(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -56,7 +57,6 @@ public class ProfileUI extends BaseUI {
         // 채팅 버튼
         JButton btnChat = new JButton("1:1 채팅");
         btnChat.setFont(subFont);
-     
         gbc.gridy = 5;
         gbc.gridheight = 1;
         gbc.anchor = GridBagConstraints.SOUTH;
@@ -68,6 +68,5 @@ public class ProfileUI extends BaseUI {
         });
         
         setVisible(true);
-
     }
 }
