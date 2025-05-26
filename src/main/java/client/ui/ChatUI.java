@@ -35,7 +35,7 @@ public class ChatUI extends BaseUI {
         this.setLayout(new BorderLayout());
 
         // 유저 아이콘 버튼
-        UserIconButton userIconButton = new UserIconButton("/icons/default_profile.png", 32);
+        UserIconButton userIconButton = new UserIconButton("/images/default_profile.png", 32);
         
         // 탑바 영역
         JPanel topbar = createTopbarPanel(username, userIconButton);

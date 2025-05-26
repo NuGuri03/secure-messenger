@@ -3,13 +3,11 @@ package client.ui;
 import java.awt.*;
 import javax.swing.*;
 
-public class ProfileUI extends BaseUI{
-    private static final long serialVersionUID = 1L;
-    public ProfileUI(String username) 
-    {
+public class ProfileUI extends BaseUI {
+    public ProfileUI(String username) {
     	super();
 
-        setSize(400, 600);
+        setSize(400, 700);
         setResizable(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -22,12 +20,11 @@ public class ProfileUI extends BaseUI{
         Font subFont = new Font("Pretendard", Font.PLAIN, 14);
         
         // 프로필 사진
-        ImageIcon profileIcon = new ImageIcon(getClass().getResource("/icons/default_profile.png"));
+        ImageIcon profileIcon = new ImageIcon(getClass().getResource("/images/default_profile.png"));
         Image scaledImage = profileIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         JLabel profileLabel = new JLabel(new ImageIcon(scaledImage));
         
         profileLabel.setOpaque(false);
-        
         gbc.gridx = 1;
         gbc.gridy = 3;
         gbc.gridheight = 1;
@@ -36,7 +33,8 @@ public class ProfileUI extends BaseUI{
         
         
         // 배경사진
-        ImageIcon BackIcon = new ImageIcon(getClass().getResource("/icons/user_profile.jpg"));
+
+        ImageIcon BackIcon = new ImageIcon(getClass().getResource("/images/deafult_background.png"));
         Image BackscaledImage = BackIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
         JLabel BackLabel = new JLabel(new ImageIcon(BackscaledImage));
 
@@ -56,7 +54,7 @@ public class ProfileUI extends BaseUI{
         
         
         // 채팅 버튼
-        JButton btnChat = new JButton("1 : 1 채팅");
+        JButton btnChat = new JButton("1:1 채팅");
         btnChat.setFont(subFont);
      
         gbc.gridy = 5;

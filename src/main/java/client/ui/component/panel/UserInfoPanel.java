@@ -26,7 +26,7 @@ public class UserInfoPanel extends JPanel {
         }
 
         if (imagePath == null || imagePath.trim().isEmpty()) {
-            this.avatarPath = "/icons/default_profile.png";
+            this.avatarPath = "/images/default_profile.png";
         } else {
             this.avatarPath = imagePath;
         }
