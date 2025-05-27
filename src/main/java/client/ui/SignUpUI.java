@@ -1,16 +1,17 @@
 package client.ui;
 
+import client.ChatClient;
 import client.ui.component.text.JTextFieldLimit;
+import networked.messages.RegisterResponse;
 
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 public class SignUpUI extends BaseUI {
-    public SignUpUI() {
-        super();
+    public SignUpUI(ChatClient client) {
+        super(client);
 
         setTitle("회원가입");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -181,30 +182,47 @@ public class SignUpUI extends BaseUI {
         String password = new String(pwField.getPassword());
         String confirmPassword = new String(pwcField.getPassword());
 
-        ArrayList<String> idList = new ArrayList<>();
-        idList.add("admin");
-
         // 한국어 정규식
         String koreanRegex = ".*[가-힣ㄱ-ㅎㅏ-ㅣ].*";
 
         if (id.matches(koreanRegex) || password.matches(koreanRegex)) {
             showCustomDialog("아이디와 비밀번호에는 한글을 포함할 수 없습니다");
+            return;
         } else if (name.isEmpty() || id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             showCustomDialog("모든 항목을 입력하세요");
+            return;
         } else if (!password.equals(confirmPassword)) {
             showCustomDialog("비밀번호가 일치하지 않습니다");
+            return;
         } else if (!name.matches("^.{1,32}$")) {
             showCustomDialog("이름은 1~32자로 작성하세요");
-        } else if (idList.contains(id)) {
-            showCustomDialog("중복된 아이디입니다");
+            return;
         } else if(!id.matches("^[a-z0-9_.\\-]{4,32}$")) {
             showCustomDialog("ID는 소문자,숫자,특수기호(_ . -)4~32자로 작성하세요");
+            return;
         } else if(!password.matches("^[\\u0020-\\u007E]{8,1024}$")) {
             showCustomDialog("비밀번호는 8글자 이상, 1024글자 이하로 작성하세요");
-        } else {
-            showCustomDialog("가입이 완료되었습니다. 환영합니다!");
-            this.dispose();
+            return;
         }
+
+        requestSignUp(name, id, password);
+    }
+
+    private void requestSignUp(String name, String id, String password) {
+        setFormEnabled(false);
+
+        var client = getClient();
+        client.setOneshotCallback(RegisterResponse.class, (RegisterResponse res) -> {
+            if (res.success) {
+                showCustomDialog("회원가입이 완료되었습니다");
+                dispose();
+            } else {
+                showCustomDialog("회원가입에 실패했습니다: " + res.message);
+                setFormEnabled(true);
+            }
+        });
+
+        client.register(id, password);
     }
 
     private void showCustomDialog(String message) {

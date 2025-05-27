@@ -5,16 +5,18 @@ import java.awt.*;
 import java.awt.event.*;
 
 import client.ui.component.panel.ChatBubblePanel;
+import networked.RoomInfo;
+import client.ChatClient;
 import client.ui.component.button.UserIconButton;
 
 public class ChatUI extends BaseUI {
+    private RoomInfo roomInfo;
 
-    public ChatUI(String username) {
-        super();
+    public ChatUI(ChatClient client, RoomInfo roomInfo) {
+        super(client);
+        this.roomInfo = roomInfo;
 
-        if (username == null || username.trim().isEmpty()) {
-            username = "홍길동";
-        }
+        String username = client.getCurrentUser().getNickname();
 
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

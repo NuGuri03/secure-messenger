@@ -1,6 +1,7 @@
 package client.ui.panel;
 
-import client.ui.ChatUI;
+import client.WindowManager;
+import networked.RoomInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,10 +19,8 @@ public class RecentChatPanel extends JPanel {
         JButton openChatButton = new JButton("채팅창 열기");
         openChatButton.addActionListener((ActionEvent e) -> {
             // ChatUI를 새 창으로 띄움
-            SwingUtilities.invokeLater(() -> {
-                ChatUI chatUI = new ChatUI("테스트유저");
-                chatUI.setVisible(true);
-            });
+            // TODO
+            WindowManager.openChatUI(new RoomInfo(1234, "Test", null, null));
         });
 
         add(openChatButton, BorderLayout.CENTER);
