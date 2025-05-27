@@ -28,7 +28,7 @@ public class ChatUI extends BaseUI {
         this.setLayout(new BorderLayout());
 
         // 유저 아이콘 버튼
-        UserIconButton userIconButton = new UserIconButton("/images/default_profile.png", 32);
+        UserIconButton myAvatar = new UserIconButton(client.getUserInfo().getAvatarPath(), 32);
 
         // 탑바 영역
         JPanel topbar = createTopbarPanel();
@@ -44,7 +44,7 @@ public class ChatUI extends BaseUI {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         // 메세지 입력창 영역
-        JPanel inputPanel = createInputPanel(chatArea, scrollPane, myUsername, userIconButton);
+        JPanel inputPanel = createInputPanel(chatArea, scrollPane, myUsername, myAvatar);
 
         // 위치 설정
         chatPanel.add(topbar, BorderLayout.NORTH);
@@ -68,10 +68,10 @@ public class ChatUI extends BaseUI {
         topbar.setAlignmentY(Component.TOP_ALIGNMENT);
         topbar.setBackground(new Color(175, 175, 175));
 
-        // 유저 아이콘 버튼
-        UserIconButton userIconButton = new UserIconButton("/images/default_profile.png", 32);
+        // 상대방 아이콘 버튼
+        UserIconButton userIconButton = new UserIconButton(null, 32);
 
-        // 유저 이름 라벨
+        // 상대방 이름 라벨
         JLabel usernameLabel = new JLabel(String.format("%s 님과 대화", roomInfo.getName()));
 
         // 탑바 패널에 요소 추가
@@ -79,7 +79,6 @@ public class ChatUI extends BaseUI {
         topbar.add(userIconButton);
         topbar.add(Box.createHorizontalStrut(12)); // 아이콘과 라벨 사이 여백
         topbar.add(usernameLabel);
-
 
         return topbar;
     }

@@ -39,7 +39,7 @@ public class UserInfoPanel extends JPanel {
         myAvatarPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         myAvatarPanel.setBorder(new EmptyBorder(1, 0, 0, 0));
 
-        UserIconButton userIconButton = new UserIconButton("/images/default_profile.png", 40);
+        UserIconButton userIconButton = new UserIconButton(userInfo.getAvatarPath(), 40);
         userIconButton.setAlignmentY(Component.TOP_ALIGNMENT);
         myAvatarPanel.add(userIconButton);
 

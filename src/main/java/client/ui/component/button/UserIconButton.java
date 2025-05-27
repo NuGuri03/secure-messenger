@@ -9,7 +9,7 @@ public class UserIconButton extends JButton {
 
     public UserIconButton(String imagePath, int avatarSize) {
         if (imagePath == null || imagePath.isEmpty()) {
-            this.imagePath = "/icons/default_avatar.png";
+            this.imagePath = "/images/default_profile.png";
         } else {
             this.imagePath = imagePath;
         }
@@ -18,7 +18,7 @@ public class UserIconButton extends JButton {
         setPreferredSize(new Dimension(avatarSize, avatarSize));
 
         int iconSize = (int)(avatarSize * 0.7);
-        ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
+        ImageIcon icon = new ImageIcon(getClass().getResource(this.imagePath));
         Image scaledImage = icon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
         setIcon(scaledIcon);
