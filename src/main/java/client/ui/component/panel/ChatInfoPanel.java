@@ -1,32 +1,31 @@
 package client.ui.component.panel;
 
+import client.ChatClient;
+import client.WindowManager;
 import client.ui.ChatUI;
 import client.ui.component.button.UserIconButton;
+import networked.RoomInfo;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class ChatInfoPanel extends ClickAblePanel{
-    private final String myName;
-    private final String username;
-    private final String lastMessage;
+    private ChatClient client;
+    private RoomInfo roomInfo;
 
     @Override
     protected void onClick(MouseEvent e) {
-        SwingUtilities.invokeLater(() -> {
-            ChatUI chatUI = new ChatUI(myName, username);
-            chatUI.setVisible(true);
-        });
+        WindowManager.openChatUI(roomInfo);
     }
 
-    public ChatInfoPanel(String myName, String username, String lastMessage) {
-        this.myName = myName;
-        this.username = username;
-        this.lastMessage = lastMessage;
+    public ChatInfoPanel(ChatClient client, RoomInfo roomInfo) {
+        this.client = client;
+        this.roomInfo = roomInfo;
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(null);
+        setAlignmentX(Component.LEFT_ALIGNMENT);
 
         setPreferredSize(new Dimension(400, 55)); // 너비는 부모에 따라 달라질 수 있음
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 60)); // BoxLayout용 확장 허용
@@ -48,12 +47,12 @@ public class ChatInfoPanel extends ClickAblePanel{
         contentPanel.setOpaque(false);
         contentPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 
-        JLabel userLabel = new JLabel(username);
+        JLabel userLabel = new JLabel(client.getUserInfo().getNickname());
         userLabel.setFont(nameFont);
         userLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPanel.add(userLabel);
 
-        JLabel messageLabel = new JLabel(lastMessage);
+        JLabel messageLabel = new JLabel("마지막 최근 메세지 추가 필요");
         messageLabel.setFont(messageFont);
         messageLabel.setAlignmentY(Component.TOP_ALIGNMENT);
         messageLabel.setForeground(Color.GRAY);
@@ -64,7 +63,6 @@ public class ChatInfoPanel extends ClickAblePanel{
         add(Box.createRigidArea(new Dimension(15, 0)));
         add(contentPanel);
         add(Box.createRigidArea(new Dimension(0, 30)));
-
         setVisible(true);
     }
 }

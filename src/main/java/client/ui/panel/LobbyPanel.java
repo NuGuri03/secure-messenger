@@ -1,18 +1,21 @@
 package client.ui.panel;
 
+import client.ChatClient;
 import client.ui.component.panel.UserInfoPanel;
+import networked.UserInfo;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Vector;
 
 public class LobbyPanel extends JPanel {
     private static final int PADDING = 30;
 
-    public LobbyPanel(String username) {
+    public LobbyPanel(ChatClient client) {
         setLayout(new BorderLayout());
 
         JPanel title = new JPanel();
@@ -34,9 +37,10 @@ public class LobbyPanel extends JPanel {
         usersPanel.setBorder(null);
         usersPanel.add(Box.createVerticalStrut(PADDING));
 
-        UserInfoPanel myInfo = new UserInfoPanel(username, null, null);
-        myInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        usersPanel.add(myInfo);
+        UserInfo myInfo = client.getUserInfo();
+        UserInfoPanel myInfoPanel = new UserInfoPanel(myInfo.getNickname(), null, null);
+        myInfoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        usersPanel.add(myInfoPanel);
 
         usersPanel.add(Box.createVerticalStrut(30));
 
@@ -49,7 +53,7 @@ public class LobbyPanel extends JPanel {
         line.setAlignmentX(Component.LEFT_ALIGNMENT);
         usersPanel.add(line);
 
-        Vector<UserInfoPanel> userInfo = new Vector<UserInfoPanel>();
+        ArrayList<UserInfoPanel> userInfo = new ArrayList<UserInfoPanel>();
         // 예시 유저
         userInfo.add(new UserInfoPanel("호반우", "KNU CSE", null));
         userInfo.add(new UserInfoPanel("김민준", "코딩을 사랑합니다 저를 굴려주세요 PM님 힝힝 (당근)", null));
