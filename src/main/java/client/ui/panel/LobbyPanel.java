@@ -51,26 +51,26 @@ public class LobbyPanel extends JPanel {
         line.setAlignmentX(Component.LEFT_ALIGNMENT);
         usersPanel.add(line);
 
-        ArrayList<UserInfoPanel> userInfoList = new ArrayList<UserInfoPanel>();
+        ArrayList<UserInfoPanel> friendList = new ArrayList<UserInfoPanel>();
         // 예시 유저
         // **myInfo.getPublicKey()** 는 나중에 삭제하여야 함
-        userInfoList.add(new UserInfoPanel(new UserInfo("user1", "호반우", "KNU CSE", null)));
-        userInfoList.add(new UserInfoPanel(new UserInfo("user2", "김민준", "코딩을 사랑합니다 저를 굴려주세요 PM님 힝힝 (당근)", null)));
-        userInfoList.add(new UserInfoPanel(new UserInfo("user3", "장기원", "KERT 들어와 주세요 힝힝", null)));
-        userInfoList.add(new UserInfoPanel(new UserInfo("user4", "서유민", "PM", null)));
-        userInfoList.add(new UserInfoPanel(new UserInfo("user5", "Bruno", "백엔드 구축 중...", null)));
-        userInfoList.add(new UserInfoPanel(new UserInfo("user6", "정성진", "백엔드 만드는 중...", null)));
-        userInfoList.add(new UserInfoPanel(new UserInfo("user7", "권혁주", "로그인, 프로필 UI 만드는 중...", null)));
-        userInfoList.add(new UserInfoPanel(new UserInfo("user8", "신승빈", "회원가입, 설정 UI 만드는 중...", null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user1", "호반우", "KNU CSE", null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user2", "김민준", "코딩을 사랑합니다 저를 굴려주세요 PM님 힝힝 (당근)", null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user3", "장기원", "KERT 들어와 주세요 힝힝", null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user4", "서유민", "PM", null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user5", "Bruno", "백엔드 구축 중...", null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user6", "정성진", "백엔드 만드는 중...", null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user7", "권혁주", "로그인, 프로필 UI 만드는 중...", null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user8", "신승빈", "회원가입, 설정 UI 만드는 중...", null)));
 
         // 이름 가나다 순서로 정렬
-        userInfoList.sort(Comparator.comparing(
+        friendList.sort(Comparator.comparing(
                 panel -> panel.getUserInfo().getNickname(),
                 Collator.getInstance()
         ));
 
         // 친구 수 표시
-        int friendCount = userInfoList.size();
+        int friendCount = friendList.size();
         JPanel friendPanel = new JPanel();
         friendPanel.setLayout(new BoxLayout(friendPanel, BoxLayout.Y_AXIS));
         friendPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -88,7 +88,7 @@ public class LobbyPanel extends JPanel {
         usersPanel.add(Box.createVerticalStrut(PADDING * 2 / 3));
 
         // 친구 목록
-        for (UserInfoPanel user : userInfoList) {
+        for (UserInfoPanel user : friendList) {
             user.setAlignmentX(Component.LEFT_ALIGNMENT);
             usersPanel.add(user);
             usersPanel.add(Box.createVerticalStrut(PADDING));
