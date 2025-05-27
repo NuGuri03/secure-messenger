@@ -28,7 +28,7 @@ public class ChatUI extends BaseUI {
         this.setLayout(new BorderLayout());
 
         // 유저 아이콘 버튼
-        UserIconButton userIconButton = new UserIconButton("/icons/default_profile.png", 32);
+        UserIconButton userIconButton = new UserIconButton("/images/default_profile.png", 32);
 
         // 탑바 영역
         JPanel topbar = createTopbarPanel();
@@ -69,7 +69,7 @@ public class ChatUI extends BaseUI {
         topbar.setBackground(new Color(175, 175, 175));
 
         // 유저 아이콘 버튼
-        UserIconButton userIconButton = new UserIconButton("/icons/default_profile.png", 32);
+        UserIconButton userIconButton = new UserIconButton("/images/default_profile.png", 32);
 
         // 유저 이름 라벨
         JLabel usernameLabel = new JLabel(String.format("%s 님과 대화", roomInfo.getName()));

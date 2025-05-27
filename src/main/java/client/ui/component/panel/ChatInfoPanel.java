@@ -34,7 +34,7 @@ public class ChatInfoPanel extends ClickAblePanel{
         avatarPanel.setOpaque(false);
         avatarPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         avatarPanel.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
-        UserIconButton userIconButton = new UserIconButton("/icons/default_profile.png", 40);
+        UserIconButton userIconButton = new UserIconButton("/images/default_profile.png", 40);
         userIconButton.setAlignmentY(Component.TOP_ALIGNMENT);
         avatarPanel.add(userIconButton);
 
