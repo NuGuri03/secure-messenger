@@ -35,16 +35,16 @@ public class RecentChatPanel extends JPanel {
 
         ArrayList<ChatInfoPanel> recentChatList = new ArrayList<>();
         // Sample data for recent chats
-        recentChatList.add(new ChatInfoPanel(client, new RoomInfo(1001, "Test1", null, null)));
-        recentChatList.add(new ChatInfoPanel(client, new RoomInfo(1002, "Test2", null, null)));
-        recentChatList.add(new ChatInfoPanel(client, new RoomInfo(1003, "Test3", null, null)));
-        recentChatList.add(new ChatInfoPanel(client, new RoomInfo(1004, "Test4", null, null)));
-        recentChatList.add(new ChatInfoPanel(client, new RoomInfo(1005, "Test5", null, null)));
-        recentChatList.add(new ChatInfoPanel(client, new RoomInfo(1006, "Test6", null, null)));
-        recentChatList.add(new ChatInfoPanel(client, new RoomInfo(1007, "Test7", null, null)));
-        recentChatList.add(new ChatInfoPanel(client, new RoomInfo(1008, "Test8", null, null)));
-        recentChatList.add(new ChatInfoPanel(client, new RoomInfo(1009, "Test9", null, null)));
-        recentChatList.add(new ChatInfoPanel(client, new RoomInfo(1010, "Test10", null, null)));
+        recentChatList.add(new ChatInfoPanel(new RoomInfo(1001, "Test1", null, null)));
+        recentChatList.add(new ChatInfoPanel(new RoomInfo(1002, "Test2", null, null)));
+        recentChatList.add(new ChatInfoPanel(new RoomInfo(1003, "Test3", null, null)));
+        recentChatList.add(new ChatInfoPanel(new RoomInfo(1004, "Test4", null, null)));
+        recentChatList.add(new ChatInfoPanel(new RoomInfo(1005, "Test5", null, null)));
+        recentChatList.add(new ChatInfoPanel(new RoomInfo(1006, "Test6", null, null)));
+        recentChatList.add(new ChatInfoPanel(new RoomInfo(1007, "Test7", null, null)));
+        recentChatList.add(new ChatInfoPanel(new RoomInfo(1008, "Test8", null, null)));
+        recentChatList.add(new ChatInfoPanel(new RoomInfo(1009, "Test9", null, null)));
+        recentChatList.add(new ChatInfoPanel(new RoomInfo(1010, "Test10", null, null)));
 
         for (var chatInfoPanel : recentChatList) {
             chatListPanel.add(chatInfoPanel);

@@ -1,8 +1,6 @@
 package client.ui.component.panel;
 
-import client.ChatClient;
 import client.WindowManager;
-import client.ui.ChatUI;
 import client.ui.component.button.UserIconButton;
 import networked.RoomInfo;
 
@@ -11,7 +9,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class ChatInfoPanel extends ClickAblePanel{
-    private ChatClient client;
     private RoomInfo roomInfo;
 
     @Override
@@ -19,16 +16,15 @@ public class ChatInfoPanel extends ClickAblePanel{
         WindowManager.openChatUI(roomInfo);
     }
 
-    public ChatInfoPanel(ChatClient client, RoomInfo roomInfo) {
-        this.client = client;
+    public ChatInfoPanel(RoomInfo roomInfo) {
         this.roomInfo = roomInfo;
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(null);
         setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        setPreferredSize(new Dimension(400, 55)); // 너비는 부모에 따라 달라질 수 있음
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, 60)); // BoxLayout용 확장 허용
+        setPreferredSize(new Dimension(400, 55));
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
 
         Font nameFont = new Font("Pretendard", Font.BOLD, 16);
         Font messageFont = new Font("Pretendard", Font.PLAIN, 14);
@@ -47,7 +43,7 @@ public class ChatInfoPanel extends ClickAblePanel{
         contentPanel.setOpaque(false);
         contentPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 
-        JLabel userLabel = new JLabel(client.getUserInfo().getNickname());
+        JLabel userLabel = new JLabel(roomInfo.getName());
         userLabel.setFont(nameFont);
         userLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPanel.add(userLabel);
