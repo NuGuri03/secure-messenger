@@ -23,7 +23,7 @@ public class ChatInfoPanel extends ClickAblePanel{
         setBorder(null);
         setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        setPreferredSize(new Dimension(400, 55));
+        setPreferredSize(new Dimension(350, 55));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
 
         Font nameFont = new Font("Pretendard", Font.BOLD, 16);
