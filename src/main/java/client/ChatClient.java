@@ -182,7 +182,7 @@ public class ChatClient {
             case RegisterResponse resp -> handleResponse(resp);
             case LoginResponse resp -> {
                 // TODO: 예시로 사용자 설정
-                currentUser = new UserInfo("@testUser", "Test User", "Hello world", null);
+                currentUser = new UserInfo("@testUser", "Test User", "Hello world", null, null);
                 handleResponse(resp);
             }
             default -> System.out.println("[WARN] Unhandled NetworkedMessage from server: " + message.getClass());
