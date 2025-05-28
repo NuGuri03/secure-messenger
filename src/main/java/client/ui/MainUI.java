@@ -38,9 +38,9 @@ public class MainUI extends BaseUI {
         JPanel mainPanel = new JPanel(new CardLayout());
 
 // mainPanel에 추가
-        mainPanel.add(lobbyPanel, "lobby");
+        mainPanel.add(new LobbyPanel(myInfo), "lobby");
         mainPanel.add(chatPanel, "chat");
-        mainPanel.add(settingsPanel, "settings");
+        mainPanel.add(new SettingsPanel(myInfo), "settings");
 
         CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
         sidebar.lobbyButton.addActionListener(e -> cardLayout.show(mainPanel, "lobby"));
