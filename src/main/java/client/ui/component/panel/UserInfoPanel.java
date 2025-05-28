@@ -41,12 +41,12 @@ public class UserInfoPanel extends JPanel {
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setAlignmentY(Component.TOP_ALIGNMENT);
 
-        JLabel nameLabel = new JLabel(this.username);
+        nameLabel = new JLabel(this.username);
         nameLabel.setFont(new Font("Pretendard", Font.BOLD, 16));
         nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(nameLabel);
 
-        JLabel introduceLabel = new JLabel(this.introduction);
+        introduceLabel = new JLabel(this.introduction);
         introduceLabel.setFont(new Font("Pretendard", Font.PLAIN, 14));
         introduceLabel.setAlignmentY(Component.TOP_ALIGNMENT);
         introduceLabel.setForeground(Color.GRAY);
