@@ -11,6 +11,9 @@ public class UserInfoPanel extends JPanel {
     private String introduction;
     private String avatarPath;
 
+    private JLabel nameLabel;
+    private JLabel introduceLabel;
+
     public UserInfoPanel(String username, String introduction, String imagePath) {
         if (username == null || username.trim().isEmpty()) {
             this.username = "user";
@@ -65,8 +68,30 @@ public class UserInfoPanel extends JPanel {
         add(content);
     }
 
-    public String getUsername() {
+    public String getUsername()
+    {
         return username;
+    }
+
+    public String getIntroduction()
+    {
+        return introduction;
+    }
+
+    public void setUsername(String name)
+    {
+        this.username = name;
+        if (nameLabel != null) {
+            nameLabel.setText(name);
+        }
+    }
+
+    public void setIntroduction(String intro)
+    {
+        this.introduction = intro;
+        if (introduceLabel != null) {
+            introduceLabel.setText(intro);
+        }
     }
 
 }
