@@ -4,6 +4,7 @@ import client.ui.panel.LobbyPanel;
 import client.ui.panel.RecentChatPanel;
 import client.ui.panel.SettingsPanel;
 import client.ui.panel.SideBarPanel;
+import client.ui.component.panel.UserInfoPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,14 +26,21 @@ public class MainUI extends BaseUI {
         setMinimumSize(minSize);
         setLayout(new BorderLayout());
 
+        UserInfoPanel myInfo = new UserInfoPanel(username, "소개를 입력하세요", null);
+
+        LobbyPanel lobbyPanel = new LobbyPanel(myInfo);
+        SettingsPanel settingsPanel = new SettingsPanel(myInfo);
+        RecentChatPanel chatPanel = new RecentChatPanel();
+
         SideBarPanel sidebar = new SideBarPanel();
         sidebar.setPreferredSize(new Dimension(100, 0));
 
         JPanel mainPanel = new JPanel(new CardLayout());
 
-        mainPanel.add(new LobbyPanel(), "lobby");
-        mainPanel.add(new RecentChatPanel(), "chat");
-        mainPanel.add(new SettingsPanel(), "settings");
+// mainPanel에 추가
+        mainPanel.add(lobbyPanel, "lobby");
+        mainPanel.add(chatPanel, "chat");
+        mainPanel.add(settingsPanel, "settings");
 
         CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
         sidebar.lobbyButton.addActionListener(e -> cardLayout.show(mainPanel, "lobby"));

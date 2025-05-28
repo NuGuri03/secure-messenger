@@ -68,11 +68,9 @@ public class UserInfoPanel extends JPanel {
         add(content);
     }
 
-    public String getUsername()
-    {
+    public String getUsername() {
         return username;
     }
-
     public String getIntroduction()
     {
         return introduction;
@@ -93,5 +91,4 @@ public class UserInfoPanel extends JPanel {
             introduceLabel.setText(intro);
         }
     }
-
 }

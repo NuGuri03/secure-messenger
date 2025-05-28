@@ -13,6 +13,8 @@ public class SettingsPanel extends JPanel {
     private UserInfoPanel myInfo;
 
     public SettingsPanel(UserInfoPanel myInfo) {
+        this.myInfo = myInfo;
+
         JLabel label = new JLabel("Settings");
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
