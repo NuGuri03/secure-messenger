@@ -2,34 +2,17 @@ package client.ui.component.panel;
 
 import client.ui.ProfileUI;
 import client.ui.component.button.UserIconButton;
+import networked.UserInfo;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class UserInfoPanel extends JPanel {
-    private String username;
-    private String introduction;
-    private String avatarPath;
+    UserInfo userInfo;
 
-    public UserInfoPanel(String username, String introduction, String imagePath) {
-        if (username == null || username.trim().isEmpty()) {
-            this.username = "user";
-        } else {
-            this.username = username;
-        }
-
-        if (introduction == null || introduction.trim().isEmpty()) {
-            this.introduction = "introduction";
-        } else {
-            this.introduction = introduction;
-        }
-
-        if (imagePath == null || imagePath.trim().isEmpty()) {
-            this.avatarPath = "/images/default_profile.png";
-        } else {
-            this.avatarPath = imagePath;
-        }
+    public UserInfoPanel(UserInfo userInfo) {
+        this.userInfo = userInfo;
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(null);
@@ -39,12 +22,12 @@ public class UserInfoPanel extends JPanel {
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setAlignmentY(Component.TOP_ALIGNMENT);
 
-        JLabel nameLabel = new JLabel(this.username);
+        JLabel nameLabel = new JLabel(userInfo.getNickname());
         nameLabel.setFont(new Font("Pretendard", Font.BOLD, 16));
         nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(nameLabel);
 
-        JLabel introduceLabel = new JLabel(this.introduction);
+        JLabel introduceLabel = new JLabel(userInfo.getBio());
         introduceLabel.setFont(new Font("Pretendard", Font.PLAIN, 14));
         introduceLabel.setAlignmentY(Component.TOP_ALIGNMENT);
         introduceLabel.setForeground(Color.GRAY);
@@ -56,23 +39,22 @@ public class UserInfoPanel extends JPanel {
         myAvatarPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         myAvatarPanel.setBorder(new EmptyBorder(1, 0, 0, 0));
 
-        UserIconButton userIconButton = new UserIconButton(this.avatarPath, 40);
+        UserIconButton userIconButton = new UserIconButton(userInfo.getAvatarPath(), 40);
         userIconButton.setAlignmentY(Component.TOP_ALIGNMENT);
         myAvatarPanel.add(userIconButton);
         // profileUI 생성
         userIconButton.addActionListener(e -> {
-        	new ProfileUI(username);
+        	new ProfileUI(userInfo.getNickname());
         });
-        
-        
+
+
         add(Box.createRigidArea(new Dimension(35, 0)));
         add(myAvatarPanel);
         add(Box.createRigidArea(new Dimension(15, 0)));
         add(content);
     }
 
-    public String getUsername() {
-        return username;
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
-
 }

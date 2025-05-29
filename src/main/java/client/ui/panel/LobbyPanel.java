@@ -1,18 +1,20 @@
 package client.ui.panel;
 
+import client.ChatClient;
 import client.ui.component.panel.UserInfoPanel;
+import networked.UserInfo;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Vector;
 
 public class LobbyPanel extends JPanel {
     private static final int PADDING = 30;
 
-    public LobbyPanel() {
+    public LobbyPanel(ChatClient client) {
         setLayout(new BorderLayout());
 
         JPanel title = new JPanel();
@@ -34,9 +36,9 @@ public class LobbyPanel extends JPanel {
         usersPanel.setBorder(null);
         usersPanel.add(Box.createVerticalStrut(PADDING));
 
-        UserInfoPanel myInfo = new UserInfoPanel(null, null, null);
-        myInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        usersPanel.add(myInfo);
+        UserInfoPanel myInfoPanel = new UserInfoPanel(client.getUserInfo());
+        myInfoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        usersPanel.add(myInfoPanel);
 
         usersPanel.add(Box.createVerticalStrut(30));
 
@@ -49,22 +51,26 @@ public class LobbyPanel extends JPanel {
         line.setAlignmentX(Component.LEFT_ALIGNMENT);
         usersPanel.add(line);
 
-        Vector<UserInfoPanel> userInfo = new Vector<UserInfoPanel>();
+        ArrayList<UserInfoPanel> friendList = new ArrayList<UserInfoPanel>();
         // 예시 유저
-        userInfo.add(new UserInfoPanel("호반우", "KNU CSE", null));
-        userInfo.add(new UserInfoPanel("김민준", "코딩을 사랑합니다 저를 굴려주세요 PM님 힝힝 (당근)", null));
-        userInfo.add(new UserInfoPanel("장기원", "KERT 들어와 주세요 힝힝", null));
-        userInfo.add(new UserInfoPanel("서유민", "PM", null));
-        userInfo.add(new UserInfoPanel("Bruno", "떼굴떼굴 구르는 중...", null));
-        userInfo.add(new UserInfoPanel("정성진", "떼굴떼굴 구르는 중...", null));
-        userInfo.add(new UserInfoPanel("권혁주", "섹스", null));
-        userInfo.add(new UserInfoPanel("신승빈", "SignUp UI 만드는 중...", null));
+        // **myInfo.getPublicKey()** 는 나중에 삭제하여야 함
+        friendList.add(new UserInfoPanel(new UserInfo("user1", "호반우", "KNU CSE", null, null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user2", "김민준", "코딩을 사랑합니다 저를 굴려주세요 PM님 힝힝 (당근)", null, null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user3", "장기원", "KERT 들어와 주세요 힝힝", null, null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user4", "서유민", "PM", null, null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user5", "Bruno", "백엔드 구축 중...", null, null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user6", "정성진", "백엔드 만드는 중...", null, null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user7", "권혁주", "로그인, 프로필 UI 만드는 중...", null, null)));
+        friendList.add(new UserInfoPanel(new UserInfo("user8", "신승빈", "회원가입, 설정 UI 만드는 중...", null, null)));
 
-        // 이름 가나다 순서
-        userInfo.sort(Comparator.comparing(UserInfoPanel::getUsername, Collator.getInstance()));
+        // 이름 가나다 순서로 정렬
+        friendList.sort(Comparator.comparing(
+                panel -> panel.getUserInfo().getNickname(),
+                Collator.getInstance()
+        ));
 
         // 친구 수 표시
-        int friendCount = userInfo.size();
+        int friendCount = friendList.size();
         JPanel friendPanel = new JPanel();
         friendPanel.setLayout(new BoxLayout(friendPanel, BoxLayout.Y_AXIS));
         friendPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -81,7 +87,8 @@ public class LobbyPanel extends JPanel {
 
         usersPanel.add(Box.createVerticalStrut(PADDING * 2 / 3));
 
-        for (UserInfoPanel user : userInfo) {
+        // 친구 목록
+        for (UserInfoPanel user : friendList) {
             user.setAlignmentX(Component.LEFT_ALIGNMENT);
             usersPanel.add(user);
             usersPanel.add(Box.createVerticalStrut(PADDING));

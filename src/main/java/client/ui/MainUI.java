@@ -1,5 +1,6 @@
 package client.ui;
 
+import client.ChatClient;
 import client.ui.panel.LobbyPanel;
 import client.ui.panel.RecentChatPanel;
 import client.ui.panel.SettingsPanel;
@@ -10,12 +11,8 @@ import java.awt.*;
 
 public class MainUI extends BaseUI {
 
-    public MainUI(String username) {
-        super();
-
-        if (username == null || username.trim().isEmpty()) {
-            username = "user";
-        }
+    public MainUI(ChatClient client) {
+        super(client);
 
         setTitle("Main");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -30,9 +27,9 @@ public class MainUI extends BaseUI {
 
         JPanel mainPanel = new JPanel(new CardLayout());
 
-        mainPanel.add(new LobbyPanel(), "lobby");
-        mainPanel.add(new RecentChatPanel(), "chat");
-        mainPanel.add(new SettingsPanel(), "settings");
+        mainPanel.add(new LobbyPanel(client), "lobby");
+        mainPanel.add(new RecentChatPanel(client), "chat");
+        mainPanel.add(new SettingsPanel(client), "settings");
 
         CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
         sidebar.lobbyButton.addActionListener(e -> cardLayout.show(mainPanel, "lobby"));
