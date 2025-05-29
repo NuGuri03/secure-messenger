@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class RecentChatPanel extends JPanel {
     private static final int PADDING = 30;
 
-    public RecentChatPanel(ChatClient client) {
+    public RecentChatPanel() {
         setLayout(new BorderLayout());
 
         JPanel title = new JPanel();
@@ -37,46 +37,16 @@ public class RecentChatPanel extends JPanel {
         ArrayList<ChatInfoPanel> recentChatList = new ArrayList<>();
 
         // Sample data for recent chats
-        recentChatList.add(new ChatInfoPanel(
-                new RoomInfo(1001, "Test1", null, null),
-                new UserInfo("user1", "Test User1", null, null, null)
-        ));
-        recentChatList.add(new ChatInfoPanel(
-                new RoomInfo(1002, "Test2", null, null),
-                new UserInfo("user2", "Test User2", null, null, null)
-        ));
-        recentChatList.add(new ChatInfoPanel(
-                new RoomInfo(1003, "Test3", null, null),
-                new UserInfo("user3", "Test User3", null, null, null)
-        ));
-        recentChatList.add(new ChatInfoPanel(
-                new RoomInfo(1004, "Test4", null, null),
-                new UserInfo("user4", "Test User4", null, null, null)
-        ));
-        recentChatList.add(new ChatInfoPanel(
-                new RoomInfo(1005, "Test5", null, null),
-                new UserInfo("user5", "Test User5", null, null, null)
-        ));
-        recentChatList.add(new ChatInfoPanel(
-                new RoomInfo(1006, "Test6", null, null),
-                new UserInfo("user6", "Test User6", null, null, null)
-        ));
-        recentChatList.add(new ChatInfoPanel(
-                new RoomInfo(1007, "Test7", null, null),
-                new UserInfo("user7", "Test User7", null, null, null)
-        ));
-        recentChatList.add(new ChatInfoPanel(
-                new RoomInfo(1008, "Test8", null, null),
-                new UserInfo("user8", "Test User8", null, null, null)
-        ));
-        recentChatList.add(new ChatInfoPanel(
-                new RoomInfo(1009, "Test9", null, null),
-                new UserInfo("user9", "Test User9", null, null, null)
-        ));
-        recentChatList.add(new ChatInfoPanel(
-                new RoomInfo(1010, "Test10", null, null),
-                new UserInfo("user10", "Test User10", null, null, null)
-        ));
+        for (int i = 1; i <= 10; i++) {
+            int roomId = 1000 + i;
+            String roomName = "Test" + i;
+            String handle = "user" + i;
+            String nickname = "Test User" + i;
+            recentChatList.add(new ChatInfoPanel(
+                    new RoomInfo(roomId, roomName, null, null),
+                    new UserInfo(handle, nickname, null, null, null)
+            ));
+        }
 
         for (var chatInfoPanel : recentChatList) {
             chatListPanel.add(chatInfoPanel);
