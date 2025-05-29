@@ -1,11 +1,16 @@
 package client.ui;
 
+import client.ChatClient;
+import client.WindowManager;
+import networked.RoomInfo;
+import networked.UserInfo;
+
 import java.awt.*;
 import javax.swing.*;
 
 public class ProfileUI extends BaseUI {
-    public ProfileUI(String username) {
-    	super();
+    public ProfileUI(ChatClient client, UserInfo user) {
+    	super(client);
 
         setSize(400, 700);
         setMinimumSize(new Dimension(400, 700));
@@ -35,7 +40,6 @@ public class ProfileUI extends BaseUI {
         
         
         // 배경사진
-
         ImageIcon BackIcon = new ImageIcon(getClass().getResource("/images/default_background.png"));
         Image BackscaledImage = BackIcon.getImage().getScaledInstance(400, 350, Image.SCALE_SMOOTH);
         JLabel BackLabel = new JLabel(new ImageIcon(BackscaledImage));
@@ -46,7 +50,7 @@ public class ProfileUI extends BaseUI {
         add(BackLabel, gbc);
         
         // 프로필 이름
-        JLabel labelID = new JLabel(username);
+        JLabel labelID = new JLabel(user.getNickname());
         labelID.setFont(mainFont);
         gbc.gridy = 4;
         gbc.gridheight = 1;
@@ -55,7 +59,7 @@ public class ProfileUI extends BaseUI {
         add(labelID, gbc);
 
         // 자기소개
-        JLabel BioID = new JLabel("권혁주 입니다");
+        JLabel BioID = new JLabel(user.getBio());
         BioID.setFont(BioFont);
         gbc.gridy = 5;
         gbc.gridheight = 1;
@@ -72,10 +76,16 @@ public class ProfileUI extends BaseUI {
         gbc.anchor = GridBagConstraints.SOUTH;
         gbc.insets = new Insets(10, 10, 10, 10);  
         add(btnChat, gbc);
-        
-        btnChat.addActionListener(e->{
-        	new ChatUI(username);
-        });
+
+        btnChat.addActionListener(
+                e -> WindowManager.openChatUI(
+                        new RoomInfo(
+                                12546,
+                                String.format("%s 님과의 대화", user.getNickname()),
+                                null,
+                                null)
+                )
+        );
         
         setVisible(true);
     }

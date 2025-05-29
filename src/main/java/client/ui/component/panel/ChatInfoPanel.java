@@ -3,6 +3,7 @@ package client.ui.component.panel;
 import client.WindowManager;
 import client.ui.component.button.UserIconButton;
 import networked.RoomInfo;
+import networked.UserInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +17,7 @@ public class ChatInfoPanel extends ClickAblePanel{
         WindowManager.openChatUI(roomInfo);
     }
 
-    public ChatInfoPanel(RoomInfo roomInfo) {
+    public ChatInfoPanel(RoomInfo roomInfo, UserInfo friendInfo) {
         this.roomInfo = roomInfo;
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -34,19 +35,21 @@ public class ChatInfoPanel extends ClickAblePanel{
         avatarPanel.setOpaque(false);
         avatarPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         avatarPanel.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
-        UserIconButton userIconButton = new UserIconButton(null, 40);
+        UserIconButton userIconButton = new UserIconButton(friendInfo, 40);
         userIconButton.setAlignmentY(Component.TOP_ALIGNMENT);
         avatarPanel.add(userIconButton);
 
+        // 채팅방 정보
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setOpaque(false);
         contentPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 
-        JLabel userLabel = new JLabel(roomInfo.getName());
-        userLabel.setFont(nameFont);
-        userLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        contentPanel.add(userLabel);
+        // 채팅방 이름
+        JLabel chatLabel = new JLabel(roomInfo.getName());
+        chatLabel.setFont(nameFont);
+        chatLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentPanel.add(chatLabel);
 
         JLabel messageLabel = new JLabel("마지막 최근 메세지 추가 필요");
         messageLabel.setFont(messageFont);

@@ -1,24 +1,27 @@
 package client.ui.component.button;
 
+import client.WindowManager;
+import networked.UserInfo;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class UserIconButton extends JButton {
-    private final String imagePath;
+    private final UserInfo userInfo;
     private final int avatarSize;
 
-    public UserIconButton(String imagePath, int avatarSize) {
-        if (imagePath == null || imagePath.isEmpty()) {
-            this.imagePath = "/images/default_profile.png";
-        } else {
-            this.imagePath = imagePath;
-        }
+    public UserIconButton(UserInfo userInfo, int avatarSize) {
+        this.userInfo = userInfo;
         this.avatarSize = avatarSize;
 
         setPreferredSize(new Dimension(avatarSize, avatarSize));
 
         int iconSize = (int)(avatarSize * 0.7);
-        ImageIcon icon = new ImageIcon(getClass().getResource(this.imagePath));
+        String imagePath = userInfo.getAvatarPath();
+        if (imagePath == null) {
+            imagePath = "/images/default_profile.png";
+        }
+        ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
         Image scaledImage = icon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
         setIcon(scaledIcon);
@@ -32,6 +35,10 @@ public class UserIconButton extends JButton {
         setVerticalAlignment(SwingConstants.CENTER);
         setContentAreaFilled(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        addActionListener(e -> {
+            WindowManager.openProfileUI(userInfo);
+        });
     }
 
     // 둥근 배경의 원 생성
@@ -59,7 +66,7 @@ public class UserIconButton extends JButton {
     }
 
     public UserIconButton copy() {
-        return new UserIconButton(imagePath, avatarSize);
+        return new UserIconButton(userInfo, avatarSize);
     }
     
 }
