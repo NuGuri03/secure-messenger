@@ -54,7 +54,7 @@ public class ProfileUI extends BaseUI {
         gbc.insets = new Insets(10, 10, 1, 10);
         add(labelID, gbc);
 
-        // 자기소개
+        // 자기소개글
         JLabel BioID = new JLabel("권혁주 입니다");
         BioID.setFont(BioFont);
         gbc.gridy = 5;
