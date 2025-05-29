@@ -34,11 +34,12 @@ public class LobbyPanel extends JPanel {
 
         // 유저 패널
         JPanel usersPanel = new JPanel();
-        usersPanel.setLayout(new BoxLayout(usersPanel, BoxLayout.PAGE_AXIS));
+        usersPanel.setLayout(new BoxLayout(usersPanel, BoxLayout.Y_AXIS));
         usersPanel.setBorder(null);
         usersPanel.add(Box.createVerticalStrut(PADDING));
 
         usersPanel.add(myInfo);
+
         myInfo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
 
         myInfo.setAlignmentX(Component.LEFT_ALIGNMENT);

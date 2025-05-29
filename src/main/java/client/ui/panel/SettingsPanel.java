@@ -39,7 +39,8 @@ public class SettingsPanel extends JPanel {
 
         //내 정보 표시 패널 (UserInfoPanel)
         myInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        contentPanel.add(myInfo);
+
+
 
         contentPanel.add(Box.createVerticalStrut(30));
 

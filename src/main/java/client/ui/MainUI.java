@@ -28,6 +28,12 @@ public class MainUI extends BaseUI {
 
         UserInfoPanel myInfo = new UserInfoPanel("user1", "intro1", null);
 
+        UserInfoPanel lobbyInfoCopy = new UserInfoPanel(
+                myInfo.getUsername(),
+                myInfo.getIntroduction(),
+                null
+        );
+
         LobbyPanel lobbyPanel = new LobbyPanel(myInfo);
         SettingsPanel settingsPanel = new SettingsPanel(myInfo);
         RecentChatPanel chatPanel = new RecentChatPanel(myInfo);
