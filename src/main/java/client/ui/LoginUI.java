@@ -96,7 +96,7 @@ public class LoginUI extends BaseUI {
         gbc.insets = new Insets(0, 10, 0, 5);
         JButton btnLogin = new JButton("로그인");
         btnLogin.setFont(subFont);
-        buttonPanel.add(btnLogin, gbc);
+        buttonPanel.add(btnLogin);
 
         KeyStroke enterKey = KeyStroke.getKeyStroke("ENTER");
         Action loginAction = new AbstractAction() {
@@ -113,7 +113,7 @@ public class LoginUI extends BaseUI {
 
         JButton btnSignUp = new JButton("회원 가입");
         btnSignUp.setFont(subFont);
-        buttonPanel.add(btnSignUp, gbc);
+        buttonPanel.add(btnSignUp);
 
         btnLogin.addActionListener(e -> {
             String inputID = textID.getText();
@@ -132,7 +132,7 @@ public class LoginUI extends BaseUI {
 
         gbc.gridx = 0;
         gbc.gridy = 5;
-        gbc.gridwidth = 3;
+        gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.EAST;
         add(buttonPanel, gbc);
 
