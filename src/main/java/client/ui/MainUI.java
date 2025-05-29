@@ -26,11 +26,11 @@ public class MainUI extends BaseUI {
         setMinimumSize(minSize);
         setLayout(new BorderLayout());
 
-        UserInfoPanel myInfo = new UserInfoPanel(username, "소개를 입력하세요", null);
+        UserInfoPanel myInfo = new UserInfoPanel("user1", "intro1", null);
 
         LobbyPanel lobbyPanel = new LobbyPanel(myInfo);
         SettingsPanel settingsPanel = new SettingsPanel(myInfo);
-        RecentChatPanel chatPanel = new RecentChatPanel();
+        RecentChatPanel chatPanel = new RecentChatPanel(myInfo);
 
         SideBarPanel sidebar = new SideBarPanel();
         sidebar.setPreferredSize(new Dimension(100, 0));
@@ -39,7 +39,7 @@ public class MainUI extends BaseUI {
 
 // mainPanel에 추가
         mainPanel.add(new LobbyPanel(myInfo), "lobby");
-        mainPanel.add(chatPanel, "chat");
+        mainPanel.add(new RecentChatPanel(myInfo), "chat");
         mainPanel.add(new SettingsPanel(myInfo), "settings");
 
         CardLayout cardLayout = (CardLayout) mainPanel.getLayout();

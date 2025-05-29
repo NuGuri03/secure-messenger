@@ -66,6 +66,10 @@ public class UserInfoPanel extends JPanel {
         add(myAvatarPanel);
         add(Box.createRigidArea(new Dimension(15, 0)));
         add(content);
+
+        setOpaque(true);
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+
     }
 
     public String getUsername() {

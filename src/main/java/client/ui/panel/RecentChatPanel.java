@@ -1,14 +1,18 @@
 package client.ui.panel;
 
 import client.ui.ChatUI;
+import client.ui.component.panel.UserInfoPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class RecentChatPanel extends JPanel {
-    public RecentChatPanel() {
+    private UserInfoPanel myInfo;
+    public RecentChatPanel(UserInfoPanel myInfo) {
         setLayout(new BorderLayout());
+
+        this.myInfo = myInfo;
 
         JLabel label = new JLabel("Recent");
         label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -19,7 +23,7 @@ public class RecentChatPanel extends JPanel {
         openChatButton.addActionListener((ActionEvent e) -> {
             // ChatUI를 새 창으로 띄움
             SwingUtilities.invokeLater(() -> {
-                ChatUI chatUI = new ChatUI("테스트유저");
+                ChatUI chatUI = new ChatUI(myInfo.getUsername());
                 chatUI.setVisible(true);
             });
         });

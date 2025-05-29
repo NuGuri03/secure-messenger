@@ -18,11 +18,9 @@ public class SettingsPanel extends JPanel {
         this.myInfo = myInfo;
 
         this.setLayout(new BorderLayout());
-        this.setBackground(Color.WHITE);
 
         JPanel title = new JPanel();
         title.setLayout(new BoxLayout(title, BoxLayout.Y_AXIS));
-        title.setBackground(Color.WHITE);
         //title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel titleLabel = new JLabel("setting");
@@ -38,11 +36,9 @@ public class SettingsPanel extends JPanel {
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(PADDING, PADDING, PADDING, PADDING));
-        contentPanel.setBackground(Color.WHITE);
 
         //내 정보 표시 패널 (UserInfoPanel)
         myInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        myInfo.setBackground(Color.WHITE);
         contentPanel.add(myInfo);
 
         contentPanel.add(Box.createVerticalStrut(30));

@@ -18,9 +18,6 @@ public class LobbyPanel extends JPanel {
         this.myInfo = myInfo;
 
         setLayout(new BorderLayout());
-        add(myInfo, BorderLayout.NORTH);
-
-        setLayout(new BorderLayout());
 
         JPanel title = new JPanel();
         title.setLayout(new BoxLayout(title, BoxLayout.Y_AXIS));
@@ -32,7 +29,7 @@ public class LobbyPanel extends JPanel {
         titleLabel.setBorder(BorderFactory.createEmptyBorder(PADDING / 6, 0, PADDING / 6, 0));
 
         title.add(titleLabel);
-        title.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode("#A9A9A9")));
+        title.setBorder(new MatteBorder(1, 0, 1, 0, Color.decode("#A9A9A9")));
         add(title, BorderLayout.NORTH);
 
         // 유저 패널
@@ -41,11 +38,12 @@ public class LobbyPanel extends JPanel {
         usersPanel.setBorder(null);
         usersPanel.add(Box.createVerticalStrut(PADDING));
 
-        myInfo = new UserInfoPanel(null, null, null);
-        myInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
         usersPanel.add(myInfo);
+        myInfo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
 
+        myInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
         usersPanel.add(Box.createVerticalStrut(30));
+        myInfo.setVisible(true);
 
         // "나" 와 "친구" 간의 구분선
         JPanel line = new JPanel();
