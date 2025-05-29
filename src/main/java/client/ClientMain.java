@@ -23,4 +23,4 @@ public class ClientMain {
         System.err.println("Initialization Failed: " + message);
         JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
-}
+}	

@@ -3,6 +3,7 @@ package client.ui.panel;
 import client.ChatClient;
 import client.ui.component.panel.ChatInfoPanel;
 import networked.RoomInfo;
+import networked.UserInfo;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 public class RecentChatPanel extends JPanel {
     private static final int PADDING = 30;
 
-    public RecentChatPanel(ChatClient client) {
+    public RecentChatPanel() {
         setLayout(new BorderLayout());
 
         JPanel title = new JPanel();
@@ -34,17 +35,18 @@ public class RecentChatPanel extends JPanel {
         chatListPanel.setBorder(BorderFactory.createEmptyBorder(PADDING / 2, PADDING / 2, PADDING / 2, PADDING / 2));
 
         ArrayList<ChatInfoPanel> recentChatList = new ArrayList<>();
+
         // Sample data for recent chats
-        recentChatList.add(new ChatInfoPanel(new RoomInfo(1001, "Test1", null, null)));
-        recentChatList.add(new ChatInfoPanel(new RoomInfo(1002, "Test2", null, null)));
-        recentChatList.add(new ChatInfoPanel(new RoomInfo(1003, "Test3", null, null)));
-        recentChatList.add(new ChatInfoPanel(new RoomInfo(1004, "Test4", null, null)));
-        recentChatList.add(new ChatInfoPanel(new RoomInfo(1005, "Test5", null, null)));
-        recentChatList.add(new ChatInfoPanel(new RoomInfo(1006, "Test6", null, null)));
-        recentChatList.add(new ChatInfoPanel(new RoomInfo(1007, "Test7", null, null)));
-        recentChatList.add(new ChatInfoPanel(new RoomInfo(1008, "Test8", null, null)));
-        recentChatList.add(new ChatInfoPanel(new RoomInfo(1009, "Test9", null, null)));
-        recentChatList.add(new ChatInfoPanel(new RoomInfo(1010, "Test10", null, null)));
+        for (int i = 1; i <= 10; i++) {
+            int roomId = 1000 + i;
+            String roomName = "Test" + i;
+            String handle = "user" + i;
+            String nickname = "Test User" + i;
+            recentChatList.add(new ChatInfoPanel(
+                    new RoomInfo(roomId, roomName, null, null),
+                    new UserInfo(handle, nickname, null, null, null)
+            ));
+        }
 
         for (var chatInfoPanel : recentChatList) {
             chatListPanel.add(chatInfoPanel);

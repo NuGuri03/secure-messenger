@@ -1,6 +1,6 @@
 package client.ui.component.panel;
 
-import client.ChatClient;
+import client.WindowManager;
 import client.ui.component.button.UserIconButton;
 import networked.UserInfo;
 
@@ -17,7 +17,7 @@ public class UserInfoPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(null);
 
-        // 이름 자기소개 패널
+        // 이름 및 자기소개 패널
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -27,11 +27,11 @@ public class UserInfoPanel extends JPanel {
         nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(nameLabel);
 
-        JLabel introduceLabel = new JLabel(userInfo.getBio());
-        introduceLabel.setFont(new Font("Pretendard", Font.PLAIN, 14));
-        introduceLabel.setAlignmentY(Component.TOP_ALIGNMENT);
-        introduceLabel.setForeground(Color.GRAY);
-        content.add(introduceLabel);
+        JLabel bioLabel = new JLabel(userInfo.getBio());
+        bioLabel.setFont(new Font("Pretendard", Font.PLAIN, 14));
+        bioLabel.setAlignmentY(Component.TOP_ALIGNMENT);
+        bioLabel.setForeground(Color.GRAY);
+        content.add(bioLabel);
 
         JPanel myAvatarPanel = new JPanel();
         myAvatarPanel.setLayout(new BoxLayout(myAvatarPanel, BoxLayout.Y_AXIS));
@@ -39,7 +39,7 @@ public class UserInfoPanel extends JPanel {
         myAvatarPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         myAvatarPanel.setBorder(new EmptyBorder(1, 0, 0, 0));
 
-        UserIconButton userIconButton = new UserIconButton(userInfo.getAvatarPath(), 40);
+        UserIconButton userIconButton = new UserIconButton(userInfo, 40);
         userIconButton.setAlignmentY(Component.TOP_ALIGNMENT);
         myAvatarPanel.add(userIconButton);
 

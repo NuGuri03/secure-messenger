@@ -4,6 +4,7 @@ import javax.swing.SwingUtilities;
 
 import client.ui.*;
 import networked.RoomInfo;
+import networked.UserInfo;
 
 public class WindowManager {
     private static BaseUI currentUI;
@@ -48,6 +49,13 @@ public class WindowManager {
         SwingUtilities.invokeLater(() -> {
             ChatUI chatUI = new ChatUI(client, roomInfo);
             chatUI.setVisible(true);
+        });
+    }
+
+    public static void openProfileUI(UserInfo userInfo) {
+        SwingUtilities.invokeLater(() -> {
+            ProfileUI profileUI = new ProfileUI(client, userInfo);
+            profileUI.setVisible(true);
         });
     }
 }
