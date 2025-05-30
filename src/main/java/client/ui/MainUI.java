@@ -1,22 +1,19 @@
 package client.ui;
 
+import client.ChatClient;
+import client.WindowManager;
 import client.ui.panel.LobbyPanel;
 import client.ui.panel.RecentChatPanel;
 import client.ui.panel.SettingsPanel;
 import client.ui.panel.SideBarPanel;
-import client.ui.component.panel.UserInfoPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MainUI extends BaseUI {
 
-    public MainUI(String username) {
-        super();
-
-        if (username == null || username.trim().isEmpty()) {
-            username = "user";
-        }
+    public MainUI(ChatClient client) {
+        super(client);
 
         setTitle("Main");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,32 +23,21 @@ public class MainUI extends BaseUI {
         setMinimumSize(minSize);
         setLayout(new BorderLayout());
 
-        UserInfoPanel myInfo = new UserInfoPanel("user1", "intro1", null);
-
-        UserInfoPanel lobbyInfoCopy = new UserInfoPanel(
-                myInfo.getUsername(),
-                myInfo.getIntroduction(),
-                null
-        );
-
-        LobbyPanel lobbyPanel = new LobbyPanel(myInfo);
-        SettingsPanel settingsPanel = new SettingsPanel(myInfo);
-        RecentChatPanel chatPanel = new RecentChatPanel(myInfo);
-
         SideBarPanel sidebar = new SideBarPanel();
         sidebar.setPreferredSize(new Dimension(100, 0));
 
         JPanel mainPanel = new JPanel(new CardLayout());
 
-// mainPanel에 추가
-        mainPanel.add(new LobbyPanel(myInfo), "lobby");
-        mainPanel.add(new RecentChatPanel(myInfo), "chat");
-        mainPanel.add(new SettingsPanel(myInfo), "settings");
+        mainPanel.add(new LobbyPanel(client), "lobby");
+        mainPanel.add(new RecentChatPanel(), "chat");
+        mainPanel.add(new SettingsPanel(client), "settings");
+
+        WindowManager.initMainPanel(mainPanel);
 
         CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
-        sidebar.lobbyButton.addActionListener(e -> cardLayout.show(mainPanel, "lobby"));
-        sidebar.chatButton.addActionListener(e -> cardLayout.show(mainPanel, "chat"));
-        sidebar.settingsButton.addActionListener(e -> cardLayout.show(mainPanel, "settings"));
+        sidebar.lobbyButton.addActionListener(e -> WindowManager.showLobby());
+        sidebar.chatButton.addActionListener(e -> WindowManager.showChat());
+        sidebar.settingsButton.addActionListener(e -> WindowManager.showSettings());
 
         add(sidebar, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);

@@ -1,29 +1,24 @@
 package client.ui.panel;
 
-import client.ui.component.panel.UserInfoPanel;
+import client.ChatClient;
+import networked.UserInfo;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
 public class SettingsPanel extends JPanel {
-
-    private JTextField nameField;
-    private JTextField introField;
-    private JButton saveButton;
-    private UserInfoPanel myInfo;
     private static final int PADDING = 30;
 
-    public SettingsPanel(UserInfoPanel myInfo) {
-        this.myInfo = myInfo;
+    public SettingsPanel(ChatClient client) {
+        UserInfo myInfo = client.getUserInfo();
 
         this.setLayout(new BorderLayout());
 
         JPanel title = new JPanel();
         title.setLayout(new BoxLayout(title, BoxLayout.Y_AXIS));
-        //title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel titleLabel = new JLabel("setting");
+        JLabel titleLabel = new JLabel("설정");
         titleLabel.setFont(new Font("Pretendard", Font.BOLD, 14));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setBorder(BorderFactory.createEmptyBorder(PADDING / 6, 0, PADDING / 6, 0));
@@ -32,14 +27,9 @@ public class SettingsPanel extends JPanel {
         title.setBorder(new MatteBorder(1, 0, 1, 0, Color.decode("#A9A9A9")));
         this.add(title, BorderLayout.NORTH);
 
-
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(PADDING, PADDING, PADDING, PADDING));
-
-        //내 정보 표시 패널 (UserInfoPanel)
-        myInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
-
 
 
         contentPanel.add(Box.createVerticalStrut(30));
@@ -49,7 +39,7 @@ public class SettingsPanel extends JPanel {
         nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPanel.add(nameLabel);
 
-        nameField = new JTextField(myInfo.getUsername());
+        JTextField nameField = new JTextField(myInfo.getUsername());
         nameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         nameField.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPanel.add(nameField);
@@ -61,7 +51,7 @@ public class SettingsPanel extends JPanel {
         introLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPanel.add(introLabel);
 
-        introField = new JTextField(myInfo.getIntroduction());
+        JTextField introField = new JTextField(myInfo.getBio());
         introField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         introField.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPanel.add(introField);
@@ -69,29 +59,27 @@ public class SettingsPanel extends JPanel {
         contentPanel.add(Box.createVerticalStrut(30));
 
         //저장 버튼
-        saveButton = new JButton("저장");
+        JButton saveButton = new JButton("저장");
         saveButton.setBackground(Color.WHITE);
         saveButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPanel.add(saveButton);
 
         //저장 동작
         saveButton.addActionListener(e -> {
-            String newName = nameField.getText().trim();
-            String newIntro = introField.getText().trim();
+            String newUsername = nameField.getText().trim();
+            String newBio = introField.getText().trim();
 
-            if (newName.isEmpty())
-            {
+            if (newUsername.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "이름을 입력하세요.");
                 return;
-            }
-            else if (!newName.matches("^.{1,32}$"))
-            {
+            } else if (!newUsername.matches("^.{1,32}$")) {
                 JOptionPane.showMessageDialog(this, "이름을 1~32자로 입력하세요.");
                 return;
             }
 
-            myInfo.setUsername(newName);
-            myInfo.setIntroduction(newIntro);
+            client.setUsername(newUsername);
+            client.setBio(newBio);
+            repaint();
 
             JOptionPane.showMessageDialog(this, "수정되었습니다.");
         });

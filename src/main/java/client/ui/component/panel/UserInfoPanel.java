@@ -1,56 +1,36 @@
 package client.ui.component.panel;
 
 import client.ui.component.button.UserIconButton;
+import networked.UserInfo;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class UserInfoPanel extends JPanel {
-    private String username;
-    private String introduction;
-    private String avatarPath;
+    UserInfo userInfo;
 
-    private JLabel nameLabel;
-    private JLabel introduceLabel;
-
-    public UserInfoPanel(String username, String introduction, String imagePath) {
-        if (username == null || username.trim().isEmpty()) {
-            this.username = "user";
-        } else {
-            this.username = username;
-        }
-
-        if (introduction == null || introduction.trim().isEmpty()) {
-            this.introduction = "introduction";
-        } else {
-            this.introduction = introduction;
-        }
-
-        if (imagePath == null || imagePath.trim().isEmpty()) {
-            this.avatarPath = "/icons/default_profile.png";
-        } else {
-            this.avatarPath = imagePath;
-        }
+    public UserInfoPanel(UserInfo userInfo) {
+        this.userInfo = userInfo;
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(null);
 
-        // 이름 자기소개 패널
+        // 이름 및 자기소개 패널
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setAlignmentY(Component.TOP_ALIGNMENT);
 
-        nameLabel = new JLabel(this.username);
+        JLabel nameLabel = new JLabel(userInfo.getUsername());
         nameLabel.setFont(new Font("Pretendard", Font.BOLD, 16));
         nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(nameLabel);
 
-        introduceLabel = new JLabel(this.introduction);
-        introduceLabel.setFont(new Font("Pretendard", Font.PLAIN, 14));
-        introduceLabel.setAlignmentY(Component.TOP_ALIGNMENT);
-        introduceLabel.setForeground(Color.GRAY);
-        content.add(introduceLabel);
+        JLabel bioLabel = new JLabel(userInfo.getBio());
+        bioLabel.setFont(new Font("Pretendard", Font.PLAIN, 14));
+        bioLabel.setAlignmentY(Component.TOP_ALIGNMENT);
+        bioLabel.setForeground(Color.GRAY);
+        content.add(bioLabel);
 
         JPanel myAvatarPanel = new JPanel();
         myAvatarPanel.setLayout(new BoxLayout(myAvatarPanel, BoxLayout.Y_AXIS));
@@ -58,7 +38,7 @@ public class UserInfoPanel extends JPanel {
         myAvatarPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         myAvatarPanel.setBorder(new EmptyBorder(1, 0, 0, 0));
 
-        UserIconButton userIconButton = new UserIconButton(this.avatarPath, 40);
+        UserIconButton userIconButton = new UserIconButton(userInfo, 40);
         userIconButton.setAlignmentY(Component.TOP_ALIGNMENT);
         myAvatarPanel.add(userIconButton);
 
@@ -66,33 +46,9 @@ public class UserInfoPanel extends JPanel {
         add(myAvatarPanel);
         add(Box.createRigidArea(new Dimension(15, 0)));
         add(content);
-
-        setOpaque(true);
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
-
     }
 
-    public String getUsername() {
-        return username;
-    }
-    public String getIntroduction()
-    {
-        return introduction;
-    }
-
-    public void setUsername(String name)
-    {
-        this.username = name;
-        if (nameLabel != null) {
-            nameLabel.setText(name);
-        }
-    }
-
-    public void setIntroduction(String intro)
-    {
-        this.introduction = intro;
-        if (introduceLabel != null) {
-            introduceLabel.setText(intro);
-        }
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
 }

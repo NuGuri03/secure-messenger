@@ -5,16 +5,20 @@ import java.awt.*;
 import java.awt.event.*;
 
 import client.ui.component.panel.ChatBubblePanel;
+import networked.RoomInfo;
+import client.ChatClient;
 import client.ui.component.button.UserIconButton;
 
 public class ChatUI extends BaseUI {
+    private ChatClient client;
+    private RoomInfo roomInfo;
 
-    public ChatUI(String username) {
-        super();
+    public ChatUI(ChatClient client, RoomInfo roomInfo) {
+        super(client);
+        this.client = client;
+        this.roomInfo = roomInfo;
 
-        if (username == null || username.trim().isEmpty()) {
-            username = "홍길동";
-        }
+        String myUsername = client.getCurrentUser().getUsername();
 
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -26,10 +30,10 @@ public class ChatUI extends BaseUI {
         this.setLayout(new BorderLayout());
 
         // 유저 아이콘 버튼
-        UserIconButton userIconButton = new UserIconButton("/icons/default_profile.png", 32);
+        UserIconButton myAvatar = new UserIconButton(client.getUserInfo(), 32);
 
         // 탑바 영역
-        JPanel topbar = createTopbarPanel(username, userIconButton);
+        JPanel topbar = createTopbarPanel();
 
         // 채팅창 패널
         JPanel chatPanel = new JPanel();
@@ -42,7 +46,7 @@ public class ChatUI extends BaseUI {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         // 메세지 입력창 영역
-        JPanel inputPanel = createInputPanel(chatArea, scrollPane, username, userIconButton);
+        JPanel inputPanel = createInputPanel(chatArea, scrollPane, myUsername, myAvatar);
 
         // 위치 설정
         chatPanel.add(topbar, BorderLayout.NORTH);
@@ -55,10 +59,9 @@ public class ChatUI extends BaseUI {
 
     /**
      * 탑바 패널을 생성
-     * @param username 유저 네임
      * @return 문구가 포함된 패널
      */
-    private JPanel createTopbarPanel(String username, UserIconButton userIconButton) {
+    private JPanel createTopbarPanel() {
         JPanel topbar = new JPanel();
 
         // 설정
@@ -67,15 +70,17 @@ public class ChatUI extends BaseUI {
         topbar.setAlignmentY(Component.TOP_ALIGNMENT);
         topbar.setBackground(new Color(175, 175, 175));
 
-        // 유저 이름 라벨
-        JLabel usernameLabel = new JLabel(String.format("%s 님과 대화", username));
+        // 상대방 아이콘 버튼
+        UserIconButton userIconButton = new UserIconButton(client.getUserInfo(), 32);
+
+        // 채팅방 이름 라벨
+        JLabel usernameLabel = new JLabel(roomInfo.getName());
 
         // 탑바 패널에 요소 추가
         topbar.add(Box.createHorizontalStrut(15)); // 왼쪽 여백
         topbar.add(userIconButton);
         topbar.add(Box.createHorizontalStrut(12)); // 아이콘과 라벨 사이 여백
         topbar.add(usernameLabel);
-
 
         return topbar;
     }

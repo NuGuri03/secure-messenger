@@ -18,8 +18,6 @@ Secure Messenger는 Java로 개발된 암호화 메신저 애플리케이션입�
 - 1:1 채팅 (그룹 채팅은 추후 확장 예정)
 - 텍스트 메시지 송수신
 - 채팅 말풍선 UI (닉네임, 아바타, 정렬 포함)
-- 메시지 전송 시간 표시
-- 안 읽은 사용자 수 표시
 
 ### 👤 사용자 인증 및 계정 관리
 - 회원가입
@@ -28,8 +26,6 @@ Secure Messenger는 Java로 개발된 암호화 메신저 애플리케이션입�
 - 비밀번호 유효성 검사 (길이, 특수문자 포함 등)
 - 로그인/로그아웃
 - 암호화된 세션 키 생성 및 유지
-- 자동 로그인 기능
-- 비밀번호 찾기
 
 ### 🛡 보안 기능
 - Argon2id 비밀번호 해싱
@@ -60,18 +56,17 @@ gradlew.bat runServer
 ## 📦 Project Structure
 ```
 secure-messenger/
-├── README.md
 ├── src/
 │   ├── main/
 │   │   ├── java/
 │   │   │   ├── client/               # 클라이언트 애플리케이션 (UI 포함)
 │   │   │   ├── server/               # 서버 애플리케이션
-│   │   │   ├── crypto/               # 암호화 로직
-│   │   │   ├── common/               # 공통 클래스
+│   │   │   ├── networked/            # 공통 클래스
 │   └── main/
-│       └── resources/                # 리소스
+│       └── resources/                # 리소스 파일
 ├── build.gradle                      
 ├── settings.gradle                   
+├── README.md
 └── .gitignore
 ```
 
