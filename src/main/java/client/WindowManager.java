@@ -61,9 +61,7 @@ public class WindowManager {
 
     public static void showLobby() {
         SwingUtilities.invokeLater(() -> {
-            // 기존 것을 통째로 제거하고
             mainPanel.remove(lobbyPanel);
-            // 새로 생성
             lobbyPanel = new LobbyPanel(client);
             mainPanel.add(lobbyPanel, "lobby");
             cardLayout.show(mainPanel, "lobby");
