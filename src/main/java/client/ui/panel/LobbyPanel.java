@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class LobbyPanel extends JPanel {
+    private JPanel usersPanel;
+    private ArrayList<UserInfoPanel> friendList;
     private static final int PADDING = 30;
 
     public LobbyPanel(ChatClient client) {
@@ -30,10 +32,24 @@ public class LobbyPanel extends JPanel {
         title.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode("#A9A9A9")));
         add(title, BorderLayout.NORTH);
 
-        // 유저 패널
-        JPanel usersPanel = new JPanel();
+        usersPanel = new JPanel();
         usersPanel.setLayout(new BoxLayout(usersPanel, BoxLayout.PAGE_AXIS));
         usersPanel.setBorder(null);
+
+        buildUserList(client);
+
+        JScrollPane scrollPane = new JScrollPane(usersPanel);
+        scrollPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.decode("#A9A9A9")));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private void buildUserList(ChatClient client) {
+        usersPanel.removeAll();
+
+        // 유저 패널
         usersPanel.add(Box.createVerticalStrut(PADDING));
 
         UserInfoPanel myInfoPanel = new UserInfoPanel(client.getUserInfo());
@@ -51,7 +67,7 @@ public class LobbyPanel extends JPanel {
         line.setAlignmentX(Component.LEFT_ALIGNMENT);
         usersPanel.add(line);
 
-        ArrayList<UserInfoPanel> friendList = new ArrayList<UserInfoPanel>();
+        friendList = new ArrayList<>();
         // 예시 유저
         // **myInfo.getPublicKey()** 는 나중에 삭제하여야 함
         friendList.add(new UserInfoPanel(new UserInfo("user1", "호반우", "KNU CSE", null, null)));
@@ -93,12 +109,5 @@ public class LobbyPanel extends JPanel {
             usersPanel.add(user);
             usersPanel.add(Box.createVerticalStrut(PADDING));
         }
-
-        JScrollPane scrollPane = new JScrollPane(usersPanel);
-        scrollPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.decode("#A9A9A9")));
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-        add(scrollPane, BorderLayout.CENTER);
     }
 }

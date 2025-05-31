@@ -3,6 +3,7 @@ package client;
 import javax.swing.*;
 
 import client.ui.*;
+import client.ui.panel.LobbyPanel;
 import networked.RoomInfo;
 import networked.UserInfo;
 
@@ -14,6 +15,8 @@ public class WindowManager {
 
     private static JPanel mainPanel;
     private static CardLayout cardLayout;
+
+    private static LobbyPanel lobbyPanel;
 
     public static void start(ChatClient chatClient) {
         client = chatClient;
@@ -53,10 +56,20 @@ public class WindowManager {
     public static void initMainPanel(JPanel panel) {
         mainPanel = panel;
         cardLayout = (CardLayout) panel.getLayout();
+        lobbyPanel = new LobbyPanel(client);
     }
 
     public static void showLobby() {
-        SwingUtilities.invokeLater(() -> cardLayout.show(mainPanel, "lobby"));
+        SwingUtilities.invokeLater(() -> {
+            // 기존 것을 통째로 제거하고
+            mainPanel.remove(lobbyPanel);
+            // 새로 생성
+            lobbyPanel = new LobbyPanel(client);
+            mainPanel.add(lobbyPanel, "lobby");
+            cardLayout.show(mainPanel, "lobby");
+            mainPanel.revalidate();
+            mainPanel.repaint();
+        });
     }
 
     public static void showChat() {

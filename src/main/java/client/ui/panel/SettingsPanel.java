@@ -31,7 +31,6 @@ public class SettingsPanel extends JPanel {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(PADDING, PADDING, PADDING, PADDING));
 
-
         contentPanel.add(Box.createVerticalStrut(30));
 
         //이름 입력 필드
@@ -79,7 +78,6 @@ public class SettingsPanel extends JPanel {
 
             client.setUsername(newUsername);
             client.setBio(newBio);
-            repaint();
 
             JOptionPane.showMessageDialog(this, "수정되었습니다.");
         });
