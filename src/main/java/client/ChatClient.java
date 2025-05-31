@@ -225,8 +225,18 @@ public class ChatClient {
         }
     }
 
-    // --------------------- getter methods --------------------- //
+    // --------------------- setter, getter methods --------------------- //
     public UserInfo getUserInfo() {
         return currentUser;
+    }
+
+    public void setUsername(String username) {
+        if (username != null) {
+            currentUser.setUsername(username);
+        }
+    }
+
+    public void setBio(String bio) {
+        currentUser.setBio(bio);
     }
 }

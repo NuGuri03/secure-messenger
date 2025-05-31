@@ -1,15 +1,23 @@
 package client;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import client.ui.*;
+import client.ui.panel.LobbyPanel;
 import networked.RoomInfo;
 import networked.UserInfo;
+
+import java.awt.*;
 
 public class WindowManager {
     private static BaseUI currentUI;
     private static ChatClient client;
-    
+
+    private static JPanel mainPanel;
+    private static CardLayout cardLayout;
+
+    private static LobbyPanel lobbyPanel;
+
     public static void start(ChatClient chatClient) {
         client = chatClient;
         currentUI = new LoginUI(client);
@@ -18,12 +26,6 @@ public class WindowManager {
     public static void toLoginUI() {
         var ui = currentUI;
         currentUI = new LoginUI(client);
-        ui.dispose();
-    }
-
-    public static void toMainUI() {
-        var ui = currentUI;
-        currentUI = new MainUI(client);
         ui.dispose();
     }
 
@@ -43,6 +45,37 @@ public class WindowManager {
                 }
             });
         });
+    }
+
+    public static void toMainUI() {
+        var ui = currentUI;
+        currentUI = new MainUI(client);
+        ui.dispose();
+    }
+
+    public static void initMainPanel(JPanel panel) {
+        mainPanel = panel;
+        cardLayout = (CardLayout) panel.getLayout();
+        lobbyPanel = new LobbyPanel(client);
+    }
+
+    public static void showLobby() {
+        SwingUtilities.invokeLater(() -> {
+            mainPanel.remove(lobbyPanel);
+            lobbyPanel = new LobbyPanel(client);
+            mainPanel.add(lobbyPanel, "lobby");
+            cardLayout.show(mainPanel, "lobby");
+            mainPanel.revalidate();
+            mainPanel.repaint();
+        });
+    }
+
+    public static void showChat() {
+        SwingUtilities.invokeLater(() -> cardLayout.show(mainPanel, "chat"));
+    }
+
+    public static void showSettings() {
+        SwingUtilities.invokeLater(() -> cardLayout.show(mainPanel, "settings"));
     }
 
     public static void openChatUI(RoomInfo roomInfo) {

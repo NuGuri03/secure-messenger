@@ -1,6 +1,7 @@
 package client.ui;
 
 import client.ChatClient;
+import client.WindowManager;
 import client.ui.panel.LobbyPanel;
 import client.ui.panel.RecentChatPanel;
 import client.ui.panel.SettingsPanel;
@@ -10,6 +11,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainUI extends BaseUI {
+    private JPanel lobbyPanel;
+    private JPanel recentChatPanel;
+    private JPanel settingsPanel;
 
     public MainUI(ChatClient client) {
         super(client);
@@ -27,14 +31,18 @@ public class MainUI extends BaseUI {
 
         JPanel mainPanel = new JPanel(new CardLayout());
 
-        mainPanel.add(new LobbyPanel(client), "lobby");
-        mainPanel.add(new RecentChatPanel(), "chat");
-        mainPanel.add(new SettingsPanel(client), "settings");
+        lobbyPanel = new LobbyPanel(client);
+        recentChatPanel = new RecentChatPanel();
+        settingsPanel = new SettingsPanel(client);
 
-        CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
-        sidebar.lobbyButton.addActionListener(e -> cardLayout.show(mainPanel, "lobby"));
-        sidebar.chatButton.addActionListener(e -> cardLayout.show(mainPanel, "chat"));
-        sidebar.settingsButton.addActionListener(e -> cardLayout.show(mainPanel, "settings"));
+        mainPanel.add(lobbyPanel, "lobby");
+        mainPanel.add(recentChatPanel, "chat");
+        mainPanel.add(settingsPanel, "settings");
+
+        WindowManager.initMainPanel(mainPanel);
+        sidebar.lobbyButton.addActionListener(e -> WindowManager.showLobby());
+        sidebar.chatButton.addActionListener(e -> WindowManager.showChat());
+        sidebar.settingsButton.addActionListener(e -> WindowManager.showSettings());
 
         add(sidebar, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
@@ -43,5 +51,7 @@ public class MainUI extends BaseUI {
         setVisible(true);
     }
 
-
+    public JPanel getLobbyPanel() {
+        return lobbyPanel;
+    }
 }

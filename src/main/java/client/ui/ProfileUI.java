@@ -50,7 +50,7 @@ public class ProfileUI extends BaseUI {
         add(BackLabel, gbc);
         
         // 프로필 이름
-        JLabel labelID = new JLabel(user.getNickname());
+        JLabel labelID = new JLabel(user.getUsername());
         labelID.setFont(mainFont);
         gbc.gridy = 4;
         gbc.gridheight = 1;
@@ -81,7 +81,7 @@ public class ProfileUI extends BaseUI {
                 e -> WindowManager.openChatUI(
                         new RoomInfo(
                                 12546,
-                                String.format("%s 님과의 대화", user.getNickname()),
+                                String.format("%s 님과의 대화", user.getUsername()),
                                 null,
                                 null)
                 )

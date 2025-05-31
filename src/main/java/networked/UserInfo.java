@@ -7,25 +7,27 @@ import java.security.PublicKey;
  */
 public class UserInfo {
     private String handle;
-    private String nickname;
+    private String username;
     private String bio;
     private String avatarPath;
     private PublicKey publicKey;
 
-    public UserInfo(String handle, String nickname, String bio, String avatarPath, PublicKey publicKey) {
+    public UserInfo(String handle, String username, String bio, String avatarPath, PublicKey publicKey) {
         this.handle = handle;
-        this.nickname = nickname;
+        this.username = username;
         this.bio = bio;
         this.avatarPath = avatarPath;
         this.publicKey = publicKey;
     }
 
+    /*--------------getter method--------------*/
+
     public String getHandle() {
         return handle;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getUsername() {
+        return username;
     }
 
     public String getBio() {
@@ -38,5 +40,14 @@ public class UserInfo {
 
     public PublicKey getPublicKey() {
         return publicKey;
+    }
+
+    /*-----------setter method-----------*/
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }

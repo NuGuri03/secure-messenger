@@ -1,6 +1,5 @@
 package client.ui.component.panel;
 
-import client.WindowManager;
 import client.ui.component.button.UserIconButton;
 import networked.UserInfo;
 
@@ -22,7 +21,7 @@ public class UserInfoPanel extends JPanel {
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setAlignmentY(Component.TOP_ALIGNMENT);
 
-        JLabel nameLabel = new JLabel(userInfo.getNickname());
+        JLabel nameLabel = new JLabel(userInfo.getUsername());
         nameLabel.setFont(new Font("Pretendard", Font.BOLD, 16));
         nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(nameLabel);

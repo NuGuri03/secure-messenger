@@ -18,7 +18,7 @@ public class ChatUI extends BaseUI {
         this.client = client;
         this.roomInfo = roomInfo;
 
-        String myUsername = client.getCurrentUser().getNickname();
+        String myUsername = client.getCurrentUser().getUsername();
 
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
