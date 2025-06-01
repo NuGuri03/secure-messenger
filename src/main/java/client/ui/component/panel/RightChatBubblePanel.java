@@ -8,14 +8,17 @@ import java.awt.*;
 
 /**
  * 하나의 채팅 메시지(아바타 + 이름 + 말풍선)를 표시하는 패널
+ * 오른쪽 정렬
  */
-public class ChatBubblePanel extends JPanel {
+public class RightChatBubblePanel extends JPanel {
     private static final int PADDING = 8;
 
-    public ChatBubblePanel(String username, String message, UserIconButton userIconButton) {
+    public RightChatBubblePanel(String username, String message, UserIconButton userIconButton) {
         // 전체: 가로 박스 레이아웃
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setOpaque(false);
+        setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+//        setAlignmentX(Component.RIGHT_ALIGNMENT);
 
         // 이름 + 말풍선 컨테이너
         JPanel content = new JPanel();
@@ -94,4 +97,5 @@ public class ChatBubblePanel extends JPanel {
         add(Box.createRigidArea(new Dimension(PADDING, 0)));
         add(buttonPanel);
     }
+
 }
