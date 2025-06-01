@@ -12,10 +12,11 @@ import java.awt.*;
 public class ChatBubblePanel extends JPanel {
     private static final int PADDING = 8;
 
-    public ChatBubblePanel(String username, String message, UserIconButton userIconButton) {
+    public ChatBubblePanel(String username, String message, UserIconButton userIconButton, boolean isRightChat) {
         // 전체: 가로 박스 레이아웃
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setOpaque(false);
+        setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // 이름 + 말풍선 컨테이너
         JPanel content = new JPanel();
@@ -26,8 +27,14 @@ public class ChatBubblePanel extends JPanel {
         // 이름
         JLabel nameLabel = new JLabel(username);
         nameLabel.setFont(new Font("Pretendard", Font.BOLD, 10));
-        nameLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        nameLabel.setBorder(new EmptyBorder(0, 0, 0, PADDING / 2));
+
+        if (isRightChat) {
+            nameLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            nameLabel.setBorder(new EmptyBorder(0, 0, 0, PADDING / 2));
+        } else {
+            nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            nameLabel.setBorder(new EmptyBorder(PADDING / 2, 0, 0, 0));
+        }
         content.add(nameLabel);
 
         // 말풍선과 대화 사이 빈 공간 생성
@@ -38,7 +45,12 @@ public class ChatBubblePanel extends JPanel {
         bubble.setLayout(new BoxLayout(bubble, BoxLayout.X_AXIS));
         bubble.setBackground(Color.decode("#D9D9D9"));
         bubble.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
-        bubble.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+        if (isRightChat) {
+            bubble.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        } else {
+            bubble.setAlignmentX(Component.LEFT_ALIGNMENT);
+        }
 
         // 말풍선 내 대화칸
         JTextArea msgArea = new JTextArea(message);
@@ -90,8 +102,14 @@ public class ChatBubblePanel extends JPanel {
         buttonPanel.add(copiedUserIconButton);
 
         // 완성
-        add(content);
-        add(Box.createRigidArea(new Dimension(PADDING, 0)));
-        add(buttonPanel);
+        if (isRightChat) {
+            add(content);
+            add(Box.createRigidArea(new Dimension(PADDING, 0)));
+            add(buttonPanel);
+        } else {
+            add(buttonPanel);
+            add(Box.createRigidArea(new Dimension(PADDING, 0)));
+            add(content);
+        }
     }
 }
