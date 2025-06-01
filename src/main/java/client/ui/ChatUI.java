@@ -92,7 +92,6 @@ public class ChatUI extends BaseUI {
     private JPanel createChatArea() {
         JPanel chatArea = new JPanel();
         chatArea.setLayout(new BoxLayout(chatArea, BoxLayout.Y_AXIS));
-        chatArea.setAlignmentX(Component.LEFT_ALIGNMENT);
         chatArea.setBackground(Color.WHITE);
         chatArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         return chatArea;
@@ -105,43 +104,24 @@ public class ChatUI extends BaseUI {
      * @return 채팅창 입력 패널
      */
     private JPanel createInputPanel(JPanel chatArea, JScrollPane scrollPane, String username, UserIconButton userIconButton) {
+        JTextArea inputArea = createInputArea();
 
-        // 메세지 입력창
-        JTextArea inputArea = new JTextArea();
-        inputArea.setEditable(true);
-        inputArea.setLineWrap(true);
-        inputArea.setWrapStyleWord(true);
-
-        // 메세지 입력창에 "메세지 입력" 문구 띄우기
-        String placeholder = "메세지 입력";
-        inputArea.setText(placeholder);
-        inputArea.setForeground(Color.GRAY);
-
-        /* 메세지 입력창이 클릭되었을 때
-         * "메세지 입력" 문구 지우고
-         * 입력창 글자 색깔 검은색으로 바꾸기 */
-        inputArea.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (inputArea.getText().equals(placeholder)) {
-                    inputArea.setText("");
-                    inputArea.setForeground(Color.BLACK);
-                }
-            }
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (inputArea.getText().trim().isEmpty()) {
-                    inputArea.setText(placeholder);
-                    inputArea.setForeground(Color.GRAY);
-                }
-            }
-        });
-
-        // 전송 버튼
         JButton sendButton = new JButton("전송");
         sendButton.setPreferredSize(new Dimension(70, 28));
 
-        // Enter 누를 시 "전송" 버튼 동작
+        JButton sendTestButton = new JButton("Test");
+        sendTestButton.setPreferredSize(new Dimension(70, 28));
+
+        // 전송 버튼 클릭 시
+        sendButton.addActionListener(e -> {
+            handleSend(chatArea, scrollPane, inputArea, username, userIconButton, true);
+        });
+
+        sendTestButton.addActionListener(e -> {
+            handleSend(chatArea, scrollPane, inputArea, "Test", userIconButton, false);
+        });
+
+        // 엔터 입력 시 전송
         inputArea.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -152,40 +132,80 @@ public class ChatUI extends BaseUI {
             }
         });
 
-        // 전송 버튼 클릭 시 입력된 메세지를 채팅창에 추가
-        sendButton.addActionListener(e -> {
-            String message = inputArea.getText();
-
-            if (message == null || message.trim().isEmpty() || message.equals(placeholder)) return;
-
-            ChatBubblePanel bubble = new ChatBubblePanel(username, message, userIconButton);
-            bubble.setAlignmentX(Component.RIGHT_ALIGNMENT);
-            chatArea.add(bubble);
-            chatArea.add(Box.createVerticalStrut(10));
-
-            inputArea.setText("");
-
-            // 채팅이 추가 될 시 스크롤을 제일 아래로
-            SwingUtilities.invokeLater(() -> {
-                JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
-                verticalBar.setValue(verticalBar.getMaximum());
-            });
-        });
-
-        // 버튼을 오른쪽에 정렬하기 위한 래퍼 패널
+        // 버튼을 오른쪽 정렬
         JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        buttonWrapper.add(sendTestButton);
         buttonWrapper.add(sendButton);
-        buttonWrapper.setOpaque(false); // 배경 투명하게
+        buttonWrapper.setOpaque(false);
 
-        // 패널 생성
+        // 패널 구성
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
         inputPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-
         inputPanel.add(inputArea);
-        inputPanel.add(Box.createVerticalStrut(5)); // 입력창-버튼 간 간격
+        inputPanel.add(Box.createVerticalStrut(5));
         inputPanel.add(buttonWrapper);
 
         return inputPanel;
+    }
+
+    private JTextArea createInputArea() {
+        String placeholder = "메세지 입력";
+
+        JTextArea inputArea = new JTextArea();
+        inputArea.setEditable(true);
+        inputArea.setLineWrap(true);
+        inputArea.setWrapStyleWord(true);
+
+        inputArea.setText(placeholder);
+        inputArea.setForeground(Color.GRAY);
+
+        inputArea.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (inputArea.getText().equals(placeholder)) {
+                    inputArea.setText("");
+                    inputArea.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (inputArea.getText().trim().isEmpty()) {
+                    inputArea.setText(placeholder);
+                    inputArea.setForeground(Color.GRAY);
+                }
+            }
+        });
+
+        return inputArea;
+    }
+
+    private void handleSend(JPanel chatArea, JScrollPane scrollPane, JTextArea inputArea,
+                            String sender, UserIconButton userIconButton, boolean isRight) {
+        String message = inputArea.getText().trim();
+        if (message.isEmpty() || message.equals("메세지 입력")) return;
+
+        JPanel bubble = new ChatBubblePanel(sender, message, userIconButton, isRight);
+
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setOpaque(false);
+        Dimension preferredSize = bubble.getPreferredSize();
+        wrapper.setMaximumSize(new Dimension(Integer.MAX_VALUE, preferredSize.height));
+
+        if (isRight) {
+            wrapper.add(bubble, BorderLayout.EAST);
+        } else {
+            wrapper.add(bubble, BorderLayout.WEST);
+        }
+
+        chatArea.add(wrapper);
+        chatArea.add(Box.createVerticalStrut(10));
+        inputArea.setText("");
+
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+            verticalBar.setValue(verticalBar.getMaximum());
+        });
     }
 }
