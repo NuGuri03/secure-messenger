@@ -77,15 +77,16 @@ public class ProfileUI extends BaseUI {
         gbc.insets = new Insets(10, 10, 10, 10);  
         add(btnChat, gbc);
 
+       RoomInfo roomInfo =  client.getPrivateRoomInfo(user.getId());
+
+       if (roomInfo == null) {
+            return;
+        }
+
         btnChat.addActionListener(
                 e -> WindowManager.openChatUI(
-                        new RoomInfo(
-                                12546,
-                                String.format("%s 님과의 대화", user.getUsername()),
-                                null,
-                                null)
-                )
-        );
+                        roomInfo
+        ));
         
         setVisible(true);
     }

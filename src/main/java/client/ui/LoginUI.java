@@ -147,7 +147,7 @@ public class LoginUI extends BaseUI {
             if (response.success) {
                 WindowManager.toMainUI();
             } else {
-                showErrorMessage("로그인 실패: " + response.message);
+                showErrorMessage("로그인 실패");
                 setFormEnabled(true);
             }
         });

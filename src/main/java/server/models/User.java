@@ -1,5 +1,6 @@
 package server.models;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -67,6 +68,10 @@ public class User extends Model {
         save();
     }
 
+    public byte[] getHashedAuthenticationKey()     { return hashedAuthenticationKey; }
+    public byte[] getHashedAuthenticationKeySalt() { return hashedAuthenticationKeySalt; }
+
+
     public byte[] getEncryptedPrivateKey() {
         return encryptedPrivateKey;
     }
@@ -99,16 +104,18 @@ public class User extends Model {
 
         var db = DatabaseManager.getInstance();
 
-        long id = db.generateId();
-        byte[] hashedAuthenticationKeySalt = CryptoUtil.generateRandomBytes(16);
-        byte[] hashedAuthenticationKey = CryptoUtil.kdf(authenticationKey, hashedAuthenticationKeySalt);
-        long createdAt = System.currentTimeMillis();
-        long updatedAt = createdAt;
+        long id = DatabaseManager.getInstance().generateId();
 
-        User user = new User(id, handle, publicKey, nickname, "", 
-                             encryptedPrivateKey, encryptedPrivateKeyIv, 
-                             hashedAuthenticationKey, hashedAuthenticationKeySalt,
-                             createdAt, updatedAt);
+        byte[] salt = handle.toLowerCase().getBytes(StandardCharsets.UTF_8);
+
+        // hash = KDF(authKey, salt)
+        byte[] hashedAuthenticationKey = CryptoUtil.kdf(authenticationKey, salt);
+
+        long now = System.currentTimeMillis();
+        User user = new User(id, handle, publicKey, nickname, "",
+                encryptedPrivateKey, encryptedPrivateKeyIv,
+                hashedAuthenticationKey, salt,   // guarda hash + salt
+                now, now);
         user.save();
         return user;
     }

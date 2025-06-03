@@ -5,6 +5,7 @@ import javax.crypto.SecretKey;
 public class SessionInfo {
     private Long sessionId;
     private SecretKey secretKey;
+    private String handleLower = null;
     private int recvSeqNumber = -1;
     private int sendSeqNumber = 0;
 
@@ -34,6 +35,9 @@ public class SessionInfo {
         recvSeqNumber = seqNumber;
         return true;
     }
+
+    public void   setHandleLower(String h){ this.handleLower = h; }
+    public String getHandleLower(){ return handleLower; }
 
     /**
      * 보낼 메시지의 Sequence Number를 받아온다.

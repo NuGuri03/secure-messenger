@@ -1,53 +1,39 @@
 package networked;
 
-import java.security.PublicKey;
 
-/**
- * @brief 사용자 정보를 저장하는 클래스.
- */
 public class UserInfo {
-    private String handle;
-    private String username;
-    private String bio;
-    private String avatarPath;
-    private PublicKey publicKey;
+    private long id;
+    private String  handle;
+    private String  username;
+    private String  bio;
+    private String  avatarPath;
+    private byte[]  publicKey;
 
-    public UserInfo(String handle, String username, String bio, String avatarPath, PublicKey publicKey) {
-        this.handle = handle;
-        this.username = username;
-        this.bio = bio;
+    public UserInfo() {}
+
+    public UserInfo(long id, String handle, String username, String bio,
+                    String avatarPath, byte[] publicKey) {
+        this.id         = id;
+        this.handle     = handle;
+        this.username   = username;
+        this.bio        = bio;
         this.avatarPath = avatarPath;
-        this.publicKey = publicKey;
+        this.publicKey  = publicKey;
     }
 
-    /*--------------getter method--------------*/
+    /* ------------------- getters ---------------------------- */
+    public long    getId()          { return id;       }
+    public String  getHandle()     { return handle;   }
+    public String  getUsername()   { return username; }
+    public String  getBio()        { return bio;      }
+    public String  getAvatarPath() { return avatarPath; }
+    public byte[]  getPublicKey()  { return publicKey; }
 
-    public String getHandle() {
-        return handle;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public String getAvatarPath() {
-        return avatarPath;
-    }
-
-    public PublicKey getPublicKey() {
-        return publicKey;
-    }
-
-    /*-----------setter method-----------*/
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
+    /* ------------------- setters ---------------------------- */
+    public void setId(long id)                  { this.id = id; }
+    public void setHandle(String h)          { this.handle = h; }
+    public void setUsername(String u)        { this.username = u; }
+    public void setBio(String b)             { this.bio = b; }
+    public void setAvatarPath(String path)   { this.avatarPath = path; }
+    public void setPublicKey(byte[] pkBytes) { this.publicKey = pkBytes; }
 }

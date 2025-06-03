@@ -222,7 +222,7 @@ public class SignUpUI extends BaseUI {
             }
         });
 
-        client.register(id, password);
+        client.register(id, password, name);
     }
 
     private void showCustomDialog(String message) {

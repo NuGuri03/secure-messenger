@@ -18,7 +18,7 @@ public class UserIconButton extends JButton {
 
         int iconSize = (int)(avatarSize * 0.7);
         String imagePath = userInfo.getAvatarPath();
-        if (imagePath == null) {
+        if (imagePath == null || imagePath.isEmpty()) {
             imagePath = "/images/default_profile.png";
         }
         ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
