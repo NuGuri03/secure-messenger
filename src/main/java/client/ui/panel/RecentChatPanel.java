@@ -2,7 +2,6 @@ package client.ui.panel;
 
 import client.ChatClient;
 import client.ui.component.panel.ChatInfoPanel;
-import client.ui.component.panel.UserInfoPanel;
 import networked.RoomInfo;
 import networked.UserInfo;
 

@@ -1,6 +1,9 @@
 package client.ui.component.button;
 
 import javax.swing.*;
+
+import client.ResourceCache;
+
 import java.awt.*;
 
 public class IconButton extends JButton {
@@ -11,9 +14,7 @@ public class IconButton extends JButton {
      * @param toolTip 아이콘 툴팁 (예: icon)
      */
     public IconButton(String path, int size, String toolTip) {
-        ImageIcon icon = new ImageIcon(getClass().getResource(path));
-        Image scaledImage = icon.getImage().getScaledInstance(size, size, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        ImageIcon scaledIcon = ResourceCache.getIcon(path, size);
 
         setIcon(scaledIcon);
         setPreferredSize(new Dimension(size, size));

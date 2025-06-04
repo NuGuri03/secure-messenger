@@ -28,8 +28,6 @@ public class ChatUI extends BaseUI {
 
     public void updateUI()
     {
-        String myUsername = client.getCurrentUser().getUsername();
-
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -40,7 +38,7 @@ public class ChatUI extends BaseUI {
         this.setLayout(new BorderLayout());
 
         // 유저 아이콘 버튼
-        UserIconButton myAvatar = new UserIconButton(client.getUserInfo(), 32);
+        new UserIconButton(client.getUserInfo(), 32);
 
         // 탑바 영역
         JPanel topbar = createTopbarPanel();

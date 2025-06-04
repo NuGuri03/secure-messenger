@@ -1,5 +1,6 @@
 package client.ui.component.button;
 
+import client.ResourceCache;
 import client.WindowManager;
 import networked.UserInfo;
 
@@ -21,10 +22,9 @@ public class UserIconButton extends JButton {
         if (imagePath == null || imagePath.isEmpty()) {
             imagePath = "/images/default_profile.png";
         }
-        ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
-        Image scaledImage = icon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-        setIcon(scaledIcon);
+
+        ImageIcon icon = ResourceCache.getIcon(imagePath, iconSize);
+        setIcon(icon);
 
         Dimension fixedSize = new Dimension(avatarSize, avatarSize);
         setPreferredSize(fixedSize);

@@ -1,8 +1,8 @@
 package client.ui;
 
 import client.ChatClient;
+import client.ResourceCache;
 import client.WindowManager;
-import networked.RoomInfo;
 import networked.UserInfo;
 
 import java.awt.*;
@@ -27,9 +27,7 @@ public class ProfileUI extends BaseUI {
         Font BioFont = new Font("Pretendard Light", Font.PLAIN, 13);
         
         // 프로필 사진
-        ImageIcon profileIcon = new ImageIcon(getClass().getResource("/images/default_profile.png"));
-        Image scaledImage = profileIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-        JLabel profileLabel = new JLabel(new ImageIcon(scaledImage));
+        JLabel profileLabel = new JLabel(ResourceCache.getIcon("/images/default_profile.png", 100));
         
         profileLabel.setOpaque(false);
         gbc.gridx = 1;
@@ -40,9 +38,7 @@ public class ProfileUI extends BaseUI {
         
         
         // 배경사진
-        ImageIcon BackIcon = new ImageIcon(getClass().getResource("/images/default_background.png"));
-        Image BackscaledImage = BackIcon.getImage().getScaledInstance(400, 350, Image.SCALE_SMOOTH);
-        JLabel BackLabel = new JLabel(new ImageIcon(BackscaledImage));
+        JLabel BackLabel = new JLabel(ResourceCache.getIcon("/images/default_background.png", 400));
 
         gbc.gridy = 0;
         gbc.gridheight = 3; // 0~3행 병합
@@ -77,16 +73,22 @@ public class ProfileUI extends BaseUI {
         gbc.insets = new Insets(10, 10, 10, 10);  
         add(btnChat, gbc);
 
-       RoomInfo roomInfo =  client.getPrivateRoomInfo(user.getId());
-
-       if (roomInfo == null) {
-            return;
+        boolean roomExists = client.getPrivateRoomInfo(user.getId()) != null;
+        if (!roomExists) {
+            // Create a new private room right away if it doesn't exist
+            String roomName = "@" + client.getCurrentUser().getHandle() + " & @" + user.getUsername();
+            client.createRoom(roomName, user.getHandle());
         }
 
         btnChat.addActionListener(
-                e -> WindowManager.openChatUI(
-                        roomInfo
-        ));
+            e -> {
+                var roomInfo = client.getPrivateRoomInfo(user.getId());
+                if (roomInfo == null) { return; }
+
+                WindowManager.openChatUI(roomInfo);
+                dispose();
+            }
+        );
         
         setVisible(true);
     }
