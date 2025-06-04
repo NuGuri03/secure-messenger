@@ -211,8 +211,6 @@ public class ChatUI extends BaseUI {
         client.sendMessage(roomInfo.getId(), message); //send to server
 
         inputArea.setText("");
-
-
     }
 
     private void loadHistory() {
@@ -249,8 +247,10 @@ public class ChatUI extends BaseUI {
         chatArea.add(Box.createVerticalStrut(10));
 
         SwingUtilities.invokeLater(() -> {
-            JScrollBar bar = scrollPane.getVerticalScrollBar();
-            bar.setValue(bar.getMaximum());
+            SwingUtilities.invokeLater(() -> {
+                JScrollBar vertical = scrollPane.getVerticalScrollBar();
+                vertical.setValue(vertical.getMaximum());
+            });
         });
     }
 
@@ -275,6 +275,4 @@ public class ChatUI extends BaseUI {
         chatArea.revalidate();
         chatArea.repaint();
     }
-
-
 }
