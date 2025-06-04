@@ -56,7 +56,7 @@ public class ChatUI extends BaseUI {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         // 메세지 입력창 영역
-        JPanel inputPanel = createInputPanel(chatArea, scrollPane, myUsername, myAvatar);
+        JPanel inputPanel = createInputPanel();
 
         // 위치 설정
         chatPanel.add(topbar, BorderLayout.NORTH);
@@ -133,13 +133,8 @@ public class ChatUI extends BaseUI {
         return chatArea;
     }
 
-    /**
-     * 채팅창 입력 패널 생성
-     * @param chatArea 채팅창 텍스트 영역
-     * @param username 유저 네임
-     * @return 채팅창 입력 패널
-     */
-    private JPanel createInputPanel(JPanel chatArea, JScrollPane scrollPane, String username, UserIconButton userIconButton) {
+    // 채팅창 입력 패널
+    private JPanel createInputPanel() {
         JTextArea inputArea = createInputArea();
 
         JButton sendButton = new JButton("전송");
