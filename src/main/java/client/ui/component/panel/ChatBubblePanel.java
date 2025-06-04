@@ -12,7 +12,7 @@ import java.awt.*;
 public class ChatBubblePanel extends JPanel {
     private static final int PADDING = 8;
 
-    public ChatBubblePanel(String username, String message, UserIconButton userIconButton, boolean isRightChat) {
+    public ChatBubblePanel(String username, String message, UserIconButton userIconButton, boolean isLeft) {
         // 전체: 가로 박스 레이아웃
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setOpaque(false);
@@ -28,12 +28,12 @@ public class ChatBubblePanel extends JPanel {
         JLabel nameLabel = new JLabel(username);
         nameLabel.setFont(new Font("Pretendard", Font.BOLD, 10));
 
-        if (isRightChat) {
-            nameLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-            nameLabel.setBorder(new EmptyBorder(0, 0, 0, PADDING / 2));
-        } else {
+        if (isLeft) {
             nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
             nameLabel.setBorder(new EmptyBorder(PADDING / 2, 0, 0, 0));
+        } else {
+            nameLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            nameLabel.setBorder(new EmptyBorder(0, 0, 0, PADDING / 2));
         }
         content.add(nameLabel);
 
@@ -46,10 +46,10 @@ public class ChatBubblePanel extends JPanel {
         bubble.setBackground(Color.decode("#D9D9D9"));
         bubble.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
 
-        if (isRightChat) {
-            bubble.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        } else {
+        if (isLeft) {
             bubble.setAlignmentX(Component.LEFT_ALIGNMENT);
+        } else {
+            bubble.setAlignmentX(Component.RIGHT_ALIGNMENT);
         }
 
         // 말풍선 내 대화칸
@@ -102,14 +102,14 @@ public class ChatBubblePanel extends JPanel {
         buttonPanel.add(copiedUserIconButton);
 
         // 완성
-        if (isRightChat) {
-            add(content);
-            add(Box.createRigidArea(new Dimension(PADDING, 0)));
+        if (isLeft) {
             add(buttonPanel);
+            add(Box.createRigidArea(new Dimension(PADDING, 0)));
+            add(content);
         } else {
-            add(buttonPanel);
-            add(Box.createRigidArea(new Dimension(PADDING, 0)));
             add(content);
+            add(Box.createRigidArea(new Dimension(PADDING, 0)));
+            add(buttonPanel);
         }
     }
 }

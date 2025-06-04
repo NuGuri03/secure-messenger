@@ -121,10 +121,7 @@ public class ChatUI extends BaseUI {
         return topbar;
     }
 
-    /**
-     * 채팅창 텍스트 영역 생성
-     * @return 채팅창 텍스트 영역
-     */
+    // 채팅창 텍스트 영역 생성
     private JPanel createChatArea() {
         chatArea = new JPanel();
         chatArea.setLayout(new BoxLayout(chatArea, BoxLayout.Y_AXIS));
@@ -174,6 +171,7 @@ public class ChatUI extends BaseUI {
         return inputPanel;
     }
 
+    // 메시지 입력창 생성
     private JTextArea createInputArea() {
         String placeholder = "메세지 입력";
 
