@@ -11,6 +11,7 @@ public class MessageTypeIndex {
         var messages = new ArrayList<Class<?>>();
 
         messages.add(byte[].class);
+        messages.add(byte[][].class);
         messages.add(EncryptedMessage.class);
         messages.add(KeyExchangeMessage.class);
 

@@ -136,6 +136,7 @@ public class LoginUI extends BaseUI {
         add(buttonPanel, gbc);
 
         setVisible(true);
+        textID.requestFocusInWindow();
     }
 
     private void loginRequest(String id, String password) {

@@ -9,6 +9,7 @@ import networked.RoomInfo;
 import networked.UserInfo;
 
 import java.awt.*;
+import java.util.List;
 
 public class WindowManager {
 
@@ -23,7 +24,7 @@ public class WindowManager {
     public static LobbyPanel lobbyPanel;
     public static RecentChatPanel recentChatPanel;
 
-    private static ChatUI chatUI;
+    private static List<ChatUI> chatUIs;
     public static CurrentUIState state;
 
 
@@ -114,8 +115,16 @@ public class WindowManager {
 
     public static void openChatUI(RoomInfo roomInfo) {
         SwingUtilities.invokeLater(() -> {
-            chatUI = new ChatUI(client, roomInfo);
+            var chatUI = new ChatUI(client, roomInfo);
             chatUI.setVisible(true);
+            chatUIs.add(chatUI);
+
+            chatUI.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    chatUIs.remove(chatUI);
+                }
+            });
         });
     }
 
@@ -128,9 +137,11 @@ public class WindowManager {
 
     public static void showIncomingMessage(RoomInfo.Message m)
     {
-        if (chatUI == null) return;
-        if (chatUI.roomInfo.getId() != m.id()) return;
-
-        chatUI.appendIncoming(m);
+        if (chatUIs.isEmpty()) return;
+        for (ChatUI chatUI : chatUIs) {
+            if (chatUI.roomInfo.getId() == m.id()) {
+                chatUI.appendIncoming(m);
+            }
+        }
     }
 }

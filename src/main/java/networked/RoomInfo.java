@@ -1,6 +1,5 @@
 package networked;
 
-import javax.crypto.SecretKey;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,11 +12,12 @@ public class RoomInfo {
 
     private final List<Message> messages = new ArrayList<>();
 
+    // Only meaningful here
     public record Message(
-            long   id,
-            String authorHandle,
-            long   createdAt,
-            String plainText
+        long   id,
+        String authorHandle,
+        long   createdAt,
+        String plainText
     ) {}
 
     public RoomInfo() {}

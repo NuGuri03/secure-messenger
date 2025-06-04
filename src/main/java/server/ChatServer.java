@@ -8,21 +8,19 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import networked.*;
 import networked.messages.*;
-import server.database.DatabaseManager;
 import server.database.UserBuilder;
+import server.models.Room;
+import server.models.RoomUser;
 import server.models.User;
 
 public class ChatServer {
@@ -135,12 +133,7 @@ public class ChatServer {
             em.ciphertext = CryptoUtil.encrypt(plaintext, session.getSecretKey(), em.iv);
             em.sessionId = 0;
 
-            if (true) {
-                System.out.println("[DEBUG][sendMessage] iv  " + Base64.getEncoder().encodeToString(em.iv));
-                System.out.println("[DEBUG][sendMessage] ct  " + Base64.getEncoder().encodeToString(em.ciphertext));
-                System.out.println("[DEBUG][sendMessage] pt  " + Base64.getEncoder().encodeToString(plaintext));
-                System.out.println("[DEBUG][sendMessage] obj " + obj.getClass());
-            }
+            System.out.println("[DEBUG][sendMessage] obj " + obj.getClass());
 
             c.sendTCP(em);
         } catch (Exception e) {
@@ -171,10 +164,6 @@ public class ChatServer {
         // 1. decrypt handshake using server rsa privatekey
         byte[] aesBytes = CryptoUtil.decryptRSA(kx.encryptedKey, serverPrivateKey);
         SecretKey aes = new SecretKeySpec(aesBytes, "AES");
-
-        if (true) {
-            System.out.println("[DEBUG][Handshake] AES key (Base64): " + Base64.getEncoder().encodeToString(aesBytes));
-        }
 
         // 2. generate session id
         long sessionId = CryptoUtil.generateRandomId();
@@ -236,10 +225,6 @@ public class ChatServer {
             return;
         }
 
-        // salt = handleLower
-        byte[] salt = req.handle.toLowerCase().getBytes(StandardCharsets.UTF_8);
-        byte[] hashedKey = CryptoUtil.kdf(req.authKey, salt);
-
         User newUser = new UserBuilder()
                 .setHandle(req.handle)
                 .setNickname(req.nickname)
@@ -249,7 +234,6 @@ public class ChatServer {
                 .setAuthenticationKey(req.authKey)
                 .createUser();
 
-        populatePrivateRooms(newUser);
         sendCreatedUserNotification(newUser);
 
         resp.success = true;
@@ -266,98 +250,30 @@ public class ChatServer {
         }
     }
 
-    private void populatePrivateRooms(User newUser) throws Exception {
-
-        DatabaseManager db = DatabaseManager.getInstance();
-
-        // create 1 room for each existing user
-        for (User peer : User.queryAll()) {
-            if (peer.getId() == newUser.getId()) continue;
-
-            // already exists with this peer?
-            boolean exists = db.query("""
-            SELECT 1
-            FROM rooms r
-            JOIN room_users ru1 ON ru1.room_id = r.id
-            JOIN room_users ru2 ON ru2.room_id = r.id
-            WHERE ru1.user_id = ? AND ru2.user_id = ?
-            GROUP BY r.id
-            HAVING COUNT(*) = 2
-        """, s -> {
-                s.setLong(1, newUser.getId());
-                s.setLong(2, peer.getId());
-                try (var rs = s.executeQuery()) { return rs.next(); }
-            });
-            if (exists) continue;
-
-            long roomId  = db.generateId();
-            db.query("INSERT INTO rooms(id,name) VALUES(?,?)",
-                    s->{ s.setLong(1, roomId); s.setString(2, ""); return s.executeUpdate(); });
-
-            byte[] roomKey    = CryptoUtil.generateRandomBytes(32);
-            byte[] encForNew  = CryptoUtil.encryptRSA(roomKey, CryptoUtil.bytesToPub(newUser.getPublicKey()));
-            byte[] encForPeer = CryptoUtil.encryptRSA(roomKey, CryptoUtil.bytesToPub(peer.getPublicKey()));
-
-            db.query("INSERT INTO room_users VALUES(?,?,?)",
-                    s->{ s.setLong(1, roomId); s.setLong(2, newUser.getId());
-                        s.setBytes(3, encForNew);  return s.executeUpdate(); });
-            db.query("INSERT INTO room_users VALUES(?,?,?)",
-                    s->{ s.setLong(1, roomId); s.setLong(2, peer.getId());
-                        s.setBytes(3, encForPeer); return s.executeUpdate(); });
-
-            Connection dst = online.get(peer.getId());
-            if (dst != null) {
-                CreateRoom cr = new CreateRoom();
-                cr.roomId        = roomId;
-                cr.roomName      = "";
-                cr.memberHandles = new String[]{ newUser.getHandle(), peer.getHandle() };
-                cr.encKeyForMe   = encForPeer;
-                sendMessage(cr, dst);
-            }
-        }
-
-        // self room
-        long selfRoomId = db.generateId();
-        db.query("INSERT INTO rooms(id,name) VALUES(?,?)",
-                s -> { s.setLong(1, selfRoomId); s.setString(2, ""); return s.executeUpdate(); });
-
-        byte[] selfKey   = CryptoUtil.generateRandomBytes(32);
-        byte[] encForMe  = CryptoUtil.encryptRSA(selfKey, CryptoUtil.bytesToPub(newUser.getPublicKey()));
-
-        db.query("INSERT INTO room_users VALUES(?,?,?)",
-                s -> { s.setLong(1, selfRoomId); s.setLong(2, newUser.getId());
-                    s.setBytes(3, encForMe); return s.executeUpdate(); });
-
-    }
-
-
     private void handleLogin(LoginRequest req, Connection c) throws Exception {
-
         User u = User.queryByHandle(req.handle);
         LoginResponse lr = new LoginResponse();
 
+        // User not found?
         if (u == null) {
             lr.success = false;
             sendMessage(lr, c);
             return;
         }
 
-        byte[] salt = req.handle.toLowerCase().getBytes(StandardCharsets.UTF_8);
-        byte[] candidate = CryptoUtil.kdf(req.authKey, salt);
-
-        if (!CryptoUtil.secureCompareBytes(candidate, u.getHashedAuthenticationKey())) {
+        // Invalid authentication key?
+        if (!u.verifyAuthenticationKey(req.authKey)) {
             lr.success = false;
             sendMessage(lr, c);
             return;
         }
 
-        // correct authKey ⇒ send challenge
+        // correct authKey -> send challenge
         Long sessionId   = connectionTable.get(c);
         SessionInfo sess = sessionTable.get(sessionId);
         if (sess != null) {
             sess.setHandleLower(req.handle.toLowerCase());
         }
-
 
         byte[] challenge = CryptoUtil.generateRandomBytes(16);
         SessionManager.storePendingChallenge(req.handle.toLowerCase(), challenge);
@@ -371,7 +287,6 @@ public class ChatServer {
 
     private void handleLoginChallengeResponse(LoginChallengeResponse resp,
                                               Connection c) throws Exception {
-
         SessionInfo sess = sessionTable.get( connectionTable.get(c) );
         if (sess == null) return;
         String handle = sess.getHandleLower();
@@ -388,12 +303,11 @@ public class ChatServer {
 
         LoginResponse lr = new LoginResponse();
         lr.success  = ok;
-        lr.userInfo = ok ? new UserInfo(u.getId(),u.getHandle(), u.getNickname(), u.getBio(),
-                null, u.getPublicKey())
-                : null;
+        lr.userInfo = null;
 
         if (ok)
         {
+            lr.userInfo = new UserInfo(u.getId(), u.getHandle(), u.getNickname(), u.getBio(), null, u.getPublicKey());
             SessionManager.removePendingChallenge(handle);
             online.put(u.getId(), c);
         }
@@ -402,30 +316,42 @@ public class ChatServer {
     }
 
     private void handleRequestCreateRoom(RequestCreateRoom req, Connection c) throws Exception {
+        SessionInfo sess = sessionTable.get( connectionTable.get(c) );
+        if (sess == null) { return; }
 
-        long roomId = DatabaseManager.getInstance().generateId();
+        // User is in memberHandles?
+        boolean hasSelf = Arrays.stream(req.memberHandles).anyMatch((str) -> str.equalsIgnoreCase(sess.getHandleLower()));
+        if (!hasSelf) {
+            System.out.println("[ChatServer] [ERROR] User " + sess.getHandleLower() + " not in member list for room creation.");
+            return;
+        }
+
+        // Array length mismatches?
+        if (req.memberHandles.length > req.encryptedKeys.length) {
+            System.out.println("[ChatServer] [ERROR] Member handles and encrypted keys length mismatch.");
+            return;
+        }
+
         String name = req.roomName.trim();
+        var room = Room.create(name);
 
-        var db = DatabaseManager.getInstance();
+        for (int i = 0; i < req.memberHandles.length; i++) {
+            User u = User.queryByHandle(req.memberHandles[i]);
+            byte[] encKey = req.encryptedKeys[i];
 
-        db.query("INSERT INTO rooms(id,name) VALUES(?,?)",
-                s->{ s.setLong(1, roomId); s.setString(2, name); return s.executeUpdate(); });
-
-        byte[] key = CryptoUtil.generateRandomBytes(32); // 256-bit
-
-        for (String h : req.memberHandles) {
-            User u = User.queryByHandle(h);
-            byte[] enc = CryptoUtil.encryptRSA(key, CryptoUtil.bytesToPub(u.getPublicKey()));
-
-            db.query("INSERT INTO room_users VALUES(?,?,?)",
-                    s->{ s.setLong(1, roomId); s.setLong(2, u.getId()); s.setBytes(3, enc); return s.executeUpdate(); });
+            if (u == null) {
+                System.out.println("[ChatServer] [WARN] User not found for handle: " + req.memberHandles[i]);
+                continue;
+            }
+            
+            room.addUser(u, encKey);
 
             // notify each member
             CreateRoom cr = new CreateRoom();
-            cr.roomId        = roomId;
-            cr.roomName      = name;
+            cr.roomId        = room.getId();
+            cr.roomName      = room.getName();
             cr.memberHandles = req.memberHandles;
-            cr.encKeyForMe   = enc;
+            cr.encKeyForMe   = encKey;
             sendMessageToUser(u, cr);
         }
     }
@@ -437,113 +363,72 @@ public class ChatServer {
     }
 
     private void handleRequestRoomList(Connection c) {
-
         SessionInfo sess = sessionTable.get(connectionTable.get(c));
-        User        me   = User.queryByHandle(sess.getHandleLower());
-        var         db   = DatabaseManager.getInstance();
+        User me = User.queryByHandle(sess.getHandleLower());
+        var rooms = me.getRooms();
 
-        RoomDTO[] list = db.query("""
-        SELECT r.id, r.name, ru.encrypted_key
-          FROM rooms r
-          JOIN room_users ru ON ru.room_id = r.id
-         WHERE ru.user_id = ?
-    """, stRooms -> {
-            stRooms.setLong(1, me.getId());
+        List<RoomDTO> list = Arrays.stream(rooms)
+            .map(roomUser -> {
+                RoomDTO dto = new RoomDTO();
+                dto.roomId   = roomUser.getRoomId();
+                dto.roomName = roomUser.getRoomName();
+                dto.encKey   = roomUser.getEncryptedKey();
 
-            List<RoomDTO> rooms = new ArrayList<>();
+                // participants
+                dto.memberHandles = Arrays.stream(roomUser.getRoom().getUsers())
+                    .map(RoomUser::getUser)
+                    .map(User::getHandle)
+                    .toArray(String[]::new);
 
-            try (var rsRooms = stRooms.executeQuery()) {
-                while (rsRooms.next()) {
+                // message history
+                dto.messages = Arrays.stream(roomUser.getRoom().getRecentMessages(100, System.currentTimeMillis() + 10000))
+                    .map(msg -> {
+                        MsgDTO m = new MsgDTO();
+                        m.id              = msg.getId();
+                        m.authorId        = msg.getAuthorId();
+                        m.createdAt       = msg.getCreatedAt();
+                        m.encryptedContent= msg.getEncryptedContent();
+                        return m;
+                    })
+                    .toArray(MsgDTO[]::new);
 
-                    RoomDTO dto  = new RoomDTO();
-                    dto.roomId   = rsRooms.getLong(1);
-                    dto.roomName = rsRooms.getString(2);
-                    dto.encKey   = rsRooms.getBytes(3);
-
-                    // participants
-                    dto.memberHandles = db.query("""
-                    SELECT u.handle
-                      FROM room_users ru
-                      JOIN users u ON u.id = ru.user_id
-                     WHERE ru.room_id = ?
-                """, stMems -> {
-                        stMems.setLong(1, dto.roomId);
-                        List<String> hs = new ArrayList<>();
-                        try (var rsMems = stMems.executeQuery()) {
-                            while (rsMems.next()) hs.add(rsMems.getString(1));
-                        }
-                        return hs.toArray(new String[0]);
-                    });
-
-                    // message history
-                    dto.messages = db.query("""
-                    SELECT id, author_id, created_at, encrypted_content
-                      FROM messages
-                     WHERE room_id = ?
-                  ORDER BY created_at
-                """, stMsg -> {
-                        stMsg.setLong(1, dto.roomId);
-                        List<MsgDTO> msgs = new ArrayList<>();
-                        try (var rsMsg = stMsg.executeQuery()) {
-                            while (rsMsg.next()) {
-                                MsgDTO m   = new MsgDTO();
-                                m.id              = rsMsg.getLong(1);
-                                m.authorId        = rsMsg.getLong(2);
-                                m.createdAt       = rsMsg.getLong(3);
-                                m.encryptedContent= rsMsg.getBytes(4);
-                                msgs.add(m);
-                            }
-                        }
-                        return msgs.toArray(new MsgDTO[0]);
-                    });
-
-                    rooms.add(dto);
-                }
-            }
-            return rooms.toArray(new RoomDTO[0]);
-        });
+                return dto;
+            })
+            .toList();
 
         RoomList rl = new RoomList();
-        rl.rooms = list;
+        rl.rooms = list.toArray(RoomDTO[]::new);
         sendMessage(rl, c);
     }
 
-
-
     private void handleSendMessage(SendMessage req, Connection c) throws Exception {
-
         SessionInfo sess = sessionTable.get(connectionTable.get(c));
         User author      = User.queryByHandle( sess.getHandleLower() );
 
-        long msgId = DatabaseManager.getInstance().generateId();
-        long now   = System.currentTimeMillis();
+        Room room = Room.queryById(req.roomId);
+        if (room == null) {
+            System.out.println("[ChatServer] [ERROR] Room not found: " + req.roomId);
+            return;
+        }
 
-        var db = DatabaseManager.getInstance();
-
-        db.query("INSERT INTO messages(id, room_id, author_id, created_at, encrypted_content)" +
-                " VALUES(?,?,?,?,?)", s -> {
-            s.setLong(1, msgId); s.setLong(2, req.roomId); s.setLong(3, author.getId());
-            s.setLong(4, now);   s.setBytes(5, req.encryptedContent); return s.executeUpdate();
-        });
+        var message = room.addMessage(author, req.encryptedContent);
 
         ReceivedMessage out = new ReceivedMessage();
         out.roomId           = req.roomId;
-        out.createdAt        = now;
+        out.createdAt        = message.getCreatedAt();
         out.authorHandle     = author.getHandle();
         out.encryptedContent = req.encryptedContent;
 
         // members of the room
-        List<Long> memberIds = db.query("SELECT user_id FROM room_users WHERE room_id = ?",
-                s->{ s.setLong(1, req.roomId); List<Long> ids=new ArrayList<>();
-                    try(var r=s.executeQuery()){while(r.next()) ids.add(r.getLong(1));} return ids;});
+        var members = room.getUsers();
 
-        for (Long uid : memberIds){
-            Connection dst = online.get(uid);
-            if (dst != null) sendMessage(out, dst);
+        for (var roomUser : members){
+            Connection dst = online.get(roomUser.getUserId());
+            if (dst != null) {
+                sendMessage(out, dst);
+            }
         }
     }
-
-
 
     private void handleAllUserInfoRequest(Connection c) {
         AllUserInfoResponse resp = new AllUserInfoResponse();

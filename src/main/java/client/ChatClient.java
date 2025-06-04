@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -37,21 +38,14 @@ public class ChatClient {
 
     //holds the 64-byte masterKey while waiting for LoginChallenge
     private byte[] pendingLoginMasterKey = null;
-    //lower-case handle, also kept until the challenge is finished
-    private String pendingHandleLower   = null;
 
-
-   public List<UserInfo> friendList = new ArrayList<>();
-   public HashMap<RoomInfo, List<UserInfo>> rooms = new HashMap<>();
+    public List<UserInfo> friendList = new ArrayList<>();
+    public HashMap<RoomInfo, List<UserInfo>> rooms = new HashMap<>();
 
     public ChatClient(ServerInfo serverInfo) throws Exception {
         this.serverInfo = serverInfo;
 
         kryoClient = new Client(65536,     65536 );
-
-        if (debug) {
-            System.out.println("[DEBUG] Server PublicKey (Base64): " + Base64.getEncoder().encodeToString(serverInfo.getPublicKey().getEncoded()));
-        }
 
         var kryo = kryoClient.getKryo();
         for (var messageType : MessageTypeIndex.getAllMessageTypes()) {
@@ -69,10 +63,6 @@ public class ChatClient {
                     sessionSecret = CryptoUtil.generateAESKey();
                     byte[] aesBytes = sessionSecret.getEncoded();
 
-                    if (debug) {
-                        System.out.println("[DEBUG][Handshake] AES key (Base64): " + Base64.getEncoder().encodeToString(aesBytes));
-                    }
-
                     //encrypt aes key with rsa (public server key)
                     byte[] encKey = CryptoUtil.encryptRSA(aesBytes, serverInfo.getPublicKey());
                     KeyExchangeMessage kx = new KeyExchangeMessage();
@@ -81,10 +71,6 @@ public class ChatClient {
 
                     //send to server our encrypted aes key
                     connection.sendTCP(kx);
-
-                    if (debug) {
-                        System.out.println("[DEBUG][Handshake] Encrypted AES key (RSA): " + Base64.getEncoder().encodeToString(encKey));
-                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -96,11 +82,6 @@ public class ChatClient {
 
                 try {
                     byte[] pt = CryptoUtil.decrypt(em.ciphertext, sessionSecret, em.iv);
-                    if (debug) {
-                        System.out.println("[DEBUG][recvObject] iv  " + Base64.getEncoder().encodeToString(em.iv));
-                        System.out.println("[DEBUG][recvObject] ct  " + Base64.getEncoder().encodeToString(em.ciphertext));
-                        System.out.println("[DEBUG][recvObject] pt  " + Base64.getEncoder().encodeToString(pt));
-                    }
 
                     // deserialize
                     Input input = new Input(pt);
@@ -138,10 +119,17 @@ public class ChatClient {
         return CryptoUtil.kdf(pwd.getBytes(StandardCharsets.UTF_8),
                 handleLower.getBytes(StandardCharsets.UTF_8));
     }
+    
     private byte[] deriveAuthKey(byte[] masterKey, String pwd) {
         return CryptoUtil.kdf(masterKey, pwd.getBytes(StandardCharsets.UTF_8));
     }
 
+    private UserInfo findUser(String handle) {
+        return friendList.stream()
+                .filter(u -> u.getHandle().equalsIgnoreCase(handle))
+                .findFirst()
+                .orElse(null);
+    }
 
     // --------------------- send messages to server methods --------------------- //
 
@@ -201,20 +189,56 @@ public class ChatClient {
 
             // keep masterKey in memory for challenge phase
             this.pendingLoginMasterKey = masterKey;
-            this.pendingHandleLower    = handleLower;
         } catch(Exception ex){ex.printStackTrace();}
     }
 
     public void createRoom(String roomName, String... handles){
+        // AES-256 room key shared with all participants
+        byte[] roomKey = CryptoUtil.generateAESKey().getEncoded();
+
+        var memberHandles = new ArrayList<String>();
+        var memberKeys = new ArrayList<byte[]>();
+
+        for (String handle : handles) {
+            UserInfo user = findUser(handle);
+
+            if (user == null) {
+                System.err.println("[createRoom] Unknown user: " + handle);
+                continue;
+            }
+
+            try {
+                byte[] encryptedRoomKey = CryptoUtil.encryptRSA(roomKey, user.getPublicKey());
+                memberHandles.add(user.getHandle());
+                memberKeys.add(encryptedRoomKey);
+            } catch (GeneralSecurityException e) {
+                System.err.println("[createRoom] Error encrypting room key for user " + handle + ": " + e.getMessage());
+                continue;
+            }
+        }
+
+        // add self to the room
+        if (!memberHandles.contains(currentUser.getHandle())) {
+            try {
+                byte[] encryptedRoomKey = CryptoUtil.encryptRSA(roomKey, currentUser.getPublicKey());
+                memberHandles.add(currentUser.getHandle());
+                memberKeys.add(encryptedRoomKey);
+            } catch (GeneralSecurityException e) {
+                System.err.println("[createRoom] Error encrypting room key for self: " + e.getMessage());
+                return;
+            }
+        }
+
         RequestCreateRoom r = new RequestCreateRoom();
         r.roomName      = roomName;
-        r.memberHandles = handles;
+        r.memberHandles = memberHandles.toArray(new String[0]);
+        r.encryptedKeys = memberKeys.toArray(new byte[0][]);
         sendEncryptedObject(r);
     }
 
     public void sendMessage(long roomId, String plainText) {
        // get the room
-        RoomInfo info = rooms.keySet()                    // rooms = HashMap<RoomInfo, List<UserInfo>>
+        RoomInfo info = rooms.keySet()
                 .stream()
                 .filter(r -> r.getId() == roomId)
                 .findFirst()
@@ -282,7 +306,11 @@ public class ChatClient {
 
         if (callback != null) {
             responseOneshotCallbacks.remove(type);
-            ((Consumer<T>) callback).accept(response);
+
+            // It's surely unsafe, but there's no other way?
+            @SuppressWarnings("unchecked")
+            var castedCallback = (Consumer<T>) callback;
+            castedCallback.accept(response);
         }
     }
 
@@ -298,7 +326,6 @@ public class ChatClient {
         }
 
         WindowManager.showLobby();
-        //friendList.addAll(response.userInfos);
     }
 
 
@@ -525,7 +552,6 @@ public class ChatClient {
             ex.printStackTrace();
             return;
         }
-        SecretKey roomKey = new SecretKeySpec(roomKeyBytes, "AES");
 
         // create RoomInfo object
         RoomInfo info = new RoomInfo(
@@ -587,8 +613,6 @@ public class ChatClient {
             connection.sendTCP(em);
 
             if (debug) {
-                System.out.println("[DEBUG][sendObject] iv  " + Base64.getEncoder().encodeToString(iv));
-                System.out.println("[DEBUG][sendObject] ct  " + Base64.getEncoder().encodeToString(ct));
                 System.out.println("[DEBUG][sendObject] obj " + obj.getClass().getSimpleName());
             }
         } catch (Exception e) {

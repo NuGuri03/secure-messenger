@@ -23,10 +23,14 @@ public class CryptoUtil {
     private static final int    GCM_IV_BYTES  = 12;
 
     //generate aes-256 key
-    public static SecretKey generateAESKey() throws NoSuchAlgorithmException {
-        KeyGenerator kg = KeyGenerator.getInstance(AES);
-        kg.init(256);
-        return kg.generateKey();
+    public static SecretKey generateAESKey() {
+        try {
+            KeyGenerator kg = KeyGenerator.getInstance(AES);
+            kg.init(256);
+            return kg.generateKey();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("AES key generation failed", e);
+        }
     }
 
     //generate random iv of 12 bytes
@@ -76,6 +80,11 @@ public class CryptoUtil {
         Cipher c = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
         c.init(Cipher.ENCRYPT_MODE, pub);
         return c.doFinal(data);
+    }
+
+    public static byte[] encryptRSA(byte[] data, byte[] pubKeyBytes) throws GeneralSecurityException {
+        PublicKey pub = bytesToPub(pubKeyBytes);
+        return encryptRSA(data, pub);
     }
 
     //decrypt data with rsa oaep-sha256

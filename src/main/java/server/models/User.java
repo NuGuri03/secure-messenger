@@ -1,6 +1,5 @@
 package server.models;
 
-import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -68,10 +67,6 @@ public class User extends Model {
         save();
     }
 
-    public byte[] getHashedAuthenticationKey()     { return hashedAuthenticationKey; }
-    public byte[] getHashedAuthenticationKeySalt() { return hashedAuthenticationKeySalt; }
-
-
     public byte[] getEncryptedPrivateKey() {
         return encryptedPrivateKey;
     }
@@ -103,12 +98,10 @@ public class User extends Model {
         }
 
         var db = DatabaseManager.getInstance();
-
-        long id = DatabaseManager.getInstance().generateId();
-
-        byte[] salt = handle.toLowerCase().getBytes(StandardCharsets.UTF_8);
+        long id = db.generateId();
 
         // hash = KDF(authKey, salt)
+        byte[] salt = CryptoUtil.generateRandomBytes(16);
         byte[] hashedAuthenticationKey = CryptoUtil.kdf(authenticationKey, salt);
 
         long now = System.currentTimeMillis();
@@ -116,6 +109,7 @@ public class User extends Model {
                 encryptedPrivateKey, encryptedPrivateKeyIv,
                 hashedAuthenticationKey, salt,   // guarda hash + salt
                 now, now);
+
         user.save();
         return user;
     }

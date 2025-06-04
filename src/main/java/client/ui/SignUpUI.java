@@ -121,15 +121,6 @@ public class SignUpUI extends BaseUI {
         messageLabel.setFont(font);
         add(messageLabel, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy++;
-        gbc.gridwidth = 3;
-        gbc.weightx = 0;
-        gbc.anchor = GridBagConstraints.EAST;
-        messageLabel = new JLabel("4~32자의 소문자, 숫자, 특수기호(_ . -)만 사용할 수 있습니다", SwingConstants.CENTER);
-        messageLabel.setFont(font);
-        add(messageLabel, gbc);
-
         gbc.insets = new Insets(10, 10, 10, 10);
 
         // 비밀번호 확인
@@ -172,8 +163,8 @@ public class SignUpUI extends BaseUI {
         pwcField.getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, "confirm");
         pwcField.getActionMap().put("confirm", loginAction);
 
-
         setVisible(true);
+        nameField.requestFocusInWindow();
     }
 
     private void signUp(JTextField nameField, JTextField idField, JPasswordField pwField, JPasswordField pwcField) {
@@ -248,5 +239,6 @@ public class SignUpUI extends BaseUI {
         dialog.add(buttonPanel, BorderLayout.SOUTH);
 
         dialog.setVisible(true);
+        okButton.requestFocusInWindow();
     }
 }
