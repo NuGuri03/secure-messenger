@@ -153,15 +153,17 @@ public class WindowManager {
 
     public static void showIncomingMessage(RoomInfo.Message m)
     {
-        if (chatUIs.isEmpty()) return;
         for (ChatUI chatUI : chatUIs) {
             if (chatUI.roomInfo.getId() == m.id()) {
                 chatUI.appendIncoming(m);
             }
         }
 
-        if (trayIcon != null) {
-            trayIcon.displayMessage("New Message", m.authorHandle() + ": " + m.plainText(), TrayIcon.MessageType.INFO);
+        String senderName = client.findUser(m.authorHandle()).getUsername();
+        boolean isMyChat = m.authorHandle().equals(client.getUserInfo().getHandle());
+
+        if (trayIcon != null && !isMyChat) {
+            trayIcon.displayMessage(senderName, senderName + ": " + m.plainText(), TrayIcon.MessageType.INFO);
         }
     }
 }
