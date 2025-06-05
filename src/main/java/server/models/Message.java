@@ -57,7 +57,7 @@ public class Message extends Model {
     public static Message[] queryByRoom(Room room, int limit, long beforeTimestamp) {
         var db = DatabaseManager.getInstance();
 
-        return db.query("SELECT * FROM messages WHERE room_id = ? AND created_at < ? ORDER BY created_at DESC LIMIT ?", stmt -> {
+        return db.query("SELECT * FROM messages WHERE room_id = ? AND created_at < ? ORDER BY created_at ASC LIMIT ?", stmt -> {
             stmt.setLong(1, room.getId());
             stmt.setLong(2, beforeTimestamp);
             stmt.setInt(3, limit);
