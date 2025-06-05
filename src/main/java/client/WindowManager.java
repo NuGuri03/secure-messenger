@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WindowManager {
-
     private static WindowManager instance;
 
     private static BaseUI currentUI;
@@ -27,6 +26,8 @@ public class WindowManager {
 
     private static final List<ChatUI> chatUIs = new ArrayList<ChatUI>();
     public static CurrentUIState state;
+
+    private static TrayIcon trayIcon;
 
 
     //singleton pattern
@@ -43,6 +44,20 @@ public class WindowManager {
         currentUI = new LoginUI(client);
         state = CurrentUIState.LOGIN;
 
+        // 시스템 트레이 아이콘 설정
+        if (SystemTray.isSupported()) {
+            var systemTray = SystemTray.getSystemTray();
+            try {
+                Image image = ResourceCache.getIcon("/icons/logo.png", 64).getImage();
+                trayIcon = new TrayIcon(image, "Chat Client");
+                trayIcon.setImageAutoSize(true);
+                systemTray.add(trayIcon);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.err.println("[WindowManager] System Tray is not supported on this platform.");
+        }
     }
 
     public static void toLoginUI() {
@@ -138,11 +153,18 @@ public class WindowManager {
 
     public static void showIncomingMessage(RoomInfo.Message m)
     {
-        if (chatUIs.isEmpty()) return;
         for (ChatUI chatUI : chatUIs) {
             if (chatUI.roomInfo.getId() == m.id()) {
                 chatUI.appendIncoming(m);
             }
+        }
+
+        UserInfo sender = client.findUser(m.authorHandle());
+        boolean isMyChat = m.authorHandle().equals(client.getUserInfo().getHandle());
+
+        if (trayIcon != null && !isMyChat) {
+            String senderName = sender != null ? sender.getUsername() : m.authorHandle();
+            trayIcon.displayMessage(senderName, senderName + ": " + m.plainText(), TrayIcon.MessageType.INFO);
         }
     }
 }

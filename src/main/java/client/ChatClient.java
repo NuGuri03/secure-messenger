@@ -124,7 +124,7 @@ public class ChatClient {
         return CryptoUtil.kdf(masterKey, pwd.getBytes(StandardCharsets.UTF_8));
     }
 
-    private UserInfo findUser(String handle) {
+    public UserInfo findUser(String handle) {
         return friendList.stream()
                 .filter(u -> u.getHandle().equalsIgnoreCase(handle))
                 .findFirst()
