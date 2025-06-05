@@ -38,13 +38,13 @@ public class RecentChatPanel extends JPanel {
 
         ArrayList<ChatInfoPanel> recentChatList = new ArrayList<>();
 
-        //iterate throught the hash map of client   HashMap<RoomInfo, List<UserInfo>> rooms = new HashMap<>();
+        //iterate throught the hash map of client HashMap<RoomInfo, List<UserInfo>> rooms = new Ha`shMap<>();
         for (Map.Entry<RoomInfo, List<UserInfo>> entry : client.rooms.entrySet()) {
 
             RoomInfo room = entry.getKey();
             List<UserInfo> users = entry.getValue();
 
-            if (room.getName() == "")
+            if (room.getName().isEmpty())
             {
                 for (UserInfo user : users) {
                     if (!user.getHandle().equals(client.getUserInfo().getHandle())) {
