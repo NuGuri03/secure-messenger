@@ -14,12 +14,13 @@ import client.ChatClient;
 public abstract class BaseUI extends JFrame {
     private static final String MAIN_FONT_PATH = "/fonts/Pretendard.ttf";
     private static Font mainFont;
+    private static LookAndFeel laf = new FlatLightLaf();
 
     private ChatClient client;
 
     public BaseUI(ChatClient client) {
         this.client = client;
-        applyLookAndFeel(new FlatLightLaf());
+        applyLookAndFeel(laf);
         applyMainFont();
     }
 

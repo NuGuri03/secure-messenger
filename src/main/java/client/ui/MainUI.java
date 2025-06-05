@@ -32,7 +32,7 @@ public class MainUI extends BaseUI {
         JPanel mainPanel = new JPanel(new CardLayout());
 
         lobbyPanel = new LobbyPanel(client);
-        recentChatPanel = new RecentChatPanel();
+        recentChatPanel = new RecentChatPanel(client);
         settingsPanel = new SettingsPanel(client);
 
         mainPanel.add(lobbyPanel, "lobby");

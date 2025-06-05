@@ -23,10 +23,14 @@ public class CryptoUtil {
     private static final int    GCM_IV_BYTES  = 12;
 
     //generate aes-256 key
-    public static SecretKey generateAESKey() throws NoSuchAlgorithmException {
-        KeyGenerator kg = KeyGenerator.getInstance(AES);
-        kg.init(256);
-        return kg.generateKey();
+    public static SecretKey generateAESKey() {
+        try {
+            KeyGenerator kg = KeyGenerator.getInstance(AES);
+            kg.init(256);
+            return kg.generateKey();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("AES key generation failed", e);
+        }
     }
 
     //generate random iv of 12 bytes
@@ -78,6 +82,11 @@ public class CryptoUtil {
         return c.doFinal(data);
     }
 
+    public static byte[] encryptRSA(byte[] data, byte[] pubKeyBytes) throws GeneralSecurityException {
+        PublicKey pub = bytesToPub(pubKeyBytes);
+        return encryptRSA(data, pub);
+    }
+
     //decrypt data with rsa oaep-sha256
     public static byte[] decryptRSA(byte[] data, PrivateKey priv) throws GeneralSecurityException {
         Cipher c = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
@@ -107,6 +116,26 @@ public class CryptoUtil {
         }
     }
 
+    public static KeyPair generateRSA4096KeyPair() throws GeneralSecurityException {
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+        kpg.initialize(4096);
+        return kpg.generateKeyPair();
+    }
+
+    public static byte[] signWithRsa4096(PrivateKey privKey, byte[] data) throws GeneralSecurityException {
+        Signature sig = Signature.getInstance("SHA256withRSA");
+        sig.initSign(privKey);
+        sig.update(data);
+        return sig.sign();
+    }
+
+    public static boolean verifyWithRsa4096(PublicKey pubKey, byte[] data, byte[] signature) throws GeneralSecurityException {
+        Signature sig = Signature.getInstance("SHA256withRSA");
+        sig.initVerify(pubKey);
+        sig.update(data);
+        return sig.verify(signature);
+    }
+
     //load or generate rsa keypair and save to pem files
     public static KeyPair loadOrGenerateRSAKeyPair(Path privPath, Path pubPath) throws Exception {
         if (Files.exists(privPath) && Files.exists(pubPath)) {
@@ -126,7 +155,7 @@ public class CryptoUtil {
     
         // generate new rsa keypair
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-        kpg.initialize(2048);
+        kpg.initialize(4096);
         KeyPair kp = kpg.generateKeyPair();
     
         // save private key to pem
@@ -203,5 +232,10 @@ public class CryptoUtil {
             i = end;
         }
         return sb.toString();
+    }
+
+    public static PublicKey bytesToPub(byte[] der) throws GeneralSecurityException {
+        return KeyFactory.getInstance("RSA")
+                .generatePublic(new X509EncodedKeySpec(der));
     }
 }

@@ -9,11 +9,13 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class RecentChatPanel extends JPanel {
     private static final int PADDING = 30;
 
-    public RecentChatPanel() {
+    public RecentChatPanel(ChatClient client) {
         setLayout(new BorderLayout());
 
         JPanel title = new JPanel();
@@ -36,17 +38,32 @@ public class RecentChatPanel extends JPanel {
 
         ArrayList<ChatInfoPanel> recentChatList = new ArrayList<>();
 
-        // Sample data for recent chats
-        for (int i = 1; i <= 10; i++) {
-            int roomId = 1000 + i;
-            String roomName = "Test" + i;
-            String handle = "user" + i;
-            String nickname = "Test User" + i;
-            recentChatList.add(new ChatInfoPanel(
-                    new RoomInfo(roomId, roomName, null, null),
-                    new UserInfo(handle, nickname, null, null, null)
-            ));
+        //iterate throught the hash map of client HashMap<RoomInfo, List<UserInfo>> rooms = new Ha`shMap<>();
+        for (Map.Entry<RoomInfo, List<UserInfo>> entry : client.rooms.entrySet()) {
+
+            RoomInfo room = entry.getKey();
+            List<UserInfo> users = entry.getValue();
+
+            if (room.getName().isEmpty())
+            {
+                for (UserInfo user : users) {
+                    if (!user.getHandle().equals(client.getUserInfo().getHandle())) {
+                        room.setName(user.getUsername());
+                    }
+                }
+            }
+
+            if (!users.isEmpty()) {
+
+                for(UserInfo user : users) {
+                    if (!user.getHandle().equals(client.getUserInfo().getHandle())) {
+                        recentChatList.add(new ChatInfoPanel(room, user));
+                    }
+                }
+
+            }
         }
+
 
         for (var chatInfoPanel : recentChatList) {
             chatListPanel.add(chatInfoPanel);

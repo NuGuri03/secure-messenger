@@ -1,6 +1,6 @@
 package networked.messages;
 
 public class LoginRequest extends NetworkedMessage {
-    public String username;
-    public String password;
+    public String handle;
+    public byte[] authKey; // 64 bytes
 }

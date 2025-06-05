@@ -1,6 +1,7 @@
 package client.ui;
 
 import client.ChatClient;
+import client.ResourceCache;
 import client.WindowManager;
 import client.ui.component.text.JTextFieldLimit;
 import networked.messages.LoginResponse;
@@ -23,9 +24,7 @@ public class LoginUI extends BaseUI {
         GridBagConstraints gbc = new GridBagConstraints();
 
         /* --------------------- 로고 추가 --------------------*/
-        ImageIcon logo = new ImageIcon(getClass().getResource("/icons/logo.png"));
-         Image scaled = logo.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-         logo = new ImageIcon(scaled);
+        ImageIcon logo = ResourceCache.getIcon("/icons/logo.png", 100);
 
         JLabel logoLabel = new JLabel(logo);
         gbc.gridx = 0;
@@ -137,6 +136,7 @@ public class LoginUI extends BaseUI {
         add(buttonPanel, gbc);
 
         setVisible(true);
+        textID.requestFocusInWindow();
     }
 
     private void loginRequest(String id, String password) {
@@ -147,7 +147,7 @@ public class LoginUI extends BaseUI {
             if (response.success) {
                 WindowManager.toMainUI();
             } else {
-                showErrorMessage("로그인 실패: " + response.message);
+                showErrorMessage("로그인 실패");
                 setFormEnabled(true);
             }
         });

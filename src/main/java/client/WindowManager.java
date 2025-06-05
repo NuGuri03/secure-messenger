@@ -4,28 +4,50 @@ import javax.swing.*;
 
 import client.ui.*;
 import client.ui.panel.LobbyPanel;
+import client.ui.panel.RecentChatPanel;
 import networked.RoomInfo;
 import networked.UserInfo;
 
 import java.awt.*;
+import java.util.List;
 
 public class WindowManager {
+
+    private static WindowManager instance;
+
     private static BaseUI currentUI;
     private static ChatClient client;
 
     private static JPanel mainPanel;
     private static CardLayout cardLayout;
 
-    private static LobbyPanel lobbyPanel;
+    public static LobbyPanel lobbyPanel;
+    public static RecentChatPanel recentChatPanel;
+
+    private static List<ChatUI> chatUIs;
+    public static CurrentUIState state;
+
+
+    //singleton pattern
+    public static  WindowManager getInstance() {
+        if (instance == null) {
+            instance = new WindowManager();
+        }
+        return instance;
+    }
+
 
     public static void start(ChatClient chatClient) {
         client = chatClient;
         currentUI = new LoginUI(client);
+        state = CurrentUIState.LOGIN;
+
     }
 
     public static void toLoginUI() {
         var ui = currentUI;
         currentUI = new LoginUI(client);
+        state = CurrentUIState.LOGIN;
         ui.dispose();
     }
 
@@ -36,6 +58,7 @@ public class WindowManager {
 
         SwingUtilities.invokeLater(() -> {
             SignUpUI signUpUI = new SignUpUI(client);
+            state = CurrentUIState.LOGIN;
             signUpUI.setVisible(true);
 
             signUpUI.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -51,12 +74,14 @@ public class WindowManager {
         var ui = currentUI;
         currentUI = new MainUI(client);
         ui.dispose();
+        state = CurrentUIState.LOBBY;
     }
 
     public static void initMainPanel(JPanel panel) {
         mainPanel = panel;
         cardLayout = (CardLayout) panel.getLayout();
         lobbyPanel = new LobbyPanel(client);
+        recentChatPanel = new RecentChatPanel(client);
     }
 
     public static void showLobby() {
@@ -67,21 +92,39 @@ public class WindowManager {
             cardLayout.show(mainPanel, "lobby");
             mainPanel.revalidate();
             mainPanel.repaint();
+            state = CurrentUIState.LOBBY;
         });
     }
 
     public static void showChat() {
-        SwingUtilities.invokeLater(() -> cardLayout.show(mainPanel, "chat"));
+        SwingUtilities.invokeLater(() -> {
+            mainPanel.remove(recentChatPanel);
+            recentChatPanel = new RecentChatPanel(client);
+            mainPanel.add(recentChatPanel, "chat");
+            cardLayout.show(mainPanel, "chat");
+            mainPanel.revalidate();
+            mainPanel.repaint();
+            state = CurrentUIState.RECENT;
+        });
     }
 
     public static void showSettings() {
         SwingUtilities.invokeLater(() -> cardLayout.show(mainPanel, "settings"));
+        state = CurrentUIState.SETTINGS;
     }
 
     public static void openChatUI(RoomInfo roomInfo) {
         SwingUtilities.invokeLater(() -> {
-            ChatUI chatUI = new ChatUI(client, roomInfo);
+            var chatUI = new ChatUI(client, roomInfo);
             chatUI.setVisible(true);
+            chatUIs.add(chatUI);
+
+            chatUI.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    chatUIs.remove(chatUI);
+                }
+            });
         });
     }
 
@@ -90,5 +133,15 @@ public class WindowManager {
             ProfileUI profileUI = new ProfileUI(client, userInfo);
             profileUI.setVisible(true);
         });
+    }
+
+    public static void showIncomingMessage(RoomInfo.Message m)
+    {
+        if (chatUIs.isEmpty()) return;
+        for (ChatUI chatUI : chatUIs) {
+            if (chatUI.roomInfo.getId() == m.id()) {
+                chatUI.appendIncoming(m);
+            }
+        }
     }
 }

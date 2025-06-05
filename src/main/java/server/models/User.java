@@ -98,17 +98,18 @@ public class User extends Model {
         }
 
         var db = DatabaseManager.getInstance();
-
         long id = db.generateId();
-        byte[] hashedAuthenticationKeySalt = CryptoUtil.generateRandomBytes(16);
-        byte[] hashedAuthenticationKey = CryptoUtil.kdf(authenticationKey, hashedAuthenticationKeySalt);
-        long createdAt = System.currentTimeMillis();
-        long updatedAt = createdAt;
 
-        User user = new User(id, handle, publicKey, nickname, "", 
-                             encryptedPrivateKey, encryptedPrivateKeyIv, 
-                             hashedAuthenticationKey, hashedAuthenticationKeySalt,
-                             createdAt, updatedAt);
+        // hash = KDF(authKey, salt)
+        byte[] salt = CryptoUtil.generateRandomBytes(16);
+        byte[] hashedAuthenticationKey = CryptoUtil.kdf(authenticationKey, salt);
+
+        long now = System.currentTimeMillis();
+        User user = new User(id, handle, publicKey, nickname, "",
+                encryptedPrivateKey, encryptedPrivateKeyIv,
+                hashedAuthenticationKey, salt,   // guarda hash + salt
+                now, now);
+
         user.save();
         return user;
     }

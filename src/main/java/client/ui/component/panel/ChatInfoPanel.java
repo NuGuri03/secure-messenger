@@ -51,7 +51,8 @@ public class ChatInfoPanel extends ClickAblePanel{
         chatLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPanel.add(chatLabel);
 
-        JLabel messageLabel = new JLabel("마지막 최근 메세지 추가 필요");
+        String lastMessage = roomInfo.getLastMessage();
+        JLabel messageLabel = new JLabel(lastMessage);
         messageLabel.setFont(messageFont);
         messageLabel.setAlignmentY(Component.TOP_ALIGNMENT);
         messageLabel.setForeground(Color.GRAY);
