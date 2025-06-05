@@ -76,7 +76,7 @@ public class ProfileUI extends BaseUI {
         boolean roomExists = client.getPrivateRoomInfo(user.getId()) != null;
         if (!roomExists) {
             // Create a new private room right away if it doesn't exist
-            String roomName = "@" + client.getCurrentUser().getHandle() + " & @" + user.getUsername();
+            String roomName = "";
             client.createRoom(roomName, user.getHandle());
         }
 

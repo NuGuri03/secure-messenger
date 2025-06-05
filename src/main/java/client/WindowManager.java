@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WindowManager {
-
     private static WindowManager instance;
 
     private static BaseUI currentUI;
@@ -27,6 +26,8 @@ public class WindowManager {
 
     private static final List<ChatUI> chatUIs = new ArrayList<ChatUI>();
     public static CurrentUIState state;
+
+    private static TrayIcon trayIcon;
 
 
     //singleton pattern
@@ -43,6 +44,20 @@ public class WindowManager {
         currentUI = new LoginUI(client);
         state = CurrentUIState.LOGIN;
 
+        // 시스템 트레이 아이콘 설정
+        if (SystemTray.isSupported()) {
+            var systemTray = SystemTray.getSystemTray();
+            try {
+                Image image = ResourceCache.getIcon("/images/tray_icon.png", 64).getImage();
+                trayIcon = new TrayIcon(image, "Chat Client");
+                trayIcon.setImageAutoSize(true);
+                systemTray.add(trayIcon);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.err.println("[WindowManager] System Tray is not supported on this platform.");
+        }
     }
 
     public static void toLoginUI() {
@@ -143,6 +158,10 @@ public class WindowManager {
             if (chatUI.roomInfo.getId() == m.id()) {
                 chatUI.appendIncoming(m);
             }
+        }
+
+        if (trayIcon != null) {
+            trayIcon.displayMessage("New Message", m.authorHandle() + ": " + m.plainText(), TrayIcon.MessageType.INFO);
         }
     }
 }
