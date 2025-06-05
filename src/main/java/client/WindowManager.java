@@ -48,7 +48,7 @@ public class WindowManager {
         if (SystemTray.isSupported()) {
             var systemTray = SystemTray.getSystemTray();
             try {
-                Image image = ResourceCache.getIcon("/images/tray_icon.png", 64).getImage();
+                Image image = ResourceCache.getIcon("/icons/logo.png", 64).getImage();
                 trayIcon = new TrayIcon(image, "Chat Client");
                 trayIcon.setImageAutoSize(true);
                 systemTray.add(trayIcon);
