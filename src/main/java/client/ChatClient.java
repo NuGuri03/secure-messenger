@@ -390,6 +390,7 @@ public class ChatClient {
             case RoomList rl  -> handleLoadRooms(rl);
             case ReceivedMessage rm -> handleShowIncomingMessage(rm);
             case NewUserCreated nu -> handleNewUserCreated(nu);
+            case UserInfoChanged uic -> handleUserInfoChanged(uic);
 
 
             default -> System.out.println("[WARN] Unhandled NetworkedMessage from server: " + message.getClass());
@@ -459,8 +460,6 @@ public class ChatClient {
             ex.printStackTrace();
         }
     }
-
-
 
     private void handleLoadRooms(RoomList rl) {
 
@@ -536,7 +535,6 @@ public class ChatClient {
        //ui update
     }
 
-
     private void handleCreateRoom(CreateRoom cr) {
 
         if (myPrivateKey == null) {
@@ -586,6 +584,25 @@ public class ChatClient {
         }
     }
 
+    private void handleUserInfoChanged(UserInfoChanged uic) {
+        if (debug) {
+            System.out.println("[DEBUG][handleUserInfoChanged] User info changed: " + uic.handle);
+        }
+
+        UserInfo user = findUser(uic.handle);
+        if (user != null) {
+            user.setUsername(uic.username);
+            user.setBio(uic.bio);
+
+            // update the UI if needed
+            if (WindowManager.state == CurrentUIState.LOBBY) {
+                WindowManager.showLobby();
+            }
+        } else {
+            System.err.println("[ERROR] User not found in list: " + uic.handle);
+        }
+    }
+
     // helper to send any encrypted object
     private void sendEncryptedObject(NetworkedMessage obj) {
         clientSeqNumber++;
@@ -627,19 +644,23 @@ public class ChatClient {
         return currentUser;
     }
 
-    public void setUsername(String username) {
+    public void updateInfo(String username, String bio) {
         if (username != null) {
             currentUser.setUsername(username);
         }
-    }
 
-    public void setBio(String bio) {
-        currentUser.setBio(bio);
+        if (bio != null) {
+            currentUser.setBio(bio);
+        }
+
+        // send the request to the server
+        UserInfoChangeRequest request = new UserInfoChangeRequest();
+        request.username = currentUser.getUsername();
+        request.bio = currentUser.getBio();
+        sendEncryptedObject(request);
     }
 
     public RoomInfo getPrivateRoomInfo(long userId) {
-
-
         String myHandle = currentUser.getHandle();
 
         String targetHandle;

@@ -76,8 +76,7 @@ public class SettingsPanel extends JPanel {
                 return;
             }
 
-            client.setUsername(newUsername);
-            client.setBio(newBio);
+            client.updateInfo(newUsername, newBio);
 
             JOptionPane.showMessageDialog(this, "수정되었습니다.");
         });

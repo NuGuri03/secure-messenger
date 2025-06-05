@@ -24,7 +24,6 @@ public class MessageTypeIndex {
         messages.add(LoginChallenge.class);
         messages.add(LoginChallengeResponse.class);
 
-
         messages.add(UserInfo.class);
         messages.add(UserInfo[].class);
 
@@ -49,6 +48,8 @@ public class MessageTypeIndex {
         messages.add(RequestRoomList.class);
         messages.add(NewUserCreated.class);
 
+        messages.add(UserInfoChanged.class);
+        messages.add(UserInfoChangeRequest.class);
 
         return messages;
     }

@@ -13,6 +13,7 @@ import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -207,6 +208,7 @@ public class ChatServer {
             case RequestCreateRoom rcr -> handleRequestCreateRoom(rcr, c);
             case RequestRoomList rrl -> handleRequestRoomList(c);
             case SendMessage sm  -> handleSendMessage(sm,  c);
+            case UserInfoChangeRequest uicr -> handleUserInfoChangeRequest(uicr, c);
 
             default -> System.out.println("[ChatServer] [WARN] Unhandled NetworkedMessage: " + msg.getClass());
         }
@@ -353,6 +355,34 @@ public class ChatServer {
             cr.memberHandles = req.memberHandles;
             cr.encKeyForMe   = encKey;
             sendMessageToUser(u, cr);
+        }
+    }
+
+    private void handleUserInfoChangeRequest(UserInfoChangeRequest req, Connection c) {
+        SessionInfo sess = sessionTable.get(connectionTable.get(c));
+        if (sess == null) return;
+
+        User u = User.queryByHandle(sess.getHandleLower());
+        if (u == null) return;
+
+        // Update user info
+        try {
+            u.setNickname(req.username);
+            u.setBio(req.bio);
+        } catch (SQLException e) {
+            System.out.println("[ChatServer] [ERROR] Failed to update user info: " + e.getMessage());
+            return;
+        }
+        
+        // Notify the user about the change
+        UserInfoChanged change = new UserInfoChanged();
+        change.handle = u.getHandle();
+        change.username = u.getNickname();
+        change.bio = u.getBio();
+
+        // Notify all online users about the change
+        for (Connection dst : online.values()) {
+            sendMessage(change, dst);
         }
     }
 
