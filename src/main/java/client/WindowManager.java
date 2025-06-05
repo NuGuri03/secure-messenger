@@ -9,6 +9,7 @@ import networked.RoomInfo;
 import networked.UserInfo;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WindowManager {
@@ -24,7 +25,7 @@ public class WindowManager {
     public static LobbyPanel lobbyPanel;
     public static RecentChatPanel recentChatPanel;
 
-    private static List<ChatUI> chatUIs;
+    private static final List<ChatUI> chatUIs = new ArrayList<ChatUI>();
     public static CurrentUIState state;
 
 
