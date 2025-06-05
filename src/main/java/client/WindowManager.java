@@ -159,10 +159,11 @@ public class WindowManager {
             }
         }
 
-        String senderName = client.findUser(m.authorHandle()).getUsername();
+        UserInfo sender = client.findUser(m.authorHandle());
         boolean isMyChat = m.authorHandle().equals(client.getUserInfo().getHandle());
 
         if (trayIcon != null && !isMyChat) {
+            String senderName = sender != null ? sender.getUsername() : m.authorHandle();
             trayIcon.displayMessage(senderName, senderName + ": " + m.plainText(), TrayIcon.MessageType.INFO);
         }
     }
