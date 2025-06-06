@@ -11,9 +11,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainUI extends BaseUI {
-    private JPanel lobbyPanel;
-    private JPanel recentChatPanel;
-    private JPanel settingsPanel;
+    private final JPanel lobbyPanel;
+    private final JPanel recentChatPanel;
+    private final JPanel settingsPanel;
 
     public MainUI(ChatClient client) {
         super(client);

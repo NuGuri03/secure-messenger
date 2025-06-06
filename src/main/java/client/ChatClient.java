@@ -598,6 +598,10 @@ public class ChatClient {
             if (WindowManager.state == CurrentUIState.LOBBY) {
                 WindowManager.showLobby();
             }
+
+            if (WindowManager.state == CurrentUIState.RECENT) {
+                WindowManager.showChat();
+            }
         } else {
             System.err.println("[ERROR] User not found in list: " + uic.handle);
         }
