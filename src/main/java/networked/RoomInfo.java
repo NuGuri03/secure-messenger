@@ -68,4 +68,8 @@ public class RoomInfo {
         return lastMessage.plainText();
     }
 
+    public long getLastMessageTimestamp() {
+        return messages.isEmpty() ? 0L : messages.get(messages.size() - 1).createdAt();
+    }
+
 }

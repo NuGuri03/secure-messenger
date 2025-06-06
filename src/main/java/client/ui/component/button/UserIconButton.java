@@ -9,11 +9,19 @@ import java.awt.*;
 
 public class UserIconButton extends JButton {
     private final UserInfo userInfo;
-    private final int avatarSize;
+    private int avatarSize;
+    private boolean nullUserInfo = false; //groupChatCase
 
     public UserIconButton(UserInfo userInfo, int avatarSize) {
+
         this.userInfo = userInfo;
         this.avatarSize = avatarSize;
+
+        if (userInfo == null)
+        {
+            userInfo = new UserInfo();
+            nullUserInfo = true;
+        }
 
         setPreferredSize(new Dimension(avatarSize, avatarSize));
 
@@ -36,9 +44,11 @@ public class UserIconButton extends JButton {
         setContentAreaFilled(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        addActionListener(e -> {
-            WindowManager.openProfileUI(userInfo);
-        });
+        if(!nullUserInfo){
+            addActionListener(e -> {
+                WindowManager.openProfileUI(this.userInfo);
+            });
+        }
     }
 
     // 둥근 배경의 원 생성

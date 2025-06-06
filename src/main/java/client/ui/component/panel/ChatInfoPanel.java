@@ -17,7 +17,7 @@ public class ChatInfoPanel extends ClickAblePanel{
         WindowManager.openChatUI(roomInfo);
     }
 
-    public ChatInfoPanel(RoomInfo roomInfo, UserInfo friendInfo) {
+    public ChatInfoPanel(RoomInfo roomInfo, String name, UserInfo friendInfo) {
         this.roomInfo = roomInfo;
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -46,7 +46,7 @@ public class ChatInfoPanel extends ClickAblePanel{
         contentPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 
         // 채팅방 이름
-        JLabel chatLabel = new JLabel(roomInfo.getName());
+        JLabel chatLabel = new JLabel(name);
         chatLabel.setFont(nameFont);
         chatLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPanel.add(chatLabel);
