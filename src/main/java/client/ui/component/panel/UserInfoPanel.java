@@ -1,17 +1,37 @@
 package client.ui.component.panel;
 
+import client.ChatClient;
+import client.WindowManager;
 import client.ui.component.button.UserIconButton;
 import networked.UserInfo;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
-public class UserInfoPanel extends JPanel {
+public class UserInfoPanel extends ClickAblePanel {
     UserInfo userInfo;
+    ChatClient client;
 
-    public UserInfoPanel(UserInfo userInfo) {
+    @Override
+    protected void onClick(MouseEvent e) {
+        boolean roomExists = client.getPrivateRoomInfo(userInfo.getId()) != null;
+        if (!roomExists) {
+            // Create a new private room right away if it doesn't exist
+            String roomName = "";
+            client.createRoom(roomName, userInfo.getHandle());
+        }
+
+        var roomInfo = client.getPrivateRoomInfo(userInfo.getId());
+        if (roomInfo == null) { return; }
+
+        WindowManager.openChatUI(roomInfo);
+    }
+
+    public UserInfoPanel(ChatClient client, UserInfo userInfo) {
         this.userInfo = userInfo;
+        this.client = client;
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(null);

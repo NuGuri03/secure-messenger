@@ -52,7 +52,7 @@ public class LobbyPanel extends JPanel {
         // 유저 패널
         usersPanel.add(Box.createVerticalStrut(PADDING));
 
-        UserInfoPanel myInfoPanel = new UserInfoPanel(client.getUserInfo());
+        UserInfoPanel myInfoPanel = new UserInfoPanel(null, client.getUserInfo());
         myInfoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         usersPanel.add(myInfoPanel);
 
@@ -69,8 +69,8 @@ public class LobbyPanel extends JPanel {
 
         friendList = new ArrayList<>();
 
-        for (UserInfo user : client.getFriendList()) {
-            friendList.add(new UserInfoPanel(user));
+        for (UserInfo userInfo : client.getFriendList()) {
+            friendList.add(new UserInfoPanel(client, userInfo));
         }
 
         // 이름 가나다 순서로 정렬
