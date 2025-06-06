@@ -3,6 +3,7 @@ package client.ui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 
 import client.ui.component.panel.ChatBubblePanel;
 import networked.RoomInfo;
@@ -11,7 +12,7 @@ import client.ui.component.button.UserIconButton;
 import networked.UserInfo;
 
 public class ChatUI extends BaseUI {
-    private ChatClient client;
+    private final ChatClient client;
     public RoomInfo roomInfo;
 
     private JPanel chatArea;
@@ -23,11 +24,10 @@ public class ChatUI extends BaseUI {
         this.client = client;
         this.roomInfo = roomInfo;
 
-       updateUI();
+        updateUI();
     }
 
-    public void updateUI()
-    {
+    public void updateUI() {
         setTitle("Chat");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -69,6 +69,7 @@ public class ChatUI extends BaseUI {
 
     /**
      * 탑바 패널을 생성
+     *
      * @return 문구가 포함된 패널
      */
     private JPanel createTopbarPanel() {
@@ -82,37 +83,44 @@ public class ChatUI extends BaseUI {
 
         // 상대방 아이콘 버튼
         UserIconButton userIconButton = null;
-        String roomName = roomInfo.getName();
-        if (roomInfo.getMemberHandles().length == 1)
-        {
+        String roomTitle;
+
+        String myHandle = client.getCurrentUser().getHandle();
+        int memberCnt = roomInfo.getMemberHandles().length;
+
+        //self-room, only me inside
+        if (memberCnt == 1) {
+            roomTitle = "나";
             userIconButton = new UserIconButton(client.getUserInfo(), 32);
-            roomName = client.getUserInfo().getUsername();
         }
-        else if (roomInfo.getMemberHandles().length == 2)
-        {
-            for(String handle : roomInfo.getMemberHandles())
-            {
-                if(!handle.equals(client.getCurrentUser().getHandle()))
-                {
-                    UserInfo friend = client.getFriendList().stream()
-                            .filter(u -> u.getHandle().equals(handle))
-                            .findFirst()
-                            .orElse(new UserInfo(-1, handle, "", "", "", null));
+        //private chat, exactly two handles and room name is empty
+        else if (memberCnt == 2 && roomInfo.getName().isEmpty()) {
+            String friendHandle = Arrays.stream(roomInfo.getMemberHandles())
+                    .filter(h -> !h.equals(myHandle))
+                    .findFirst()
+                    .orElse("");
 
-                    userIconButton = new UserIconButton(friend, 32);
-                    roomName = friend.getUsername();
-                }
-            }
+            UserInfo friend = client.getFriendList().stream()
+                    .filter(u -> u.getHandle().equals(friendHandle))
+                    .findFirst()
+                    .orElse(new UserInfo(-1, friendHandle, "", "", "", null));
 
+            roomTitle = friend.getUsername(); //friend name
+            userIconButton = new UserIconButton(friend, 32);
         }
 
+        //group chat, any other case (2 members or custom name already set)
+        else {
+            roomTitle = roomInfo.getName() + " — " + roomInfo.getMemberHandles().length;
+            userIconButton = new UserIconButton(null, 32);
+        }
 
         // 채팅방 이름 라벨
-        JLabel usernameLabel = new JLabel(roomName);
+        JLabel usernameLabel = new JLabel(roomTitle);
 
         // 탑바 패널에 요소 추가
         topbar.add(Box.createHorizontalStrut(15)); // 왼쪽 여백
-        if(userIconButton != null) topbar.add(userIconButton); //group chat doesnt have user icon
+        if (userIconButton != null) topbar.add(userIconButton); //group chat doesnt have user icon
         topbar.add(Box.createHorizontalStrut(12)); // 아이콘과 라벨 사이 여백
         topbar.add(usernameLabel);
 
@@ -219,7 +227,7 @@ public class ChatUI extends BaseUI {
                             : client.getFriendList().stream()
                             .filter(u -> u.getHandle().equals(m.authorHandle()))
                             .findFirst()
-                            .orElse(new UserInfo(-1, m.authorHandle(),"","","",null)),
+                            .orElse(new UserInfo(-1, m.authorHandle(), "", "", "", null)),
                     32);
 
             String sendName = isMe ? client.getUserInfo().getUsername() : client.getFriendList().stream()
@@ -259,7 +267,7 @@ public class ChatUI extends BaseUI {
                         : client.getFriendList().stream()
                         .filter(u -> u.getHandle().equals(m.authorHandle()))
                         .findFirst()
-                        .orElse(new UserInfo(-1, m.authorHandle(),"","","",null)),
+                        .orElse(new UserInfo(-1, m.authorHandle(), "", "", "", null)),
                 32);
 
         String sendName = !isLeft ? client.getUserInfo().getUsername() : client.getFriendList().stream()
