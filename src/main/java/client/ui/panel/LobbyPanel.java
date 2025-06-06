@@ -52,7 +52,7 @@ public class LobbyPanel extends JPanel {
         // 유저 패널
         usersPanel.add(Box.createVerticalStrut(PADDING));
 
-        UserInfoPanel myInfoPanel = new UserInfoPanel(null, client.getUserInfo());
+        UserInfoPanel myInfoPanel = new UserInfoPanel(client, client.getUserInfo());
         myInfoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         usersPanel.add(myInfoPanel);
 
