@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import networked.CryptoUtil;
 
 public class ServerInfo {
-    private static final String CONFIG_FILE_NAME = "server_info_localhost.txt";
+    private static final String CONFIG_FILE_NAME = "server_info.txt";
     private static final int DEFAULT_PORT = 23456;
 
     private String serverAddress;

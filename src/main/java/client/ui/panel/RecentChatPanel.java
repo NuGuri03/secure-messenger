@@ -149,7 +149,7 @@ public class RecentChatPanel extends JPanel {
         for (UserInfo friend : friends) {
 
             //panel showing a single user
-            UserInfoPanel core = new UserInfoPanel(friend);
+            UserInfoPanel core = new UserInfoPanel(client, friend);
             core.setOpaque(true);
             core.setBackground(DEFAULT_BG);
 

@@ -52,7 +52,7 @@ public class LobbyPanel extends JPanel {
         // 유저 패널
         usersPanel.add(Box.createVerticalStrut(PADDING));
 
-        UserInfoPanel myInfoPanel = new UserInfoPanel(client.getUserInfo());
+        UserInfoPanel myInfoPanel = new UserInfoPanel(client, client.getUserInfo());
         myInfoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         usersPanel.add(myInfoPanel);
 
@@ -69,20 +69,9 @@ public class LobbyPanel extends JPanel {
 
         friendList = new ArrayList<>();
 
-        for (UserInfo user : client.getFriendList()) {
-            friendList.add(new UserInfoPanel(user));
+        for (UserInfo userInfo : client.getFriendList()) {
+            friendList.add(new UserInfoPanel(client, userInfo));
         }
-
-        // 예시 유저
-        // **myInfo.getPublicKey()** 는 나중에 삭제하여야 함
-       // friendList.add(new UserInfoPanel(new UserInfo("user1", "호반우", "KNU CSE", null, null)));
-        //    friendList.add(new UserInfoPanel(new UserInfo("user2", "김민준", "코딩을 사랑합니다 저를 굴려주세요 PM님 힝힝 (당근)", null, null)));
-     //   friendList.add(new UserInfoPanel(new UserInfo("user3", "장기원", "KERT 들어와 주세요 힝힝", null, null)));
-      //  friendList.add(new UserInfoPanel(new UserInfo("user4", "서유민", "PM", null, null)));
-      //  friendList.add(new UserInfoPanel(new UserInfo("user5", "Bruno", "백엔드 구축 중...", null, null)));
-      //  friendList.add(new UserInfoPanel(new UserInfo("user6", "정성진", "백엔드 만드는 중...", null, null)));
-      //  friendList.add(new UserInfoPanel(new UserInfo("user7", "권혁주", "로그인, 프로필 UI 만드는 중...", null, null)));
-      //  friendList.add(new UserInfoPanel(new UserInfo("user8", "신승빈", "회원가입, 설정 UI 만드는 중...", null, null)));
 
         // 이름 가나다 순서로 정렬
         friendList.sort(Comparator.comparing(
