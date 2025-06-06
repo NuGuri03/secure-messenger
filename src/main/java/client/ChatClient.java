@@ -590,6 +590,9 @@ public class ChatClient {
         }
 
         UserInfo user = findUser(uic.handle);
+
+        if(uic.handle.equals(currentUser.getHandle())) return; //if its self, doesnt need to update
+
         if (user != null) {
             user.setUsername(uic.username);
             user.setBio(uic.bio);
