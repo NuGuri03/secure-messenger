@@ -16,14 +16,14 @@ public class UserInfoPanel extends ClickAblePanel {
 
     @Override
     protected void onClick(MouseEvent e) {
-        if (client.getUserInfo().equals(userInfo)) {
-            return;
-        }
 
         boolean roomExists = client.getPrivateRoomInfo(userInfo.getId()) != null;
         if (!roomExists) {
             // Create a new private room right away if it doesn't exist
             String roomName = "";
+            if (client.getUserInfo().equals(userInfo)) {
+                roomName = "(나) — " + client.getUserInfo().getUsername();
+            }
             client.createRoom(roomName, userInfo.getHandle());
         }
 
