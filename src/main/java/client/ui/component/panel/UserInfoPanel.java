@@ -16,7 +16,7 @@ public class UserInfoPanel extends ClickAblePanel {
 
     @Override
     protected void onClick(MouseEvent e) {
-        if (client.getUserInfo() == userInfo) {
+        if (client.getUserInfo().equals(userInfo)) {
             return;
         }
 
